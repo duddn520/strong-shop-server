@@ -1,6 +1,6 @@
 package com.strongshop.mobile.dto.order;
 
-import com.strongshop.mobile.domain.Order.Orders;
+import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.vo.TintingPosition;
 import com.strongshop.mobile.vo.TintingStrength;
@@ -26,8 +26,8 @@ public class OrderRequestDto {
 
     private String request;
 
-    public Orders toEntityWithTinting() {
-        return Orders.builder()
+    public Order toEntityWithTinting() {
+        return Order.builder()
                 .user(user)
                 .isTinting(isTinting)
                 .tintingPosition(tintingPosition)
@@ -41,8 +41,8 @@ public class OrderRequestDto {
                 .build();
     }
 
-    public Orders toEntityWithoutTinting() {
-        return Orders.builder()
+    public Order toEntityWithoutTinting() {
+        return Order.builder()
                 .user(user)
                 .isTinting(isTinting)
                 .isBlackBox(isBlackBox)

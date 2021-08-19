@@ -33,6 +33,7 @@ public class CompanyImage {
     @Column(nullable = false)
     private String filepath;
 
+
     // 전달받은 requestDto를 이용해 빌더로 객체생성하고 생성한 객체를 JPA에게 넘겨 디비에 저장
     @Builder
     public CompanyImage(Company company, String origFilename, String filename, String filepath) {

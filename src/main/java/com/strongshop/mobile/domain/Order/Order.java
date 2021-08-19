@@ -1,26 +1,28 @@
 package com.strongshop.mobile.domain.Order;
 
-import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Bid.Bidding;
 import com.strongshop.mobile.domain.User.User;
-import com.strongshop.mobile.dto.order.OrderRequestDto;
-import com.strongshop.mobile.vo.Tinting;
 import com.strongshop.mobile.vo.TintingPosition;
 import com.strongshop.mobile.vo.TintingStrength;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @NoArgsConstructor
 @Entity
-public class Orders {
+@Table(name = "orders")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY) // 여러개의 요청이 하나의 유저
-    @JoinColumn(nullable = false) // 매핑할 외래키 이름지정 - company엔티티의 id필드를 외래키로 갖겠다.
+    @JoinColumn(name = "user_id",nullable = false) // 매핑할 외래키 이름지정 - company엔티티의 id필드를 외래키로 갖겠다.
     private User user;
 
     // isTinting이 true일때만 null값이 아니게됨
@@ -39,8 +41,12 @@ public class Orders {
 
     private String request;
 
+    @OneToMany(mappedBy = "order")
+    private List<Bidding> biddings = new ArrayList<>();
+
+
     @Builder
-    public Orders(User user, TintingPosition tintingPosition, TintingStrength tintingStrength, Boolean isTinting, Boolean isBlackBox, Boolean isGlassCoating, Boolean isUnderCoating, Boolean isPdf, Boolean isSoundProof, String request) {
+    public Order(User user, TintingPosition tintingPosition, TintingStrength tintingStrength, Boolean isTinting, Boolean isBlackBox, Boolean isGlassCoating, Boolean isUnderCoating, Boolean isPdf, Boolean isSoundProof, String request, List<Bidding> biddings) {
         this.user = user;
         this.tintingPosition = tintingPosition;
         this.tintingStrength = tintingStrength;
@@ -51,5 +57,6 @@ public class Orders {
         this.isPdf = isPdf;
         this.isSoundProof = isSoundProof;
         this.request = request;
+        this.biddings = biddings;
     }
 }

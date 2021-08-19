@@ -1,13 +1,13 @@
 package com.strongshop.mobile.domain.Company;
 
+import com.strongshop.mobile.domain.Bid.Bidding;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -25,8 +25,11 @@ public class Company {
     private String contact; // 연락처
     private String businessNumber; // 사업자번호
 
+    @OneToMany(mappedBy = "company")
+    private List<Bidding> biddings = new ArrayList<>();
+
     @Builder
-    public Company(Long id, String name, String bossName, String address, String detailAddress, String contact, String businessNumber) {
+    public Company(Long id, String name, String bossName, String address, String detailAddress, String contact, String businessNumber, List<Bidding> biddings) {
         this.id = id;
         this.name = name;
         this.bossName = bossName;
@@ -34,5 +37,6 @@ public class Company {
         this.detailAddress = detailAddress;
         this.contact = contact;
         this.businessNumber = businessNumber;
+        this.biddings = biddings;
     }
 }
