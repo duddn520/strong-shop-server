@@ -1,15 +1,12 @@
 package com.strongshop.mobile.dto.order;
 
-import com.strongshop.mobile.domain.Order.Order;
+import com.strongshop.mobile.domain.Order.Orders;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.vo.TintingPosition;
 import com.strongshop.mobile.vo.TintingStrength;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 @Setter
 @Getter
@@ -29,8 +26,8 @@ public class OrderRequestDto {
 
     private String request;
 
-    public Order toEntityWithTinting() {
-        return Order.builder()
+    public Orders toEntityWithTinting() {
+        return Orders.builder()
                 .user(user)
                 .isTinting(isTinting)
                 .tintingPosition(tintingPosition)
@@ -44,8 +41,8 @@ public class OrderRequestDto {
                 .build();
     }
 
-    public Order toEntityWithoutTinting() {
-        return Order.builder()
+    public Orders toEntityWithoutTinting() {
+        return Orders.builder()
                 .user(user)
                 .isTinting(isTinting)
                 .isBlackBox(isBlackBox)
