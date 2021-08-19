@@ -1,7 +1,7 @@
 package com.strongshop.mobile.service;
 
-import com.strongshop.mobile.domain.Order.Order;
-import com.strongshop.mobile.domain.Order.OrderRepository;
+import com.strongshop.mobile.domain.Order.Orders;
+import com.strongshop.mobile.domain.Order.OrdersRepository;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.dto.order.OrderRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -14,17 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final UserService userService;
-    private final OrderRepository orderRepository;
+    private final OrdersRepository ordersRepository;
 
     @Transactional
-    public Order saveOrder(OrderRequestDto requestDto, Authentication authentication) {
+    public Orders saveOrder(OrderRequestDto requestDto, Authentication authentication) {
         User user = userService.getUserByToken(authentication.getPrincipal());
         requestDto.setUser(user);
         if (requestDto.getIsTinting()) {
             //TODO - OrderResponsetDto로 리턴
-            return orderRepository.save(requestDto.toEntityWithTinting());
+            return ordersRepository.save(requestDto.toEntityWithTinting());
         } else {
-            return orderRepository.save(requestDto.toEntityWithoutTinting());
+            return ordersRepository.save(requestDto.toEntityWithoutTinting());
         }
     }
 }
