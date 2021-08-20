@@ -1,7 +1,7 @@
-package com.strongshop.mobile.dto.order;
+package com.strongshop.mobile.dto.Order;
 
+import com.strongshop.mobile.domain.Car.Car;
 import com.strongshop.mobile.domain.Order.Order;
-import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.vo.TintingPosition;
 import com.strongshop.mobile.vo.TintingStrength;
 import lombok.Getter;
@@ -16,7 +16,7 @@ public class OrderRequestDto {
     private TintingPosition tintingPosition;
     private TintingStrength tintingStrength;
 
-    private User user;
+    private Car car;
     private Boolean isTinting;
     private Boolean isBlackBox;
     private Boolean isGlassCoating;
@@ -28,7 +28,7 @@ public class OrderRequestDto {
 
     public Order toEntityWithTinting() {
         return Order.builder()
-                .user(user)
+                .car(car)
                 .isTinting(isTinting)
                 .tintingPosition(tintingPosition)
                 .tintingStrength(tintingStrength)
@@ -43,7 +43,7 @@ public class OrderRequestDto {
 
     public Order toEntityWithoutTinting() {
         return Order.builder()
-                .user(user)
+                .car(car)
                 .isTinting(isTinting)
                 .isBlackBox(isBlackBox)
                 .isGlassCoating(isGlassCoating)

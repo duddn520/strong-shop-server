@@ -3,7 +3,7 @@ package com.strongshop.mobile.service;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Order.OrderRepository;
 import com.strongshop.mobile.domain.User.User;
-import com.strongshop.mobile.dto.order.OrderRequestDto;
+import com.strongshop.mobile.dto.Order.OrderRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;

@@ -1,0 +1,52 @@
+package com.strongshop.mobile.domain.Bidding;
+
+import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Order.Order;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@NoArgsConstructor
+@Getter
+public class Bidding {
+
+    @Id @GeneratedValue
+    private Long id;
+
+    private int tintingPrice;
+    private int blackboxPrice;
+    private int ppfPrice;
+
+    private int totalPrice;
+    private LocalDateTime startTime;
+    private LocalDateTime dueTime;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    @Builder
+    public Bidding(int tintingPrice, int blackboxPrice, int ppfPrice, int totalPrice, LocalDateTime startTime, LocalDateTime dueTime, Order order, Company company)
+    {
+        this.tintingPrice = tintingPrice;
+        this.blackboxPrice = blackboxPrice;
+        this.ppfPrice = ppfPrice;
+        this.totalPrice = totalPrice;
+        this.startTime = startTime;
+        this.dueTime = dueTime;
+        this.order = order;
+        this.company = company;
+    }
+
+
+
+}

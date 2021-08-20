@@ -1,6 +1,6 @@
 package com.strongshop.mobile.domain.Company;
 
-import com.strongshop.mobile.domain.Bid.Bidding;
+import com.strongshop.mobile.domain.Bidding.Bidding;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,11 +25,11 @@ public class Company {
     private String contact; // 연락처
     private String businessNumber; // 사업자번호
 
-    @OneToMany(mappedBy = "company")
-    private List<Bidding> biddings = new ArrayList<>();
+    @OneToOne(mappedBy = "company",fetch = FetchType.LAZY)
+    private Bidding bidding;
 
     @Builder
-    public Company(Long id, String name, String bossName, String address, String detailAddress, String contact, String businessNumber, List<Bidding> biddings) {
+    public Company(Long id, String name, String bossName, String address, String detailAddress, String contact, String businessNumber, Bidding bidding) {
         this.id = id;
         this.name = name;
         this.bossName = bossName;
@@ -37,6 +37,6 @@ public class Company {
         this.detailAddress = detailAddress;
         this.contact = contact;
         this.businessNumber = businessNumber;
-        this.biddings = biddings;
+        this.bidding = bidding;
     }
 }

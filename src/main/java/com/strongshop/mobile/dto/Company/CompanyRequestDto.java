@@ -16,6 +16,8 @@ public class CompanyRequestDto {
     private String businessNumber; // 사업자번호
 
 
+
+
     public Company toEntity() {
         return Company.builder()
                 .name(name)

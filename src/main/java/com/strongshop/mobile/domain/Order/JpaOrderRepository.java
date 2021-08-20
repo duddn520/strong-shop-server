@@ -1,6 +1,5 @@
 package com.strongshop.mobile.domain.Order;
 
-import com.strongshop.mobile.domain.Bid.Bidding;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;

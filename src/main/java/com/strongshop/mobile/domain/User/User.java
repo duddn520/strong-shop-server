@@ -1,7 +1,6 @@
 package com.strongshop.mobile.domain.User;
 
 import com.strongshop.mobile.domain.Car.Car;
-import com.strongshop.mobile.domain.Order.Order;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -18,10 +17,6 @@ public class User {
     private String userName;
 
     @OneToMany(mappedBy = "user")
-    private List<Order> orders = new ArrayList<>();
-
-    @OneToMany
-    @JoinColumn(name = "user_id")
     private List<Car> cars = new ArrayList<>();
 
     public User(Long id, String userName) {

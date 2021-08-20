@@ -1,5 +1,6 @@
 package com.strongshop.mobile.domain.Car;
 
+import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.User.User;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,11 @@ public class Car {
     //유저 매핑필요
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToOne(mappedBy = "car")
+    private Order order;
 
     // 차번호
     private String carNo;
