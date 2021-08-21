@@ -20,6 +20,6 @@ public class OrderController {
 
     @PostMapping("/api/order")
     public void requestOrder(@RequestBody OrderRequestDto requestDto, Authentication authentication) {
-        Order order = orderService.saveOrder(requestDto, authentication);
+//        Order order = orderService.saveOrder(requestDto, authentication);
     }
 }

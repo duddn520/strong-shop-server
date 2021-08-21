@@ -30,8 +30,6 @@ public class BiddingResponseDto {
         this.blackboxPrice = bidding.getBlackboxPrice();
         this.ppfPrice = bidding.getPpfPrice();
         this.totalPrice = bidding.getTotalPrice();
-        this.startTime = bidding.getStartTime();
-        this.dueTime = bidding.getDueTime();
         this.order = bidding.getOrder();
         this.company = bidding.getCompany();
     }

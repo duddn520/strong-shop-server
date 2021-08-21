@@ -17,11 +17,10 @@ public class BiddingRequestDto {
     private int ppfPrice;
 
     private int totalPrice;
-    private LocalDateTime startTime;
-    private LocalDateTime dueTime;
 
     private Order order;
     private Company company;
+
 
     public Bidding toEntity(){
         return Bidding.builder().
@@ -29,8 +28,6 @@ public class BiddingRequestDto {
                 .blackboxPrice(blackboxPrice)
                 .ppfPrice(ppfPrice)
                 .totalPrice(totalPrice)
-                .startTime(startTime)
-                .dueTime(dueTime)
                 .order(order)
                 .company(company)
                 .build();

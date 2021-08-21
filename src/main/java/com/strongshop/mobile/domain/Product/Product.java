@@ -1,5 +1,6 @@
 package com.strongshop.mobile.domain.Product;
 
+import com.strongshop.mobile.domain.Company.Company;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -12,6 +13,9 @@ public abstract class Product {
 
     @Id @GeneratedValue
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Company company;
 
     private String manufacturer;
 

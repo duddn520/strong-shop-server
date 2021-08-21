@@ -1,5 +1,6 @@
 package com.strongshop.mobile.dto.Order;
 
+import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Car.Car;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.vo.TintingPosition;
@@ -7,6 +8,8 @@ import com.strongshop.mobile.vo.TintingStrength;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Setter
 @Getter
@@ -21,10 +24,11 @@ public class OrderRequestDto {
     private Boolean isBlackBox;
     private Boolean isGlassCoating;
     private Boolean isUnderCoating;
-    private Boolean isPdf;
+    private Boolean isPpf;
     private Boolean isSoundProof;
 
     private String request;
+    private List<Bidding> biddings;
 
     public Order toEntityWithTinting() {
         return Order.builder()
@@ -35,9 +39,10 @@ public class OrderRequestDto {
                 .isBlackBox(isBlackBox)
                 .isGlassCoating(isGlassCoating)
                 .isUnderCoating(isUnderCoating)
-                .isPdf(isPdf)
+                .isPpf(isPpf)
                 .isSoundProof(isSoundProof)
                 .request(request)
+                .biddings(biddings)
                 .build();
     }
 
@@ -48,9 +53,10 @@ public class OrderRequestDto {
                 .isBlackBox(isBlackBox)
                 .isGlassCoating(isGlassCoating)
                 .isUnderCoating(isUnderCoating)
-                .isPdf(isPdf)
+                .isPpf(isPpf)
                 .isSoundProof(isSoundProof)
                 .request(request)
+                .biddings(biddings)
                 .build();
     }
 

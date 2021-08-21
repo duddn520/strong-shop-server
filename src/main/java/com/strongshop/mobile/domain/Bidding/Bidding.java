@@ -22,8 +22,6 @@ public class Bidding {
     private int ppfPrice;
 
     private int totalPrice;
-    private LocalDateTime startTime;
-    private LocalDateTime dueTime;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,18 +33,14 @@ public class Bidding {
     private Company company;
 
     @Builder
-    public Bidding(int tintingPrice, int blackboxPrice, int ppfPrice, int totalPrice, LocalDateTime startTime, LocalDateTime dueTime, Order order, Company company)
+    public Bidding(int tintingPrice, int blackboxPrice, int ppfPrice, int totalPrice, Order order, Company company)
     {
         this.tintingPrice = tintingPrice;
         this.blackboxPrice = blackboxPrice;
         this.ppfPrice = ppfPrice;
         this.totalPrice = totalPrice;
-        this.startTime = startTime;
-        this.dueTime = dueTime;
         this.order = order;
         this.company = company;
     }
-
-
 
 }

@@ -1,7 +1,9 @@
 package com.strongshop.mobile.domain.Order;
 
+import com.strongshop.mobile.domain.BaseEntity;
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Car.Car;
+import com.strongshop.mobile.dto.Order.OrderRequestDto;
 import com.strongshop.mobile.vo.TintingPosition;
 import com.strongshop.mobile.vo.TintingStrength;
 import lombok.Builder;
@@ -15,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +38,7 @@ public class Order {
     private Boolean isBlackBox;
     private Boolean isGlassCoating;
     private Boolean isUnderCoating;
-    private Boolean isPdf;
+    private Boolean isPpf;
     private Boolean isSoundProof;
 
     private String request;
@@ -46,7 +48,7 @@ public class Order {
 
 
     @Builder
-    public Order(Car car, TintingPosition tintingPosition, TintingStrength tintingStrength, Boolean isTinting, Boolean isBlackBox, Boolean isGlassCoating, Boolean isUnderCoating, Boolean isPdf, Boolean isSoundProof, String request, List<Bidding> biddings) {
+    public Order(Car car, TintingPosition tintingPosition, TintingStrength tintingStrength, Boolean isTinting, Boolean isBlackBox, Boolean isGlassCoating, Boolean isUnderCoating, Boolean isPpf, Boolean isSoundProof, String request, List<Bidding> biddings) {
         this.car = car;
         this.tintingPosition = tintingPosition;
         this.tintingStrength = tintingStrength;
@@ -54,7 +56,7 @@ public class Order {
         this.isBlackBox = isBlackBox;
         this.isGlassCoating = isGlassCoating;
         this.isUnderCoating = isUnderCoating;
-        this.isPdf = isPdf;
+        this.isPpf = isPpf;
         this.isSoundProof = isSoundProof;
         this.request = request;
         this.biddings = biddings;
