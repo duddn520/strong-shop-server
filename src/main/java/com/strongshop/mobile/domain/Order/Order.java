@@ -8,8 +8,11 @@ import com.strongshop.mobile.vo.TintingPosition;
 import com.strongshop.mobile.vo.TintingStrength;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +48,6 @@ public class Order extends BaseEntity {
 
     @OneToMany(mappedBy = "order")
     private List<Bidding> biddings = new ArrayList<>();
-
 
     @Builder
     public Order(Car car, TintingPosition tintingPosition, TintingStrength tintingStrength, Boolean isTinting, Boolean isBlackBox, Boolean isGlassCoating, Boolean isUnderCoating, Boolean isPpf, Boolean isSoundProof, String request, List<Bidding> biddings) {

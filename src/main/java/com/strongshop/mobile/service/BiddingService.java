@@ -21,7 +21,6 @@ public class BiddingService {
     @Transactional
     public BiddingResponseDto registerBidding(BiddingRequestDto requestDto){
         Bidding bidding = requestDto.toEntity();
-        bidding.updateTime();
         return new BiddingResponseDto(biddingRepository.save(bidding));
     }
 
