@@ -10,53 +10,58 @@ import javax.persistence.*;
 @Entity
 public class Car {
 
-    @Id @GeneratedValue
+    @Id
     private Long id;
 
     //유저 매핑필요
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "car")
-    private Order order;
-
-    // 차번호
     private String carNo;
-    // 제조사
-    private String manufacturer;
-    // 차종 ( 세단, SUV)
-    private String type;
-    // 모델명
-    private String model;
-    // 상세 모델명
-    private String detailModel;
-    // 등급
-    private String rating;
-    // 상세 등급
-    private String detailRating;
-    // 변속기 (오토, 수동, 기타 ...)
-    private String gearbox;
-    // 연료 (가솔린, 디젤, LPG ...)
-    private String fuel;
-    //색상
-    private String color;
-    // 연식
-    private Integer modelYear;
-    // 주행거리
-    private Integer mileage;
-    // 출고가
-    private Integer price;
-    // 최초등록일
-    private Integer initialRegistration;
-    // 사고이력
-    @Enumerated(EnumType.STRING)
-    private AccidentHistory history; //
-    // 소유
-    private String owner;
-    // 기타이력
-    private String historyEtc; // TODO - enum으로 수정
+
+    public Car(Long id, User user, String carNo) {
+        this.id = id;
+        this.user = user;
+        this.carNo = carNo;
+    }
+
+//
+//    // 차번호
+//    private String carNo;
+//    // 제조사
+//    private String manufacturer;
+//    // 차종 ( 세단, SUV)
+//    private String type;
+//    // 모델명
+//    private String model;
+//    // 상세 모델명
+//    private String detailModel;
+//    // 등급
+//    private String rating;
+//    // 상세 등급
+//    private String detailRating;
+//    // 변속기 (오토, 수동, 기타 ...)
+//    private String gearbox;
+//    // 연료 (가솔린, 디젤, LPG ...)
+//    private String fuel;
+//    //색상
+//    private String color;
+//    // 연식
+//    private Integer modelYear;
+//    // 주행거리
+//    private Integer mileage;
+//    // 출고가
+//    private Integer price;
+//    // 최초등록일
+//    private Integer initialRegistration;
+//    // 사고이력
+//    @Enumerated(EnumType.STRING)
+//    private AccidentHistory history; //
+//    // 소유
+//    private String owner;
+//    // 기타이력
+//    private String historyEtc; // TODO - enum으로 수정
 
 
 }

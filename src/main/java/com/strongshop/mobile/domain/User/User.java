@@ -1,5 +1,6 @@
 package com.strongshop.mobile.domain.User;
 
+import com.strongshop.mobile.domain.Car.Car;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
