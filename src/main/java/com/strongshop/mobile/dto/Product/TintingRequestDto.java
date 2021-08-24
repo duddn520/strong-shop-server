@@ -2,11 +2,17 @@ package com.strongshop.mobile.dto.Product;
 
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Product.Items.Tinting;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@Setter
+@Getter
 public class TintingRequestDto {
 
     private String name;
-    private Company company;
+    private Long companyId;
     private String manufacturer;
     private int price;
     private int stockQuantity;
@@ -20,7 +26,6 @@ public class TintingRequestDto {
     public Tinting toEntity(){
         return Tinting.builder()
                 .name(name)
-                .company(company)
                 .manufacturer(manufacturer)
                 .price(price)
                 .stockQuantity(stockQuantity)

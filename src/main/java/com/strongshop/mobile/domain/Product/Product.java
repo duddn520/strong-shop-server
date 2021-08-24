@@ -28,4 +28,8 @@ public abstract class Product {
     private int price;
     private int stockQuantity;
 
+    public void updateCompany(Company company){
+        this.company = company;
+    }
+
 }

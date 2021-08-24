@@ -2,11 +2,17 @@ package com.strongshop.mobile.dto.Product;
 
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Product.Items.Ppf;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@Setter
+@Getter
 public class PpfRequestDto {
 
     private String name;
-    private Company company;
+    private Long companyId;
     private String manufacturer;
     private int price;
     private int stockQuantity;
@@ -16,7 +22,6 @@ public class PpfRequestDto {
     public Ppf toEntity(){
         return Ppf.builder()
                 .name(name)
-                .company(company)
                 .manufacturer(manufacturer)
                 .price(price)
                 .stockQuantity(stockQuantity)

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @NoArgsConstructor
@@ -41,6 +42,11 @@ public class Bidding {
         this.totalPrice = totalPrice;
         this.order = order;
         this.company = company;
+    }
+
+    public void updateOrderCompany(Order order, Company company){
+        this.company = company;
+        this.order = order;
     }
 
 }

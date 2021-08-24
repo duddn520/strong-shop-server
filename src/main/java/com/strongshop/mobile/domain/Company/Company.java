@@ -4,6 +4,7 @@ import com.strongshop.mobile.domain.Bidding.Bidding;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 

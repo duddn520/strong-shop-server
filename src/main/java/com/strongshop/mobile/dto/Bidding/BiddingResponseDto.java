@@ -19,8 +19,6 @@ public class BiddingResponseDto {
     private int blackboxPrice;
     private int ppfPrice;
     private int totalPrice;
-    private LocalDateTime startTime;
-    private LocalDateTime dueTime;
     private Order order;
     private Company company;
 

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class BiddingController {
     private final BiddingService biddingService;
 
     @PostMapping("/api/bidding")
-    public ResponseEntity<ApiResponse<BiddingResponseDto>> registerBidding(BiddingRequestDto requestDto)
+    public ResponseEntity<ApiResponse<BiddingResponseDto>> registerBidding(@RequestBody BiddingRequestDto requestDto)
     {
         BiddingResponseDto responseDto = biddingService.registerBidding(requestDto);
 
