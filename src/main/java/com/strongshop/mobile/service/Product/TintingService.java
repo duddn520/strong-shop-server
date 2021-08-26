@@ -28,4 +28,12 @@ public class TintingService {
         tinting.updateCompany(company);
         return new TintingResponseDto(tintingRepository.save(tinting));
     }
+
+    @Transactional
+    public TintingResponseDto updateTinting(TintingRequestDto requestDto){
+        Tinting tinting = tintingRepository.findById(requestDto.getId())
+                .orElseThrow(()->new IllegalArgumentException());
+
+        return new TintingResponseDto(tinting.updateTinting(requestDto.toEntity()));
+    }
 }

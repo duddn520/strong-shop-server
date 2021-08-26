@@ -29,4 +29,17 @@ public class Tinting extends Product {
         this.visibleLightTransmittance = visibleLightTransmittance;
         this.color = color;
     }
+
+    public Tinting updateTinting(Tinting tinting){
+        this.setName(tinting.getName());
+        this.setPrice(tinting.getPrice());
+        this.setManufacturer(tinting.getManufacturer());
+        this.setStockQuantity(tinting.getStockQuantity());
+        this.uvProtectionRate = tinting.getUvProtectionRate();
+        this.irProtectionRate = tinting.getIrProtectionRate();
+        this.visibleLightTransmittance = tinting.getVisibleLightTransmittance();
+        this.color = tinting.getColor();
+
+        return this;
+    }
 }

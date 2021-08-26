@@ -23,10 +23,10 @@ public class OrderController {
 //        log.info(order.toString());
 //    }
 
-    @PostMapping("/api/order/test")
-    public void requestOrder(@RequestBody OrderRequestDto requestDto ) {
-        Order order = orderService.saveOrderTest(requestDto);
-        log.info(order.toString());
-
-    }
+//    @PostMapping("/api/order/test")
+//    public void requestOrder(@RequestBody OrderRequestDto requestDto ) {
+//        Order order = orderService.saveOrderTest(requestDto);
+//        log.info(order.toString());
+//
+//    }
 }

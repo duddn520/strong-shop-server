@@ -11,6 +11,7 @@ import lombok.Setter;
 @Getter
 public class BlackboxRequestDto {
 
+    private Long id;
     private String name;
     private Long companyId;
     private String manufacturer;

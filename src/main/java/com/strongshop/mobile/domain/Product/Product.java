@@ -4,6 +4,7 @@ import com.strongshop.mobile.domain.Company.Company;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public abstract class Product {
 
     @Id @GeneratedValue
@@ -20,7 +22,7 @@ public abstract class Product {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Company company;
 
     private String manufacturer;

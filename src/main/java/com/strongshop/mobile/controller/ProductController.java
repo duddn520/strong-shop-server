@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,7 @@ public class ProductController {
     private final BlackboxService blackboxService;
     private final PpfService ppfService;
 
+    //제품 등록
     @PostMapping("/api/product/blackbox")
     public ResponseEntity<ApiResponse<BlackboxResponseDto>> registerBlackbox(@RequestBody BlackboxRequestDto requestDto){
 
@@ -54,4 +56,41 @@ public class ProductController {
                 HttpResponseMsg.POST_SUCCESS,
                 responseDto), HttpStatus.CREATED);
     }
+
+    //제품 수정
+    @PutMapping("/api/product/blackbox")
+    public ResponseEntity<ApiResponse<BlackboxResponseDto>> updateBlackbox(@RequestBody BlackboxRequestDto requestDto){
+
+        BlackboxResponseDto responseDto = blackboxService.updateBlackbox(requestDto);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.UPDATE_PRODUCT,
+                responseDto),HttpStatus.OK);
+    }
+
+    @PutMapping("/api/product/ppf")
+    public ResponseEntity<ApiResponse<PpfResponseDto>> updatePpf(@RequestBody PpfRequestDto requestDto){
+
+        PpfResponseDto responseDto = ppfService.updatePpf(requestDto);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.UPDATE_PRODUCT,
+                responseDto),HttpStatus.OK);
+    }
+
+    @PutMapping("/api/product/tinting")
+    public ResponseEntity<ApiResponse<TintingResponseDto>> updateTinting(@RequestBody TintingRequestDto requestDto)
+    {
+        TintingResponseDto responseDto = tintingService.updateTinting(requestDto);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.UPDATE_PRODUCT,
+                responseDto),HttpStatus.OK);
+    }
+
+    //제품 조회
+
 }

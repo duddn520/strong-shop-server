@@ -27,4 +27,13 @@ public class PpfService {
         ppf.updateCompany(company);
         return new PpfResponseDto(ppfRepository.save(ppf));
     }
+
+    @Transactional
+    public PpfResponseDto updatePpf(PpfRequestDto requestDto){
+        System.out.println("request id :"+requestDto.getId());
+        Ppf ppf = ppfRepository.findById(requestDto.getId())
+                .orElseThrow(()-> new IllegalArgumentException());
+        return new PpfResponseDto(ppf.updatePpf(requestDto.toEntity()));
+
+    }
 }

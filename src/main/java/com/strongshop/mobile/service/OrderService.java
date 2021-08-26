@@ -31,23 +31,23 @@ public class OrderService {
 //
 //    }
 
-    @Transactional
-    public Order saveOrderTest(OrderRequestDto requestDto) {
-        //User user = userService.getUserByToken(authentication.getPrincipal());
-        User user = new User(1L, "seungjin");
-        Car car = new Car(1L, user, "12나1234");
-        User user1 = userRepository.save(user);
-        Car car1 = carRepository.save(car);
-
-        var result = requestDto.getTintingOption();
-        System.out.println(result.getPositionFront());
-//        tintingOptionRepository.save(result);
-        requestDto.setUser(user1);
-        requestDto.setCar(car1);
-
-        return orderRepository.save(requestDto.toEntity());
-
-    }
+//    @Transactional
+//    public Order saveOrderTest(OrderRequestDto requestDto) {
+//        //User user = userService.getUserByToken(authentication.getPrincipal());
+//        User user = new User(1L, "seungjin");
+//        Car car = new Car(1L, user, "12나1234");
+//        User user1 = userRepository.save(user);
+//        Car car1 = carRepository.save(car);
+//
+//        var result = requestDto.getTintingOption();
+//        System.out.println(result.getPositionFront());
+////        tintingOptionRepository.save(result);
+//        requestDto.setUser(user1);
+//        requestDto.setCar(car1);
+//
+//        return orderRepository.save(requestDto.toEntity());
+//
+//    }
 
 
 }

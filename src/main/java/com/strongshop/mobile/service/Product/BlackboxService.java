@@ -27,4 +27,11 @@ public class BlackboxService {
         blackbox.updateCompany(company);
         return new BlackboxResponseDto(blackBoxRepository.save(blackbox));
     }
+
+    @Transactional
+    public BlackboxResponseDto updateBlackbox(BlackboxRequestDto requestDto){
+        Blackbox blackbox = blackBoxRepository.findById(requestDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException());
+        return new BlackboxResponseDto(blackbox.updateBlackbox(requestDto.toEntity()));
+    }
 }
