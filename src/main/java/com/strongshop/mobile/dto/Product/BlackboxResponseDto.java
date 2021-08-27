@@ -13,7 +13,7 @@ public class BlackboxResponseDto {
 
     private Long id;
     private String name;
-    private Company company;
+    private Long company_id;
     private String manufacturer;
     private int price;
     private int stockQuantity;
@@ -25,7 +25,7 @@ public class BlackboxResponseDto {
     {
         this.id = blackbox.getId();
         this.name = blackbox.getName();
-        this.company = blackbox.getCompany();
+        this.company_id = blackbox.getCompany().getId();
         this.manufacturer = blackbox.getManufacturer();
         this.price = blackbox.getPrice();
         this.stockQuantity = blackbox.getStockQuantity();

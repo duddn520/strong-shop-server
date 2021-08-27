@@ -13,7 +13,7 @@ public class TintingResponseDto {
 
     private Long id;
     private String name;
-    private Company company;
+    private Long company_id;
     private String manufacturer;
     private int price;
     private int stockQuantity;
@@ -28,7 +28,7 @@ public class TintingResponseDto {
     {
         this.id = tinting.getId();
         this.name = tinting.getName();
-        this.company = tinting.getCompany();
+        this.company_id = tinting.getCompany().getId();
         this.manufacturer = tinting.getManufacturer();
         this.price = tinting.getPrice();
         this.stockQuantity = tinting.getStockQuantity();

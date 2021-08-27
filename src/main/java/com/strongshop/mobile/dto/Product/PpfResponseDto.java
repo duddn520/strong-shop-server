@@ -13,7 +13,7 @@ public class PpfResponseDto {
 
     private Long id;
     private String name;
-    private Company company;
+    private Long company_id;
     private String manufacturer;
     private int price;
     private int stockQuantity;
@@ -23,7 +23,7 @@ public class PpfResponseDto {
     public PpfResponseDto(Ppf ppf){
         this.id = ppf.getId();
         this.name = ppf.getName();
-        this.company = ppf.getCompany();
+        this.company_id = ppf.getCompany().getId();
         this.manufacturer = ppf.getManufacturer();
         this.price = ppf.getPrice();
         this.stockQuantity = ppf.getStockQuantity();
