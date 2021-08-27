@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Entity
 @NoArgsConstructor
@@ -24,11 +22,11 @@ public class Bidding {
     private int totalPrice;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
 
@@ -46,6 +44,15 @@ public class Bidding {
     public void updateOrderCompany(Order order, Company company){
         this.company = company;
         this.order = order;
+    }
+
+    public Bidding updateBidding(Bidding bidding){
+        this.tintingPrice = bidding.getTintingPrice();
+        this.blackboxPrice = bidding.getBlackboxPrice();
+        this.ppfPrice = bidding.getPpfPrice();
+        this.totalPrice = bidding.getTotalPrice();
+
+        return this;
     }
 
 }

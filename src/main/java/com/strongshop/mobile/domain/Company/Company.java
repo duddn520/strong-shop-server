@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -24,11 +25,11 @@ public class Company {
     private String contact; // 연락처
     private String businessNumber; // 사업자번호
 
-    @OneToOne(mappedBy = "company",fetch = FetchType.LAZY)
-    private Bidding bidding;
+    @OneToMany(mappedBy = "company")
+    private List<Bidding> biddings;
 
     @Builder
-    public Company(Long id, String name, String bossName, String address, String detailAddress, String contact, String businessNumber, Bidding bidding) {
+    public Company(Long id, String name, String bossName, String address, String detailAddress, String contact, String businessNumber, List<Bidding> biddings) {
         this.id = id;
         this.name = name;
         this.bossName = bossName;
@@ -36,6 +37,6 @@ public class Company {
         this.detailAddress = detailAddress;
         this.contact = contact;
         this.businessNumber = businessNumber;
-        this.bidding = bidding;
+        this.biddings = biddings;
     }
 }
