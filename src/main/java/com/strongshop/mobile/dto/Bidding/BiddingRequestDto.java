@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 public class BiddingRequestDto {
 
+    private Long id;
     private int tintingPrice;
     private int blackboxPrice;
     private int ppfPrice;

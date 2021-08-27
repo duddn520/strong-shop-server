@@ -19,8 +19,8 @@ public class BiddingResponseDto {
     private int blackboxPrice;
     private int ppfPrice;
     private int totalPrice;
-    private Order order;
-    private Company company;
+    private Long order_id;
+    private Long company_id;
 
     public BiddingResponseDto(Bidding bidding){
         this.id = bidding.getId();
@@ -28,7 +28,7 @@ public class BiddingResponseDto {
         this.blackboxPrice = bidding.getBlackboxPrice();
         this.ppfPrice = bidding.getPpfPrice();
         this.totalPrice = bidding.getTotalPrice();
-        this.order = bidding.getOrder();
-        this.company = bidding.getCompany();
+        this.order_id = bidding.getOrder().getId();
+        this.company_id = bidding.getCompany().getId();
     }
 }

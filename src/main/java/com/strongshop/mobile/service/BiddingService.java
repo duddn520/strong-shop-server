@@ -9,9 +9,11 @@ import com.strongshop.mobile.domain.Order.OrderRepository;
 import com.strongshop.mobile.dto.Bidding.BiddingRequestDto;
 import com.strongshop.mobile.dto.Bidding.BiddingResponseDto;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.pool.TypePool;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,8 +42,26 @@ public class BiddingService {
     }
 
     @Transactional
-    public List<Bidding> findbyOrder(Order order)
-    {
-        return biddingRepository.findAllByOrder(order);
+    public BiddingResponseDto updateBidding(BiddingRequestDto requestDto){
+        Bidding bidding = biddingRepository.findById(requestDto.getId())
+                .orElseThrow(()-> new IllegalArgumentException());
+
+        return new BiddingResponseDto(bidding.updateBidding(requestDto.toEntity()));
+    }
+
+    @Transactional
+    public List<BiddingResponseDto> getBiddingsByCompany(String companyName){
+        Company company = companyRepository.findByName(companyName)
+                .orElseThrow(()-> new IllegalArgumentException());
+
+        List<Bidding> biddings = biddingRepository.findAllByCompany(company)
+                .orElseThrow(()-> new IllegalArgumentException());
+
+        List<BiddingResponseDto> responseDtos = new ArrayList<>();
+        for(Bidding b : biddings) {
+            responseDtos.add(new BiddingResponseDto(b));
+        }
+
+        return responseDtos;
     }
 }
