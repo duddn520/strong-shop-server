@@ -14,7 +14,7 @@ public class Car {
     private Long id;
 
     //유저 매핑필요
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 

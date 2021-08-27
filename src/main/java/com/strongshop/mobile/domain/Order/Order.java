@@ -28,7 +28,7 @@ public class Order extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY) // 여러개의 요청이 하나의 카
+    @OneToOne // 여러개의 요청이 하나의 카
     @JoinColumn(nullable = false) // 매핑할 외래키 이름지정 - company엔티티의 id필드를 외래키로 갖겠다.
     private Car car;
 
