@@ -21,7 +21,6 @@ public class Bidding {
     private int tintingPrice;
     private int blackboxPrice;
     private int ppfPrice;
-
     private int totalPrice;
 
 
