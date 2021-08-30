@@ -8,12 +8,12 @@ import com.strongshop.mobile.service.Product.BlackboxService;
 import com.strongshop.mobile.service.Product.PpfService;
 import com.strongshop.mobile.service.Product.TintingService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -92,5 +92,36 @@ public class ProductController {
     }
 
     //제품 조회
+    @GetMapping("/api/product/blackbox")
+    public ResponseEntity<ApiResponse<List<BlackboxResponseDto>>> getBlackboxesByCompany(@RequestParam("company_id") Long company_id )
+    {
+        List<BlackboxResponseDto> responseDtos = blackboxService.getBlackboxByCompany(company_id);
 
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDtos),HttpStatus.OK);
+    }
+
+    @GetMapping("/api/product/ppf")
+    public ResponseEntity<ApiResponse<List<PpfResponseDto>>> getPpfesByCompany(@RequestParam("company_id") Long company_id )
+    {
+        List<PpfResponseDto> responseDtos = ppfService.getPpfByCompany(company_id);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDtos),HttpStatus.OK);
+    }
+
+    @GetMapping("/api/product/tinting")
+    public ResponseEntity<ApiResponse<List<TintingResponseDto>>> getTintingesByCompany(@RequestParam("company_id") Long company_id )
+    {
+        List<TintingResponseDto> responseDtos = tintingService.getTintingByCompany(company_id);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDtos),HttpStatus.OK);
+    }
 }

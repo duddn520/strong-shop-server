@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -35,5 +37,23 @@ public class PpfService {
                 .orElseThrow(()-> new IllegalArgumentException());
         return new PpfResponseDto(ppf.updatePpf(requestDto.toEntity()));
 
+    }
+
+    @Transactional
+    public List<PpfResponseDto> getPpfByCompany(Long company_id)
+    {
+        Company company = companyRepository.findById(company_id)
+                .orElseThrow(()-> new IllegalArgumentException());
+
+        List<Ppf> Ppfs = ppfRepository.findAllByCompany(company)
+                .orElseThrow(()-> new IllegalArgumentException());
+
+        List<PpfResponseDto> responseDtos = new ArrayList<>();
+        for(Ppf b : Ppfs)
+        {
+            responseDtos.add(new PpfResponseDto(b));
+        }
+
+        return responseDtos;
     }
 }

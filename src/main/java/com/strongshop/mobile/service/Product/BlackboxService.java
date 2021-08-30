@@ -7,9 +7,13 @@ import com.strongshop.mobile.domain.Product.Items.Blackbox;
 import com.strongshop.mobile.dto.Product.BlackboxRequestDto;
 import com.strongshop.mobile.dto.Product.BlackboxResponseDto;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.agent.builder.AgentBuilder;
+import net.bytebuddy.pool.TypePool;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -33,5 +37,23 @@ public class BlackboxService {
         Blackbox blackbox = blackBoxRepository.findById(requestDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException());
         return new BlackboxResponseDto(blackbox.updateBlackbox(requestDto.toEntity()));
+    }
+
+    @Transactional
+    public List<BlackboxResponseDto> getBlackboxByCompany(Long company_id)
+    {
+        Company company = companyRepository.findById(company_id)
+                .orElseThrow(()-> new IllegalArgumentException());
+
+        List<Blackbox> blackboxes = blackBoxRepository.findAllByCompany(company)
+                .orElseThrow(()-> new IllegalArgumentException());
+
+        List<BlackboxResponseDto> responseDtos = new ArrayList<>();
+        for(Blackbox b : blackboxes)
+        {
+            responseDtos.add(new BlackboxResponseDto(b));
+        }
+
+        return responseDtos;
     }
 }
