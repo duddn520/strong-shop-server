@@ -41,7 +41,7 @@ public class BiddingController {
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
-                HttpResponseMsg.UPDATE_BIDDING,
+                HttpResponseMsg.UPDATE_SUCCESS,
                 responseDto), HttpStatus.OK);
     }
 

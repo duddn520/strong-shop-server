@@ -65,7 +65,7 @@ public class ProductController {
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
-                HttpResponseMsg.UPDATE_PRODUCT,
+                HttpResponseMsg.UPDATE_SUCCESS,
                 responseDto),HttpStatus.OK);
     }
 
@@ -76,7 +76,7 @@ public class ProductController {
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
-                HttpResponseMsg.UPDATE_PRODUCT,
+                HttpResponseMsg.UPDATE_SUCCESS,
                 responseDto),HttpStatus.OK);
     }
 
@@ -87,7 +87,7 @@ public class ProductController {
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
-                HttpResponseMsg.UPDATE_PRODUCT,
+                HttpResponseMsg.UPDATE_SUCCESS,
                 responseDto),HttpStatus.OK);
     }
 

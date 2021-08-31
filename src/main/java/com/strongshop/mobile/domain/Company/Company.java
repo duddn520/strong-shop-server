@@ -39,4 +39,16 @@ public class Company {
         this.businessNumber = businessNumber;
         this.biddings = biddings;
     }
+
+    public Company updateCompany(Company company)
+    {
+        this.name = company.getName();
+        this.bossName = company.getBossName();
+        this.address = company.getAddress();
+        this.detailAddress = company.getDetailAddress();
+        this.contact = company.getContact();
+        this.businessNumber = company.getBusinessNumber();
+
+        return this;
+    }
 }

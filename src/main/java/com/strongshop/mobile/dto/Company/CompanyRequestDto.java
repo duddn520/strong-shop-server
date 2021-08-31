@@ -1,13 +1,16 @@
 package com.strongshop.mobile.dto.Company;
 
 import com.strongshop.mobile.domain.Company.Company;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
 @Setter
+@Getter
 public class CompanyRequestDto {
 
+    private Long id;
     private String name; // 회사명
     private String bossName; // 대표자성명
     private String address; // 주소
