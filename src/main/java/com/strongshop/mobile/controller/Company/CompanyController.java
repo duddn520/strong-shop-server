@@ -1,11 +1,11 @@
-package com.strongshop.mobile.controller;
+package com.strongshop.mobile.controller.Company;
 
 import com.strongshop.mobile.dto.Company.CompanyRequestDto;
 import com.strongshop.mobile.dto.Company.CompanyResponseDto;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
-import com.strongshop.mobile.service.CompanyService;
+import com.strongshop.mobile.service.Company.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

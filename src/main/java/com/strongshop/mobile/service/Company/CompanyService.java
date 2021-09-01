@@ -1,4 +1,4 @@
-package com.strongshop.mobile.service;
+package com.strongshop.mobile.service.Company;
 
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;

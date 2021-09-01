@@ -30,10 +30,10 @@ public class BiddingService {
     @Transactional
     public BiddingResponseDto registerBidding(BiddingRequestDto requestDto){
         Bidding bidding = requestDto.toEntity();
-        Order order = orderRepository.findById(requestDto.getOrder_pk())
+        Order order = orderRepository.findById(requestDto.getOrder_id())
                 .orElseThrow(()-> new IllegalArgumentException());
 
-        Company company = companyRepository.findById(requestDto.getCompany_pk())
+        Company company = companyRepository.findById(requestDto.getCompany_id())
                 .orElseThrow(()-> new IllegalArgumentException());
 
         bidding.updateOrderCompany(order,company);

@@ -17,8 +17,8 @@ public class BiddingRequestDto {
 
     private int totalPrice;
 
-    private Long order_pk;
-    private Long company_pk;
+    private Long order_id;
+    private Long company_id;
 
 
     public Bidding toEntity(){
