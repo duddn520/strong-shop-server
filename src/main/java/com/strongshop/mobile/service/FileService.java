@@ -2,6 +2,10 @@ package com.strongshop.mobile.service;
 
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
+import com.strongshop.mobile.domain.Gallary.Gallary;
+import com.strongshop.mobile.domain.Gallary.GallaryImage;
+import com.strongshop.mobile.domain.Gallary.GallaryImageRepository;
+import com.strongshop.mobile.domain.Gallary.GallaryRepository;
 import com.strongshop.mobile.domain.Image.CompanyImage;
 import com.strongshop.mobile.domain.Image.CompanyImageRepository;
 import com.strongshop.mobile.dto.File.CompanyImageRequestDto;
@@ -27,25 +31,25 @@ import java.util.UUID;
 @Service
 public class FileService {
 
-    private final CompanyImageRepository companyImageRepository;
-    private final CompanyRepository companyRepository;
+    private final GallaryRepository gallaryRepository;
+    private final GallaryImageRepository gallaryImageRepository;
 
     private String getRandomString(){
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
     // MultipartFile[]타입의 files에는 업로드할 파일의 정보가 담겨있음
-    public List<FileResponseDto> uploadFiles(List<MultipartFile> files, Long companyId) {
+    public void uploadFilesToGallary(List<MultipartFile> files, Long gallaryId) {
 
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new CompanyNotFoundException(companyId));
+        Gallary gallary = gallaryRepository.findById(gallaryId)
+                .orElseThrow(() -> new CompanyNotFoundException(gallaryId));
 
         //업로드 파일 정보를 담을 비어있는 리스트 수정수정 랼랄라
-        List<FileResponseDto> attachList = new ArrayList<>();
+//        List<FileResponseDto> attachList = new ArrayList<>();
 
         // 파일이 비어있으면 비어있는 리스트 반환
         if (files.isEmpty()){
-            return attachList;
+            return ;
         }
 
         // 여기다가 저장할것임!!!
@@ -66,45 +70,45 @@ public class FileService {
                 file.transferTo(target);
 
                 // 제네릭으로 런타임에 타입지정
-                FileRequestDto<Company> fileRequestDto = FileRequestDto.<Company>builder()
-                        .t(company)
+                FileRequestDto<Gallary> fileRequestDto = FileRequestDto.<Gallary>builder()
+                        .t(gallary)
                         .origFilename(file.getOriginalFilename())
                         .filename(saveName)
                         .filepath(path)
                         .build();
 
 
-                CompanyImage entity = companyImageRepository.save(fileRequestDto.toCompanyImage());
+                GallaryImage entity = gallaryImageRepository.save(fileRequestDto.toGallaryImage());
 
                 log.info("File save complete...");
                 log.info(entity.getFilepath());
                 log.info(entity.getFilename());
                 // 파일 정보 추가
-                attachList.add(FileResponseDto.builder()
-                                    .id(entity.getId())
-                                    .realationId(entity.getCompany().getId())
-                                    .filename(entity.getFilename())
-                                    .origFilename(entity.getOrigFilename())
-                                    .filepath(entity.getFilepath())
-                                    .build());
+//                attachList.add(FileResponseDto.builder()
+//                                    .id(entity.getId())
+//                                    .realationId(entity.getGallary().getId())
+//                                    .filename(entity.getFilename())
+//                                    .origFilename(entity.getOrigFilename())
+//                                    .filepath(entity.getFilepath())
+//                                    .build());
 
             } catch (Exception e) {
                 throw new AttachFileException("[" + file.getOriginalFilename() + "] failed to save file...");
             }
         }
         // 파일정보를 담은 리스트 반환
-        return attachList;
+//        return attachList;
     }
 
     @Transactional
-    public List<FileResponseDto> getFile(Long companyId) {
-        List<CompanyImage> imageList = companyImageRepository.findAllByCompanyId(companyId);
+    public List<FileResponseDto> getGallaryFiles(Long gallaryId) {
+        List<GallaryImage> imageList = gallaryImageRepository.findAllByGallaryId(gallaryId);
         List<FileResponseDto> fileDtoList = new ArrayList<>();
 
-        for (CompanyImage image : imageList) {
+        for (GallaryImage image : imageList) {
             FileResponseDto responseDto = FileResponseDto.builder()
                     .id(image.getId())
-                    .realationId(image.getCompany().getId())
+                    .realationId(image.getGallary().getId())
                     .filename(image.getFilename())
                     .filepath(image.getFilepath())
                     .origFilename(image.getOrigFilename())
@@ -117,6 +121,6 @@ public class FileService {
 
     @Transactional
     public void deleteFile(Long fileId){
-        companyImageRepository.deleteById(fileId);
+        gallaryImageRepository.deleteById(fileId);
     }
 }

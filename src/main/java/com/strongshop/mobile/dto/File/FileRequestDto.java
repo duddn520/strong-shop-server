@@ -1,7 +1,7 @@
 package com.strongshop.mobile.dto.File;
 
-import com.strongshop.mobile.domain.Company.Company;
-import com.strongshop.mobile.domain.Image.CompanyImage;
+import com.strongshop.mobile.domain.Gallary.Gallary;
+import com.strongshop.mobile.domain.Gallary.GallaryImage;
 import lombok.Builder;
 
 public class FileRequestDto<T> {
@@ -19,13 +19,16 @@ public class FileRequestDto<T> {
         this.filepath = filepath;
     }
 
-    public CompanyImage toCompanyImage() {
-        return CompanyImage.builder()
-                .company((Company) relationEntity)
-                .filename(filename)
+    public GallaryImage toGallaryImage() {
+        return GallaryImage.builder()
+                .gallary((Gallary) relationEntity)
                 .origFilename(origFilename)
                 .filename(filename)
                 .filepath(filepath)
                 .build();
     }
+
+//    public ReviewImage toReviewImage(){
+//
+//    }
 }
