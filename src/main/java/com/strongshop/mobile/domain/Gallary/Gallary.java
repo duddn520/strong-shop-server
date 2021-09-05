@@ -20,7 +20,6 @@ public class Gallary extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @Column(name = "company_id")
     private Company company;
 
     private String content;
