@@ -2,6 +2,8 @@ package com.strongshop.mobile.dto.File;
 
 import com.strongshop.mobile.domain.Gallary.Gallary;
 import com.strongshop.mobile.domain.Gallary.GallaryImage;
+import com.strongshop.mobile.domain.Review.Review;
+import com.strongshop.mobile.domain.Review.ReviewImage;
 import lombok.Builder;
 
 public class FileRequestDto<T> {
@@ -28,7 +30,12 @@ public class FileRequestDto<T> {
                 .build();
     }
 
-//    public ReviewImage toReviewImage(){
-//
-//    }
+    public ReviewImage toReviewImage(){
+        return ReviewImage.builder()
+                .review((Review) relationEntity)
+                .origFilename(origFilename)
+                .filename(filename)
+                .filepath(filepath)
+                .build();
+    }
 }

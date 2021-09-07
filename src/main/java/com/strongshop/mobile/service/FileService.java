@@ -1,15 +1,13 @@
 package com.strongshop.mobile.service;
 
-import com.strongshop.mobile.domain.Company.Company;
-import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.Gallary.Gallary;
 import com.strongshop.mobile.domain.Gallary.GallaryImage;
 import com.strongshop.mobile.domain.Gallary.GallaryImageRepository;
 import com.strongshop.mobile.domain.Gallary.GallaryRepository;
-import com.strongshop.mobile.domain.Image.CompanyImage;
-import com.strongshop.mobile.domain.Image.CompanyImageRepository;
-import com.strongshop.mobile.dto.File.CompanyImageRequestDto;
-import com.strongshop.mobile.dto.File.CompanyImageResponseDto;
+import com.strongshop.mobile.domain.Review.Review;
+import com.strongshop.mobile.domain.Review.ReviewImage;
+import com.strongshop.mobile.domain.Review.ReviewImageRepository;
+import com.strongshop.mobile.domain.Review.ReviewRepository;
 import com.strongshop.mobile.dto.File.FileRequestDto;
 import com.strongshop.mobile.dto.File.FileResponseDto;
 import com.strongshop.mobile.exception.AttachFileException;
@@ -23,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Slf4j
@@ -33,6 +30,8 @@ public class FileService {
 
     private final GallaryRepository gallaryRepository;
     private final GallaryImageRepository gallaryImageRepository;
+    private final ReviewRepository reviewRepository;
+    private final ReviewImageRepository reviewImageRepository;
 
     private String getRandomString(){
         return UUID.randomUUID().toString().replaceAll("-", "");
@@ -44,17 +43,13 @@ public class FileService {
         Gallary gallary = gallaryRepository.findById(gallaryId)
                 .orElseThrow(() -> new CompanyNotFoundException(gallaryId));
 
-        //업로드 파일 정보를 담을 비어있는 리스트 수정수정 랼랄라
-//        List<FileResponseDto> attachList = new ArrayList<>();
-
-        // 파일이 비어있으면 비어있는 리스트 반환
         if (files.isEmpty()){
             return ;
         }
 
         // 여기다가 저장할것임!!!
         // local_path
-        String path = "/usr/local/etc/nginx/images";
+        String path = "/Users/youngwoo/test";
         // ec2_path
         //String path = "/etc/nginx/images";
 
@@ -79,25 +74,16 @@ public class FileService {
 
 
                 GallaryImage entity = gallaryImageRepository.save(fileRequestDto.toGallaryImage());
+                gallary.getGallaryImages().add(entity);
 
                 log.info("File save complete...");
                 log.info(entity.getFilepath());
                 log.info(entity.getFilename());
-                // 파일 정보 추가
-//                attachList.add(FileResponseDto.builder()
-//                                    .id(entity.getId())
-//                                    .realationId(entity.getGallary().getId())
-//                                    .filename(entity.getFilename())
-//                                    .origFilename(entity.getOrigFilename())
-//                                    .filepath(entity.getFilepath())
-//                                    .build());
-
             } catch (Exception e) {
                 throw new AttachFileException("[" + file.getOriginalFilename() + "] failed to save file...");
+//                System.out.println(e.getMessage());
             }
         }
-        // 파일정보를 담은 리스트 반환
-//        return attachList;
     }
 
     @Transactional
@@ -120,7 +106,81 @@ public class FileService {
     }
 
     @Transactional
-    public void deleteFile(Long fileId){
-        gallaryImageRepository.deleteById(fileId);
+    public void deleteGallaryImage(Long ImageId){
+        gallaryImageRepository.deleteById(ImageId);
+    }
+
+    @Transactional
+    public void uploadFilesToReview(List<MultipartFile> files, Long reviewId) {
+
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException());
+
+        if (files.isEmpty()){
+            return ;
+        }
+
+        // 여기다가 저장할것임!!!
+        // local_path
+        String path = "/Users/youngwoo/test";
+        // ec2_path
+        //String path = "/etc/nginx/images";
+
+        // 파일 개수만큼 forEach실행
+        for (MultipartFile file : files) {
+            try {
+                final String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+                final String saveName = getRandomString() + "." + extension;
+
+                java.io.File target = new java.io.File(path, saveName);
+
+                // 물리적으로 파일을 생성
+                file.transferTo(target);
+
+                // 제네릭으로 런타임에 타입지정
+                FileRequestDto<Review> fileRequestDto = FileRequestDto.<Review>builder()
+                        .t(review)
+                        .origFilename(file.getOriginalFilename())
+                        .filename(saveName)
+                        .filepath(path)
+                        .build();
+
+
+                ReviewImage entity = reviewImageRepository.save(fileRequestDto.toReviewImage());
+                review.getReviewImages().add(entity);
+
+                log.info("File save complete...");
+                log.info(entity.getFilepath());
+                log.info(entity.getFilename());
+            } catch (Exception e) {
+                throw new AttachFileException("[" + file.getOriginalFilename() + "] failed to save file...");
+//                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+
+    @Transactional
+    public List<FileResponseDto> getReviewFiles(Long reviewId) {
+        List<ReviewImage> imageList = reviewImageRepository.findAllByReviewId(reviewId);
+        List<FileResponseDto> fileDtoList = new ArrayList<>();
+
+        for (ReviewImage image : imageList) {
+            FileResponseDto responseDto = FileResponseDto.builder()
+                    .id(image.getId())
+                    .realationId(image.getReview().getId())
+                    .filename(image.getFilename())
+                    .filepath(image.getFilepath())
+                    .origFilename(image.getOrigFilename())
+                    .build();
+
+            fileDtoList.add(responseDto);
+        }
+        return fileDtoList;
+    }
+
+    @Transactional
+    public void deleteReviewImage(Long ImageId){
+        reviewImageRepository.deleteById(ImageId);
     }
 }

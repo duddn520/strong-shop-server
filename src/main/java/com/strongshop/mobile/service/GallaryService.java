@@ -8,6 +8,7 @@ import com.strongshop.mobile.domain.Gallary.GallaryRepository;
 import com.strongshop.mobile.dto.Gallary.GallaryRequestDto;
 import com.strongshop.mobile.dto.Gallary.GallaryResponseDto;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.pool.TypePool;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ public class GallaryService {
         Gallary gallary = requestDto.toEntity();
         gallary.updateCompany(company);
 
-        return new GallaryResponseDto(gallary);
+        return new GallaryResponseDto(gallaryRepository.save(gallary));
     }
 
     @Transactional
@@ -39,5 +40,14 @@ public class GallaryService {
         gallaries = gallaryRepository.findAllByCompanyIdOrderByCreatedTimeDesc(company.getId());
 
         return gallaries;
+    }
+
+    @Transactional
+    public GallaryResponseDto refreshResponseDto(Long gallary_id)
+    {
+        Gallary gallary = gallaryRepository.findById(gallary_id)
+                .orElseThrow(()->new IllegalArgumentException());
+
+        return new GallaryResponseDto(gallary);
     }
 }

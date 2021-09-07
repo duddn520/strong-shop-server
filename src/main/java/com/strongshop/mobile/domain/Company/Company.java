@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,7 +27,7 @@ public class Company {
     private String businessNumber; // 사업자번호
 
     @OneToMany(mappedBy = "company")
-    private List<Bidding> biddings;
+    private List<Bidding> biddings = new ArrayList<>();
 
     @Builder
     public Company(Long id, String name, String bossName, String address, String detailAddress, String contact, String businessNumber, List<Bidding> biddings) {

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,7 +26,7 @@ public class Gallary extends BaseEntity {
     private String content;
 
     @OneToMany(mappedBy = "gallary",cascade = CascadeType.ALL, orphanRemoval = true) //gallaryimage 엔티티의 변경 시 자동으로 구성 내용 변경(cascade), gallary 삭제시 연관된 gallaryimage 삭제(orphanremoval)
-    private List<GallaryImage> gallaryImages;
+    private List<GallaryImage> gallaryImages = new ArrayList<>();
 
     @Builder
     public Gallary(Company company, String content, List<GallaryImage> gallaryImages)

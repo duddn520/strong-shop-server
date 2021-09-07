@@ -31,13 +31,14 @@ public class GallaryController {
     private final CompanyRepository companyRepository;
 
     @PostMapping("/api/{company_id}/gallary")
-    public ResponseEntity<ApiResponse<GallaryResponseDto>> registerGallaryContent(@RequestParam("files") List<MultipartFile> files, @RequestBody GallaryRequestDto requestDto,@PathVariable Long company_id)
+    public ResponseEntity<ApiResponse<GallaryResponseDto>> registerGallaryContent(@RequestParam("files") List<MultipartFile> files, GallaryRequestDto requestDto,@PathVariable Long company_id)
     {
         requestDto.setCompany_id(company_id);
         GallaryResponseDto responseDto = gallaryService.registerGallary(requestDto);
         Long gallary_id = responseDto.getId();
 
         fileService.uploadFilesToGallary(files,gallary_id);
+        responseDto = gallaryService.refreshResponseDto(gallary_id);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,

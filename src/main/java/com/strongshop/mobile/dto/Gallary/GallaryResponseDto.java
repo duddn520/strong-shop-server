@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -16,14 +17,15 @@ public class GallaryResponseDto {
     private Long id;
     private Long company_id;
     private String content;
-    private List<GallaryImage> gallaryImages;
+    private List<Long> gallaryImagesId = new ArrayList<>();
     private LocalDateTime createdTime;
 
     public GallaryResponseDto (Gallary gallary){
         this.id = gallary.getId();
         this.company_id = gallary.getCompany().getId();
         this.content = gallary.getContent();
-        this.gallaryImages = gallary.getGallaryImages();
+        for(GallaryImage gi : gallary.getGallaryImages())
+            gallaryImagesId.add(gi.getId());
         this.createdTime = gallary.getCreatedTime();
     }
 }
