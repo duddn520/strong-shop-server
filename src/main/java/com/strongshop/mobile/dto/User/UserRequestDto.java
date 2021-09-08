@@ -14,17 +14,28 @@ import java.time.LocalDate;
 public class UserRequestDto {
 
     private Long id;
-    private String realName;
-    private String userName;
-    private String phoneNumber;
+    private String realName;    //사용자
+    private String email;   //카카오
+    private String userName;  //사용자
+    private String phoneNumber; //사용자
+    private String profileImage; // 카카오
+    private String thumbnailImage;  //카카오
+    private String gender;  //카카오
+    private String refreshToken; //카카오
     private LocalDate birth;
 
     @Builder
-    public UserRequestDto(Long id, String realName, String userName, String phoneNumber, LocalDate birth) {
+    public UserRequestDto(Long id, String realName,String email, String userName, String phoneNumber, String profileImage, String thumbnailImage, String gender
+                          , String refreshToken, LocalDate birth) {
         this.id = id;
         this.realName = realName;
+        this.email = email;
         this.userName = userName;
         this.phoneNumber = phoneNumber;
+        this.profileImage = profileImage;
+        this.thumbnailImage = thumbnailImage;
+        this.gender = gender;
+        this.refreshToken = refreshToken;
         this.birth = birth;
     }
 }
