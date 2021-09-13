@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+
+//OAuth2UserService -> OAuth2 콜백 결과가 성공이고, auth code 포함한다면, accesstoken에 대한 authoriztion code 교환 및 OAuth2UserService 호출.
 @Slf4j
 @Service
 public class StrongShopOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {

@@ -15,8 +15,9 @@ public class OAuth2Attribute {
     private Map<String, Object> attributes;
     private String attributeKey;
     private String email;
-    private String name;
-    private String picture;
+    private String nickname;
+    private String profileImage;
+    private String thumbnailImage;
 
     static OAuth2Attribute of(String provider, String attributeKey, Map<String, Object> attributes){
         switch (provider){
@@ -31,9 +32,10 @@ public class OAuth2Attribute {
         Map<String,Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
 
         return OAuth2Attribute.builder()
-                .name((String) kakaoProfile.get("nickname"))
+                .nickname((String) kakaoProfile.get("nickname"))
                 .email((String) kakaoAccount.get("email"))
-                .picture((String) kakaoProfile.get("profile_image_url"))
+                .profileImage((String) kakaoProfile.get("profile_image_url"))
+                .thumbnailImage((String) kakaoProfile.get("thumbnail_image_url"))
                 .attributes(kakaoAccount)
                 .attributeKey(attributeKey)
                 .build();
@@ -43,9 +45,10 @@ public class OAuth2Attribute {
         Map<String,Object> map = new HashMap<>();
         map.put("id",attributeKey);
         map.put("key",attributeKey);
-        map.put("name",name);
+        map.put("nickname",nickname);
         map.put("email",email);
-        map.put("picture",picture);
+        map.put("profile_image",profileImage);
+        map.put("thumbnail_image",thumbnailImage);
         return map;
     }
 }
