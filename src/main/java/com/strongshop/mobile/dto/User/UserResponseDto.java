@@ -15,7 +15,7 @@ public class UserResponseDto {
     private Long id;
     private String realName;    //사용자
     private String email;   //카카오
-    private String username;  //사용자
+    private String nickname;  //사용자
     private String phoneNumber; //사용자
     private String profileImage; // 카카오
     private String thumbnailImage;  //카카오
@@ -29,7 +29,7 @@ public class UserResponseDto {
         this.id = user.getId();
         this.realName = user.getRealName();
         this.email = user.getEmail();
-        this.username = user.getUsername();
+        this.nickname = user.getNickname();
         this.phoneNumber = user.getPhoneNumber();
         this.profileImage = user.getProfileImage();
         this.thumbnailImage = user.getThumbnailImage();

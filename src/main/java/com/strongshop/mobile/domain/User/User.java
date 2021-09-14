@@ -14,7 +14,7 @@ import java.util.Collection;
 @Getter
 @NoArgsConstructor
 @Entity
-public class User implements UserDetails {
+public class User {
 
     @Id
     // 카카오에서 받은 고유ID로 PK설정할것이므로 자동전략 사용하지 않는다.
@@ -22,7 +22,7 @@ public class User implements UserDetails {
 
     private String realName;    //사용자
     private String email;   //카카오
-    private String userName;  //사용자
+    private String nickname;  //사용자
     private String phoneNumber; //사용자
     private String profileImage; // 카카오
     private String thumbnailImage;  //카카오
@@ -35,11 +35,11 @@ public class User implements UserDetails {
         this.realName = realName;
     }
     @Builder
-    public User(Long id, String realName, String email, String userName, String phoneNumber, String profileImage, String thumbnailImage, String gender, String refreshToken, LocalDate birth) {
+    public User(Long id, String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, String refreshToken, LocalDate birth) {
         this.id = id;
         this.realName = realName;
         this.email = email;
-        this.userName = userName;
+        this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.profileImage = profileImage;
         this.thumbnailImage = thumbnailImage;
@@ -50,46 +50,11 @@ public class User implements UserDetails {
     }
 
     public User update(UserRequestDto requestDto) {
-        this.realName = requestDto.getRealName();
-        this.userName = requestDto.getUserName();
+        this.realName = requestDto.getRealname();
+        this.nickname = requestDto.getNickname();
         this.phoneNumber = requestDto.getPhoneNumber();
         this.birth = requestDto.getBirth();
 
         return this;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
     }
 }

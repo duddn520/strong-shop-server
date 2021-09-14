@@ -1,5 +1,6 @@
 package com.strongshop.mobile.dto.User;
 
+import com.strongshop.mobile.domain.User.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +15,9 @@ import java.time.LocalDate;
 public class UserRequestDto {
 
     private Long id;
-    private String realName;    //사용자
+    private String realname;    //사용자
     private String email;   //카카오
-    private String userName;  //사용자
+    private String nickname;  //카카오
     private String phoneNumber; //사용자
     private String profileImage; // 카카오
     private String thumbnailImage;  //카카오
@@ -25,17 +26,27 @@ public class UserRequestDto {
     private LocalDate birth;
 
     @Builder
-    public UserRequestDto(Long id, String realName,String email, String userName, String phoneNumber, String profileImage, String thumbnailImage, String gender
+    public UserRequestDto(Long id, String realname,String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender
                           , String refreshToken, LocalDate birth) {
         this.id = id;
-        this.realName = realName;
+        this.realname = realname;
         this.email = email;
-        this.userName = userName;
+        this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.profileImage = profileImage;
         this.thumbnailImage = thumbnailImage;
         this.gender = gender;
         this.refreshToken = refreshToken;
         this.birth = birth;
+    }
+
+    public User toEntity(){
+        return User.builder()
+                .id(id)
+                .nickname(nickname)
+                .email(email)
+                .profileImage(profileImage)
+                .thumbnailImage(thumbnailImage)
+                .build();
     }
 }

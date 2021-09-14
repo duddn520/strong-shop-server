@@ -2,8 +2,10 @@ package com.strongshop.mobile.OAuth2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.strongshop.mobile.dto.User.UserRequestDto;
+import com.strongshop.mobile.dto.User.UserResponseDto;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.service.TokenService;
+import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -19,6 +21,7 @@ import java.io.IOException;
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final TokenService tokenService;
+    private final UserService userService;
     private final UserRequestMapper userRequestMapper;
     private final ObjectMapper objectMapper;
 
@@ -29,6 +32,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         UserRequestDto requestDto = userRequestMapper.toRequestDto(oAuth2User);
 
         //최초로그인 -> 회원가입.
+        UserResponseDto responseDto = userService.registerUser(requestDto);
 
         Token token = tokenService.generateToken(requestDto.getEmail(),"USER");
         writeTokenResponse(response,token);
