@@ -1,5 +1,6 @@
 package com.strongshop.mobile.OAuth2;
 
+import com.strongshop.mobile.domain.User.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,4 +52,5 @@ public class OAuth2Attribute {
         map.put("thumbnail_image",thumbnailImage);
         return map;
     }
+
 }

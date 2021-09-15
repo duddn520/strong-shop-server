@@ -1,5 +1,8 @@
 package com.strongshop.mobile.OAuth2;
 
+import com.strongshop.mobile.domain.User.User;
+import com.strongshop.mobile.domain.User.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -16,7 +19,9 @@ import java.util.Collections;
 //OAuth2UserService -> OAuth2 콜백 결과가 성공이고, auth code 포함한다면, accesstoken에 대한 authoriztion code 교환 및 OAuth2UserService 호출.
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class StrongShopOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
@@ -39,4 +44,7 @@ public class StrongShopOAuth2UserService implements OAuth2UserService<OAuth2User
                 memberAttribute,"email");
 
     }
+
+
+
 }

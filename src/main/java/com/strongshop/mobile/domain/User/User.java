@@ -30,10 +30,15 @@ public class User {
     private String refreshToken; //카카오
     private LocalDate birth;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+
     public User(Long id, String realName) {
         this.id = id;
         this.realName = realName;
     }
+
     @Builder
     public User(Long id, String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, String refreshToken, LocalDate birth) {
         this.id = id;

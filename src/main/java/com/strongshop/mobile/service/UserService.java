@@ -31,7 +31,15 @@ public class UserService {
     @Transactional
     public UserResponseDto registerUser(UserRequestDto requestDto)
     {
+        User user = userRepository.findByEmail(requestDto.getEmail())
+                .orElse(User.builder()
+                        .id(requestDto.getId())
+                        .nickname(requestDto.getNickname())
+                        .email(requestDto.getEmail())
+                        .profileImage(requestDto.getProfileImage())
+                        .thumbnailImage(requestDto.getThumbnailImage())
+                        .build());
 
-        return new UserResponseDto(userRepository.save(requestDto.toEntity()));
+        return new UserResponseDto(userRepository.save(user));
     }
 }

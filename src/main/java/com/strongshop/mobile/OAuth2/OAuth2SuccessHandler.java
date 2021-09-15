@@ -3,7 +3,6 @@ package com.strongshop.mobile.OAuth2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.strongshop.mobile.dto.User.UserRequestDto;
 import com.strongshop.mobile.dto.User.UserResponseDto;
-import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.service.TokenService;
 import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +34,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         UserResponseDto responseDto = userService.registerUser(requestDto);
 
         Token token = tokenService.generateToken(requestDto.getEmail(),"USER");
+        //response에 토큰 담겨서 반환.
         writeTokenResponse(response,token);
     }
 
