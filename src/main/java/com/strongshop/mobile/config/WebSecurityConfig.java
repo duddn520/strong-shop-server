@@ -52,10 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .logoutSuccessUrl("/")
                 .and()
                     .oauth2Login()
-                .userInfoEndpoint()
-                        .userService(strongShopOAuth2UserService)
-                .and()
-                .successHandler(oAuth2SuccessHandler);
+                        .successHandler(oAuth2SuccessHandler)
+                        .userInfoEndpoint().userService(strongShopOAuth2UserService);
 
     }
 }
