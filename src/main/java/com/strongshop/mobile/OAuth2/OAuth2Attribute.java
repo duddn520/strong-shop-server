@@ -14,6 +14,7 @@ import java.util.Map;
 @Builder(access = AccessLevel.PRIVATE)
 public class OAuth2Attribute {
     private Map<String, Object> attributes;
+    private Long id;
     private String attributeKey;
     private String email;
     private String nickname;
@@ -33,6 +34,7 @@ public class OAuth2Attribute {
         Map<String,Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
 
         return OAuth2Attribute.builder()
+                .id(new Long((int) attributes.get("id")))
                 .nickname((String) kakaoProfile.get("nickname"))
                 .email((String) kakaoAccount.get("email"))
                 .profileImage((String) kakaoProfile.get("profile_image_url"))
@@ -44,7 +46,7 @@ public class OAuth2Attribute {
 
     Map<String, Object> convertToMap(){
         Map<String,Object> map = new HashMap<>();
-        map.put("id",attributeKey);
+        map.put("id",id);
         map.put("key",attributeKey);
         map.put("nickname",nickname);
         map.put("email",email);

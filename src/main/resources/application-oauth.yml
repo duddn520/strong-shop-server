@@ -10,6 +10,8 @@ spring:
             client-authentication-method: POST
             client-name: Kakao
             scope:
+              - profile_nickname
+              - profile_image
               - account_email
           naver:
             client-id: <your id>
