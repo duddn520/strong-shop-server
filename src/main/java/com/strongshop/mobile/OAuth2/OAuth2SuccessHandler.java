@@ -28,12 +28,15 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        System.out.println("authentication = " + authentication);
         UserRequestDto requestDto = userRequestMapper.toRequestDto(oAuth2User);
 
-        //최초로그인 -> 회원가입.
-        UserResponseDto responseDto = userService.registerUser(requestDto);
+        Token token = tokenService.generateToken(requestDto.getEmail(),"USER");         //jwt발급
 
-        Token token = tokenService.generateToken(requestDto.getEmail(),"USER");
+        requestDto.updateRefreshToken(token);               //requestDto에 리프레쉬토큰 정보 담기
+        //최초로그인 -> 회원가입. 기존회원 -> 업데이트.
+        userService.registerUser(requestDto);
+
         //response에 토큰 담겨서 반환.
         writeTokenResponse(response,token);
     }

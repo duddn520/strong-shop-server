@@ -16,8 +16,8 @@ public class UserRequestMapper {
                 .id((Long) attributes.get("id"))
                 .nickname((String) attributes.get("nickname"))
                 .email((String) attributes.get("email"))
-                .profileImage((String) attributes.get("profile_image_url"))
-                .thumbnailImage((String) attributes.get("thumbnail_image_url"))
+                .profileImage((String) attributes.get("profile_image"))
+                .thumbnailImage((String) attributes.get("thumbnail_image"))
                 .build();
 
     }

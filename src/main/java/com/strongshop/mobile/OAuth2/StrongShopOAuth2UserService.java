@@ -47,7 +47,4 @@ public class StrongShopOAuth2UserService implements OAuth2UserService<OAuth2User
                 memberAttribute,"email");
 
     }
-
-
-
 }

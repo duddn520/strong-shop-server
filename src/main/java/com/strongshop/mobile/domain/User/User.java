@@ -1,5 +1,6 @@
 package com.strongshop.mobile.domain.User;
 
+import com.strongshop.mobile.dto.User.UserDto;
 import com.strongshop.mobile.dto.User.UserRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,9 +31,6 @@ public class User {
     private String refreshToken; //카카오
     private LocalDate birth;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
 
     public User(Long id, String realName) {
         this.id = id;
@@ -40,7 +38,7 @@ public class User {
     }
 
     @Builder
-    public User(Long id, String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, String refreshToken, LocalDate birth) {
+    public User(Long id, String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, String refreshToken, LocalDate birth, Role role) {
         this.id = id;
         this.realName = realName;
         this.email = email;
@@ -54,12 +52,28 @@ public class User {
 
     }
 
-    public User update(UserRequestDto requestDto) {
-        this.realName = requestDto.getRealname();
+    public User updateUser(UserRequestDto requestDto) {
+        this.id = requestDto.getId();
         this.nickname = requestDto.getNickname();
-        this.phoneNumber = requestDto.getPhoneNumber();
-        this.birth = requestDto.getBirth();
-
+        this.email = requestDto.getEmail();
+        this.profileImage = requestDto.getProfileImage();
+        this.thumbnailImage = requestDto.getThumbnailImage();
+        this.refreshToken = requestDto.getRefreshToken();
         return this;
+    }
+
+    public UserDto toUserDto(){
+        return UserDto.builder()
+                .id(id)
+                .realName(realName)
+                .email(email)
+                .nickname(nickname)
+                .profileImage(profileImage)
+                .phoneNumber(phoneNumber)
+                .thumbnailImage(thumbnailImage)
+                .gender(gender)
+                .refreshToken(refreshToken)
+                .birth(birth)
+                .build();
     }
 }

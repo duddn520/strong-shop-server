@@ -1,10 +1,13 @@
 package com.strongshop.mobile.service;
 
 import com.strongshop.mobile.OAuth2.Token;
+import com.strongshop.mobile.domain.User.User;
+import com.strongshop.mobile.domain.User.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -12,7 +15,10 @@ import java.util.Base64;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class TokenService {
+
+    private final UserRepository userRepository;
     private String secretKey = "strong-shop";
 
     @PostConstruct

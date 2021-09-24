@@ -31,15 +31,17 @@ public class UserService {
     @Transactional
     public UserResponseDto registerUser(UserRequestDto requestDto)
     {
-        User user = userRepository.findByEmail(requestDto.getEmail())
-                .orElse(User.builder()
-                        .id(requestDto.getId())
-                        .nickname(requestDto.getNickname())
-                        .email(requestDto.getEmail())
-                        .profileImage(requestDto.getProfileImage())
-                        .thumbnailImage(requestDto.getThumbnailImage())
-                        .build());
+        User user = userRepository.findByEmail(requestDto.getEmail())           //email로 고객 조회, 최초가입자는 카카오에서 받아온 정보로 회원가입, 기존 가입자는
+                .orElseGet(()-> new User());
 
-        return new UserResponseDto(userRepository.save(user));
+        User saveuser = user.updateUser(requestDto);
+
+        return new UserResponseDto(userRepository.save(saveuser));
     }
+
+//    @Transactional
+//    public UserResponseDto updateUser(UserRequestDto requestDto)
+//    {
+//
+//    }
 }

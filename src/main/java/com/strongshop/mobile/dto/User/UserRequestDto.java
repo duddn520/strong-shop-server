@@ -1,5 +1,7 @@
 package com.strongshop.mobile.dto.User;
 
+import com.strongshop.mobile.OAuth2.Token;
+import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +28,7 @@ public class UserRequestDto {
     private LocalDate birth;
 
     @Builder
-    public UserRequestDto(Long id, String realname,String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender
+    public UserRequestDto(Long id, Role role,String realname,String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender
                           , String refreshToken, LocalDate birth) {
         this.id = id;
         this.realname = realname;
@@ -47,6 +49,12 @@ public class UserRequestDto {
                 .email(email)
                 .profileImage(profileImage)
                 .thumbnailImage(thumbnailImage)
+                .refreshToken(refreshToken)
                 .build();
+    }
+
+    public void updateRefreshToken(Token token)
+    {
+        this.refreshToken = token.getRefreshToken();
     }
 }
