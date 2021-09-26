@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
@@ -22,7 +23,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final StrongShopOAuth2UserService strongShopOAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final TokenService tokenService;
-    private final UserRepository userRepository;
 
     @Bean
     @Override
@@ -63,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .successHandler(oAuth2SuccessHandler)
                         .userInfoEndpoint().userService(strongShopOAuth2UserService);
 
-        http.addFilterBefore(new JwtAuthenticationFilter(tokenService,userRepository),UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(tokenService),UsernamePasswordAuthenticationFilter.class);
 
     }
 }

@@ -15,7 +15,7 @@ import java.util.Collection;
 @Getter
 @NoArgsConstructor
 @Entity
-public class User {
+public class User implements UserDetails{
 
     @Id
     // 카카오에서 받은 고유ID로 PK설정할것이므로 자동전략 사용하지 않는다.
@@ -75,5 +75,40 @@ public class User {
                 .refreshToken(refreshToken)
                 .birth(birth)
                 .build();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
     }
 }

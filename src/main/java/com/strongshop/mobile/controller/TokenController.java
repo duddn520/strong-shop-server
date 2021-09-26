@@ -20,7 +20,7 @@ public class TokenController {
         String token = request.getHeader("Refresh");
 
         if(token!= null && tokenService.verifyToken(token)){
-            String email = tokenService.getUid(token);
+            String email = tokenService.getUserEmail(token);
             Token newToken = tokenService.generateToken(email,"USER");
 
             response.addHeader("Auth",newToken.getToken());

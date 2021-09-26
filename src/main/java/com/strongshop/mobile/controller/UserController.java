@@ -2,18 +2,18 @@ package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
-import com.strongshop.mobile.dto.User.UserRequestDto;
 import com.strongshop.mobile.dto.User.UserResponseDto;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,8 +34,6 @@ public class UserController {
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS,
                 new UserResponseDto(user)),HttpStatus.FOUND);
-
-
     }
 
 

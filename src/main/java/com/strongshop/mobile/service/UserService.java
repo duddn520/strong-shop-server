@@ -39,9 +39,5 @@ public class UserService {
         return new UserResponseDto(userRepository.save(saveuser));
     }
 
-//    @Transactional
-//    public UserResponseDto updateUser(UserRequestDto requestDto)
-//    {
-//
-//    }
+
 }

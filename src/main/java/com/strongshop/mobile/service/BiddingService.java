@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import net.bytebuddy.pool.TypePool;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;

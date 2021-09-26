@@ -8,10 +8,14 @@ import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.BiddingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,8 +26,10 @@ public class BiddingController {
 
     //입찰 등록
     @PostMapping("/api/bidding")
-    public ResponseEntity<ApiResponse<BiddingResponseDto>> registerBidding(@RequestBody BiddingRequestDto requestDto)
+    public ResponseEntity<ApiResponse<BiddingResponseDto>> registerBidding(@RequestBody BiddingRequestDto requestDto, Authentication authentication)
     {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        System.out.println("userDetails = " + userDetails.getUsername());
         BiddingResponseDto responseDto = biddingService.registerBidding(requestDto);
 
         return new ResponseEntity<>(ApiResponse.response(
