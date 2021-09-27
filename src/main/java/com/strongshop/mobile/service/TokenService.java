@@ -22,7 +22,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class TokenService {
 
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailService;
     private String secretKey = "strong-shop";
 
     @PostConstruct
@@ -70,7 +70,7 @@ public class TokenService {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserEmail(token));
+        UserDetails userDetails = userDetailService.loadUserByUsername(this.getUserEmail(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
