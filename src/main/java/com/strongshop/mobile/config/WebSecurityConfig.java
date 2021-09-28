@@ -2,6 +2,7 @@ package com.strongshop.mobile.config;
 
 import com.strongshop.mobile.OAuth2.OAuth2SuccessHandler;
 import com.strongshop.mobile.OAuth2.StrongShopOAuth2UserService;
+import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.jwt.JwtAuthenticationFilter;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
@@ -52,11 +53,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/").permitAll()
+                .antMatchers("/api/login/**").permitAll()
                 .antMatchers("/token/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-                //.antMatchers("/uauth/**").authenticated()
-                .anyRequest().permitAll()
+//                .antMatchers("/uauth/**").authenticated()
+                .anyRequest().authenticated()
                 .and()
                     .logout()
                         .logoutSuccessUrl("/")

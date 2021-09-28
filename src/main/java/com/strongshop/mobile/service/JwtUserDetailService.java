@@ -1,5 +1,8 @@
 package com.strongshop.mobile.service;
 
+import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Company.CompanyRepository;
+import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,14 +20,21 @@ DB에서 UserDetail을 얻어와 AuthenticationManager에게 제공하는 역할
 public class JwtUserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
 
     // 상세정보를 조회하는 메소드 , 사용자의 계정정보와 권한을 갖는 UserDetails인터페이스를 반환한다.
     // 매개변수는 로그인시 입력한 아이디 ( 아이디로 회원정보 조회)
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // DB에서 사용자정보를 가져와서 반환
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
-
+        User user = userRepository.findByEmail(email).orElseGet(()->new User());
+        Company company = companyRepository.findByEmail(email).orElseGet(()->new Company());
+        if(user.getEmail()!= null && company.getEmail()==null) {
+            return user;
+        }
+        else if(user.getEmail()==null&& company.getEmail()!=null){
+            return company;
+        }
+        else throw new RuntimeException();
     }
 }
