@@ -28,17 +28,15 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
-    private final TokenService tokenService;
-
-    private String secretKey = "strong-shop";
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         String token = ((HttpServletRequest)request).getHeader("Auth");
 
-        if (token != null && tokenService.verifyToken(token)) {     //토큰 유효성 검증 및 auth객체 생성 후 SecurityContextHolder에 등록.
-            Authentication auth = tokenService.getAuthentication(token);
+        if (token != null && jwtTokenProvider.verifyToken(token)) {     //토큰 유효성 검증 및 auth객체 생성 후 SecurityContextHolder에 등록.
+            Authentication auth = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         chain.doFilter(request, response);

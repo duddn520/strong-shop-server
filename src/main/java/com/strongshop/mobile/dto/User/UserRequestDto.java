@@ -28,7 +28,7 @@ public class UserRequestDto {
     private LocalDate birth;
 
     @Builder
-    public UserRequestDto(Long id, Role role,String realname,String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender
+    public UserRequestDto(Long id,String realname,String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender
                           , String refreshToken, LocalDate birth) {
         this.id = id;
         this.realname = realname;
@@ -45,11 +45,15 @@ public class UserRequestDto {
     public User toEntity(){
         return User.builder()
                 .id(id)
-                .nickname(nickname)
+                .realName(realname)
                 .email(email)
+                .nickname(nickname)
+                .phoneNumber(phoneNumber)
                 .profileImage(profileImage)
                 .thumbnailImage(thumbnailImage)
+                .gender(gender)
                 .refreshToken(refreshToken)
+                .birth(birth)
                 .build();
     }
 

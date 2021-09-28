@@ -4,6 +4,7 @@ import com.strongshop.mobile.OAuth2.OAuth2SuccessHandler;
 import com.strongshop.mobile.OAuth2.StrongShopOAuth2UserService;
 import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.jwt.JwtAuthenticationFilter;
+import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final StrongShopOAuth2UserService strongShopOAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final TokenService tokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     @Override
@@ -54,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/token/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 //.antMatchers("/uauth/**").authenticated()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                     .logout()
                         .logoutSuccessUrl("/")
@@ -63,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .successHandler(oAuth2SuccessHandler)
                         .userInfoEndpoint().userService(strongShopOAuth2UserService);
 
-        http.addFilterBefore(new JwtAuthenticationFilter(tokenService),UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),UsernamePasswordAuthenticationFilter.class);
 
     }
 }
