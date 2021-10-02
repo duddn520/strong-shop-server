@@ -1,4 +1,4 @@
-package com.strongshop.mobile.dto.Product;
+package com.strongshop.mobile.dto.Product.Item;
 
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Product.Items.Ppf;

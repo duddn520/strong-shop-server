@@ -1,10 +1,12 @@
 package com.strongshop.mobile.domain.Company;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
+import com.strongshop.mobile.domain.Product.Product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.event.service.spi.EventListenerGroup;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -32,6 +34,7 @@ public class Company implements UserDetails {
 
     @OneToMany(mappedBy = "company")
     private List<Bidding> biddings = new ArrayList<>();
+
 
     @Builder
     public Company(Long id, String name, String email, String bossName, String address, String detailAddress,String phoneNumber,String contact, String businessNumber, List<Bidding> biddings) {
