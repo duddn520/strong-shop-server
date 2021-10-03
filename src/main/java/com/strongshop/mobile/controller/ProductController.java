@@ -1,14 +1,14 @@
 package com.strongshop.mobile.controller;
 
-import com.strongshop.mobile.dto.Product.Item.*;
+import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Company.CompanyRepository;
+import com.strongshop.mobile.domain.Product.Item;
 import com.strongshop.mobile.dto.Product.ProductRequestDto;
 import com.strongshop.mobile.dto.Product.ProductResponseDto;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
-import com.strongshop.mobile.service.Product.BlackboxService;
-import com.strongshop.mobile.service.Product.PpfService;
-import com.strongshop.mobile.service.Product.TintingService;
+import com.strongshop.mobile.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,35 +20,31 @@ import java.util.List;
 @RestController
 public class ProductController {
 
-
+    private final CompanyRepository companyRepository;
+    private final ProductService productService;
 
     //제품 등록
-    @PostMapping("/api/product/blackbox")
-    public ResponseEntity<ApiResponse<ProductResponseDto>> registerBlackbox(@RequestBody ProductRequestDto requestDto){
+    @PostMapping("/api/product/register/{company_id}/{item}")
+    public ResponseEntity<ApiResponse<ProductResponseDto>> registerBlackbox(@RequestBody ProductRequestDto requestDto,@PathVariable("company_id") Long companyId, @PathVariable("item") String item){
 
-        BlackboxResponseDto responseDto = blackboxService.registerBlackbox(requestDto);
+        switch (item){
+            case "blackbox":
+                requestDto.setItem(Item.BLACKBOX);
+                break;
+            case "tinting":
+                requestDto.setItem(Item.TINTING);
+                break;
+            case "ppf":
+                requestDto.setItem(Item.PPF);
+                break;
+            default:
+                break;
+        }
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(()->new RuntimeException());
 
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.CREATED,
-                HttpResponseMsg.POST_SUCCESS,
-                responseDto), HttpStatus.CREATED);
-    }
-
-    @PostMapping("/api/product/tinting")
-    public ResponseEntity<ApiResponse<TintingResponseDto>> registerTinting(@RequestBody TintingRequestDto requestDto){
-
-        TintingResponseDto responseDto = tintingService.registerTinting(requestDto);
-
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.CREATED,
-                HttpResponseMsg.POST_SUCCESS,
-                responseDto), HttpStatus.CREATED);
-    }
-
-    @PostMapping("/api/product/ppf")
-    public ResponseEntity<ApiResponse<PpfResponseDto>> registerPpf(@RequestBody PpfRequestDto requestDto){
-
-        PpfResponseDto responseDto = ppfService.registerPpf(requestDto);
+        requestDto.setCompany(company);
+        ProductResponseDto responseDto = productService.registerProduct(requestDto);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,
@@ -57,32 +53,23 @@ public class ProductController {
     }
 
     //제품 수정
-    @PutMapping("/api/product/blackbox")
-    public ResponseEntity<ApiResponse<BlackboxResponseDto>> updateBlackbox(@RequestBody BlackboxRequestDto requestDto){
+    @PutMapping("/api/product/update/{item}")
+    public ResponseEntity<ApiResponse<ProductResponseDto>> updateProduct(@RequestBody ProductRequestDto requestDto,@PathVariable("item") String item){
 
-        BlackboxResponseDto responseDto = blackboxService.updateBlackbox(requestDto);
-
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.OK,
-                HttpResponseMsg.UPDATE_SUCCESS,
-                responseDto),HttpStatus.OK);
-    }
-
-    @PutMapping("/api/product/ppf")
-    public ResponseEntity<ApiResponse<PpfResponseDto>> updatePpf(@RequestBody PpfRequestDto requestDto){
-
-        PpfResponseDto responseDto = ppfService.updatePpf(requestDto);
-
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.OK,
-                HttpResponseMsg.UPDATE_SUCCESS,
-                responseDto),HttpStatus.OK);
-    }
-
-    @PutMapping("/api/product/tinting")
-    public ResponseEntity<ApiResponse<TintingResponseDto>> updateTinting(@RequestBody TintingRequestDto requestDto)
-    {
-        TintingResponseDto responseDto = tintingService.updateTinting(requestDto);
+        switch (item){
+            case "blackbox":
+                requestDto.setItem(Item.BLACKBOX);
+                break;
+            case "tinting":
+                requestDto.setItem(Item.TINTING);
+                break;
+            case "ppf":
+                requestDto.setItem(Item.PPF);
+                break;
+            default:
+                break;
+        }
+        ProductResponseDto responseDto = productService.updateProduct(requestDto);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
@@ -91,10 +78,12 @@ public class ProductController {
     }
 
     //제품 조회
-    @GetMapping("/api/product/blackbox")
-    public ResponseEntity<ApiResponse<List<BlackboxResponseDto>>> getBlackboxesByCompany(@RequestParam("company_id") Long company_id )
+        //전체조회(회사 id)
+    @GetMapping("/api/product/get/{company_id}")
+    public ResponseEntity<ApiResponse<List<ProductResponseDto>>> getAllProductsByCompany(@PathVariable("company_id") Long company_id )
     {
-        List<BlackboxResponseDto> responseDtos = blackboxService.getBlackboxByCompany(company_id);
+
+        List<ProductResponseDto> responseDtos = productService.getAllProductsByCompany(company_id);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
@@ -102,10 +91,26 @@ public class ProductController {
                 responseDtos),HttpStatus.OK);
     }
 
-    @GetMapping("/api/product/ppf")
-    public ResponseEntity<ApiResponse<List<PpfResponseDto>>> getPpfesByCompany(@RequestParam("company_id") Long company_id )
+    @GetMapping("/api/product/get/{company_id}/{item}")
+    public ResponseEntity<ApiResponse<List<ProductResponseDto>>> getSpecificItemsByCompany(@PathVariable("company_id") Long company_id,@PathVariable("item") String inputItem )
     {
-        List<PpfResponseDto> responseDtos = ppfService.getPpfByCompany(company_id);
+        Item item;
+        switch (inputItem){
+            case "blackbox":
+                item = Item.BLACKBOX;
+                break;
+            case "tinting":
+                item = Item.TINTING;
+                break;
+            case "ppf":
+                item = Item.PPF;
+                break;
+            default:
+                item = null;
+                break;
+        }
+
+        List<ProductResponseDto> responseDtos = productService.getSpecificItemsByCompany(company_id,item);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
@@ -113,14 +118,4 @@ public class ProductController {
                 responseDtos),HttpStatus.OK);
     }
 
-    @GetMapping("/api/product/tinting")
-    public ResponseEntity<ApiResponse<List<TintingResponseDto>>> getTintingesByCompany(@RequestParam("company_id") Long company_id )
-    {
-        List<TintingResponseDto> responseDtos = tintingService.getTintingByCompany(company_id);
-
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.OK,
-                HttpResponseMsg.GET_SUCCESS,
-                responseDtos),HttpStatus.OK);
-    }
 }

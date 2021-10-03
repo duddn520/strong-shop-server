@@ -57,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/token/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
 //                .antMatchers("/uauth/**").authenticated()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
                 .and()
                     .logout()
                         .logoutSuccessUrl("/")
