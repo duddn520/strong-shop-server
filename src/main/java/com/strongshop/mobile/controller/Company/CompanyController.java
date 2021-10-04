@@ -115,6 +115,10 @@ public class CompanyController {
             companyInfo.put("email", email);
 
             Company findcompany = companyRepository.findByEmail(email).orElseGet(()->new Company());
+            User finduser = userRepository.findByEmail(email).orElseGet(()->new User());
+            if(finduser.getEmail()==email){
+                throw new RuntimeException("이미 유저로 등록된 계정입니다.");        //유저로 이미 존재하는 이메일이면 가입 거부.
+            }
 
             if(findcompany.getEmail()!=email) {
                 CompanyRequestDto requestDto = new CompanyRequestDto();

@@ -1,6 +1,8 @@
 package com.strongshop.mobile.controller;
 
 import com.google.gson.*;
+import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
@@ -33,6 +35,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/api/user")
@@ -88,15 +91,18 @@ public class UserController {
             String thumbnail_image_url = profile.getAsJsonObject().get("thumbnail_image_url").getAsString();
             String profile_image_url = profile.getAsJsonObject().get("profile_image_url").getAsString();
 
-            userInfo.put("id",id);
+            userInfo.put("id", id);
             userInfo.put("nickname", nickname);
             userInfo.put("email", email);
-            userInfo.put("thumbnail_image_url",thumbnail_image_url);
+            userInfo.put("thumbnail_image_url", thumbnail_image_url);
             userInfo.put("profile_image_url", profile_image_url);
 
-            User finduser = userRepository.findByEmail(email).orElseGet(()->new User());
-
-            if(finduser.getEmail()!=email) {
+            User finduser = userRepository.findByEmail(email).orElseGet(() -> new User());
+            Company findcompany = companyRepository.findByEmail(email).orElseGet(() -> new Company());
+            if (findcompany.getEmail() == email) {
+                throw new RuntimeException("이미 업체로 등록된 계정입니다.");        //업체로 이미 등록된 이메일이면 거부.
+            }
+            if (finduser.getEmail() != email) {
                 UserRequestDto requestDto = new UserRequestDto();
                 requestDto.setId((Long) userInfo.get("id"));
                 requestDto.setNickname((String) userInfo.get("nickname"));
@@ -108,23 +114,21 @@ public class UserController {
                         HttpStatusCode.OK,
                         HttpResponseMsg.GET_SUCCESS,
                         new UserResponseDto(requestDto.toEntity())), HttpStatus.OK);
-            }
-            else
-            {
+            } else {
                 UserResponseDto responseDto = new UserResponseDto(userRepository.save(finduser));
 
                 String token = jwtTokenProvider.createToken(finduser.getEmail(), Role.USER);
 
                 HttpHeaders headers = new HttpHeaders();
-                headers.add("Auth",token);
+                headers.add("Auth", token);
 
                 return new ResponseEntity<>(ApiResponse.response(           //이미 존재하는 회원, 헤더에 jwt 발급 후, 회원정보까지 리턴.
                         HttpStatusCode.OK,
-                        HttpResponseMsg.POST_SUCCESS,
-                        responseDto),headers,HttpStatus.OK);
+                           HttpResponseMsg.POST_SUCCESS,
+                        responseDto), headers, HttpStatus.OK);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            } catch(IOException e){
+                throw new RuntimeException(e);
         }
     }
 
