@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,14 +67,19 @@ public class CompanyController {
     }
 
     @GetMapping("/api/company")
-    public ResponseEntity<ApiResponse<List<CompanyResponseDto>>> getCompany(@RequestParam("company_name") String company_name){
+    public ResponseEntity<ApiResponse<CompanyResponseDto>> getCompany(){
 
-        List<CompanyResponseDto> responseDtos = companyService.getCompaniesByName(company_name);
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();      //ContextHolder 기반 company 조회(내 회사 조회)
+        String email = userDetails.getUsername();
+
+        Company company = companyRepository.findByEmail(email).orElseThrow(()-> new RuntimeException());
+
+        CompanyResponseDto responseDto = new CompanyResponseDto(company);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS,
-                responseDtos), HttpStatus.OK);
+                responseDto), HttpStatus.OK);
     }
 
     @GetMapping("/api/login/company/kakao")
@@ -113,14 +120,17 @@ public class CompanyController {
 
             companyInfo.put("id",id);
             companyInfo.put("email", email);
+            System.out.println("email = " + email);
 
             Company findcompany = companyRepository.findByEmail(email).orElseGet(()->new Company());
             User finduser = userRepository.findByEmail(email).orElseGet(()->new User());
-            if(finduser.getEmail()==email){
+            if(finduser.getEmail()!=null&&finduser.getEmail().equals(email)){
                 throw new RuntimeException("이미 유저로 등록된 계정입니다.");        //유저로 이미 존재하는 이메일이면 가입 거부.
             }
 
-            if(findcompany.getEmail()!=email) {
+            System.out.println("findcompany.getEmail() = " + findcompany.getEmail());
+
+            if(findcompany.getEmail()==null) {
                 CompanyRequestDto requestDto = new CompanyRequestDto();
                 requestDto.setId((Long) companyInfo.get("id"));
                 requestDto.setEmail((String) companyInfo.get("email"));

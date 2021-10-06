@@ -15,13 +15,14 @@ import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -39,9 +40,10 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/api/user")
-    public ResponseEntity<ApiResponse<UserResponseDto>> findUser(HttpServletRequest request)
+    public ResponseEntity<ApiResponse<UserResponseDto>> findUser()
     {
-        String email = request.getParameter("email");
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
         User user = userRepository.findByEmail(email).orElseThrow(()->new RuntimeException());
 
         return new ResponseEntity<>(ApiResponse.response(
@@ -99,10 +101,10 @@ public class UserController {
 
             User finduser = userRepository.findByEmail(email).orElseGet(() -> new User());
             Company findcompany = companyRepository.findByEmail(email).orElseGet(() -> new Company());
-            if (findcompany.getEmail() == email) {
+            if (findcompany.getEmail()!=null && findcompany.getEmail().equals(email)) {
                 throw new RuntimeException("이미 업체로 등록된 계정입니다.");        //업체로 이미 등록된 이메일이면 거부.
             }
-            if (finduser.getEmail() != email) {
+            if (finduser.getEmail()== null) {
                 UserRequestDto requestDto = new UserRequestDto();
                 requestDto.setId((Long) userInfo.get("id"));
                 requestDto.setNickname((String) userInfo.get("nickname"));
@@ -133,7 +135,7 @@ public class UserController {
     }
 
     @PostMapping("/api/login/user/kakao")
-    public ResponseEntity<ApiResponse<UserResponseDto>> completeUserLoginKakao(@RequestBody UserRequestDto requestDto, HttpServletResponse response)
+    public ResponseEntity<ApiResponse<UserResponseDto>> completeUserLoginKakao(@RequestBody UserRequestDto requestDto)
     {
 
         if(requestDto.getEmail()!=null && requestDto.getPhoneNumber()!= null)       //필수항목 중 가장 중요한 두개 검사.

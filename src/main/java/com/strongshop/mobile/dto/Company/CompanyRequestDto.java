@@ -25,6 +25,7 @@ public class CompanyRequestDto {
 
     public Company toEntity() {
         return Company.builder()
+                .id(id)
                 .name(name)
                 .email(email)
                 .bossName(bossName)
