@@ -47,4 +47,10 @@ public class CompanyService {
         return companyResponseDtos;
     }
 
+    @Transactional
+    public void deleteCompany(Company company)
+    {
+        companyRepository.delete(company);
+    }
+
 }

@@ -39,5 +39,10 @@ public class UserService {
         return new UserResponseDto(userRepository.save(saveuser));
     }
 
+    @Transactional
+    public void deleteUser(User user)
+    {
+        userRepository.delete(user);
+    }
 
 }

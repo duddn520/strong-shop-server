@@ -181,4 +181,17 @@ public class CompanyController {
             throw new RuntimeException();
         }
     }
+
+    @DeleteMapping("/api/company")
+    public ResponseEntity<ApiResponse> withdrawCompany()
+    {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+        Company company = companyRepository.findByEmail(email).orElseThrow(()->new RuntimeException());
+        companyService.deleteCompany(company);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
+    }
 }

@@ -2,12 +2,15 @@ package com.strongshop.mobile.domain.Car;
 
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.User.User;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
 @Entity
+@Getter
 public class Car {
 
     @Id
@@ -15,11 +18,12 @@ public class Car {
 
     //유저 매핑필요
     @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user")
     private User user;
 
     private String carNo;
 
+    @Builder
     public Car(Long id, User user, String carNo) {
         this.id = id;
         this.user = user;
