@@ -1,17 +1,37 @@
 package com.strongshop.mobile.controller;
 
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.strongshop.mobile.domain.Order.Order;
+import com.strongshop.mobile.domain.User.User;
+import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.dto.Order.OrderRequestDto;
 import com.strongshop.mobile.dto.Order.OrderResponseDto;
+import com.strongshop.mobile.model.ApiResponse;
+import com.strongshop.mobile.model.HttpResponseMsg;
+import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.OrderService;
+import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.parser.JSONParser;
+import org.apache.commons.io.IOUtils;
+import org.apache.coyote.Response;
+import org.aspectj.weaver.ast.Or;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,37 +39,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final OrderService orderService;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
-    @PostMapping("/api/orders")
-    public void requestOrder(@RequestBody OrderRequestDto requestDto, Authentication authentication) {
-        Order order = orderService.saveOrder(requestDto, authentication);
-        log.info(order.toString());
+    @PostMapping(value = "/api/orders",produces = "application/json; charset=utf8")
+    public ResponseEntity<ApiResponse<OrderResponseDto>> registerOrder(@RequestBody Map<String,Object> param)
+    {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+        User user = userService.getUserByEmail(email);
+
+        String jstr = param.toString();
+        String region = (String) param.get("region");
+        Order order = new Order();
+        order.updateOrder(user,jstr,region);
+
+        OrderResponseDto responseDto = orderService.saveOrder(order);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.CREATED,
+                HttpResponseMsg.POST_SUCCESS,
+                responseDto), HttpStatus.CREATED);
     }
-
-    @PostMapping("/api/orders/test")
-    public void requestOrder(@RequestBody OrderRequestDto requestDto) {
-        Order order = orderService.saveOrderTest(requestDto);
-        log.info(order.toString());
-    }
-
-//    @GetMapping("/api/user/orders")
-//    public void getOrder(Authentication authentication) {
-//        Order order = orderService.saveOrderTest(requestDto);
-//        log.info(order.toString());
-//    }
-
-    @GetMapping("/api/user/orders")
-    public void getOrder() {
-        OrderResponseDto responseDto = orderService.getOrderForUserTest();
-        log.info(responseDto.getTintingOption().getPositionFront().toString());
-        log.info(responseDto.getTintingOption().getPositionFront().toString());
-    }
-
-    @GetMapping("/api/company/orders")
-    public void getOrder(@RequestBody OrderRequestDto requestDto ) {
-        Order order = orderService.saveOrderTest(requestDto);
-        log.info(order.toString());
-    }
-
 
 }

@@ -1,5 +1,6 @@
 package com.strongshop.mobile.domain.Order;
 
+import com.nimbusds.oauth2.sdk.util.JSONUtils;
 import com.strongshop.mobile.domain.BaseEntity;
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Car.Car;
@@ -21,6 +22,8 @@ import java.util.List;
 @Table(name = "orders")
 public class Order extends BaseEntity {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -28,32 +31,25 @@ public class Order extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToOne // 여러개의 요청이 하나의 카
-    @JoinColumn(nullable = false) // 매핑할 외래키 이름지정 - company엔티티의 id필드를 외래키로 갖겠다.
-    private Car car;
+    @Column(length = 1024)
+    private String detail;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    private TintingOption tintingOption;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private PpfOption ppfOption;
-
-    private Boolean isBlackBox;
-    private Boolean isGlassCoating;
-    private Boolean isUnderCoating;
-    private Boolean isSoundProof;
-    private String request;
+    private String region;
 
     @Builder
-    public Order(Car car, User user, TintingOption tintingOption, PpfOption ppfOption, Boolean isBlackBox, Boolean isGlassCoating, Boolean isUnderCoating, Boolean isSoundProof, String request) {
-        this.car = car;
+    public Order(Long id, User user, String detail,String region)
+    {
+        this.id = id;
         this.user = user;
-        this.tintingOption = tintingOption;
-        this.ppfOption = ppfOption;
-        this.isBlackBox = isBlackBox;
-        this.isGlassCoating = isGlassCoating;
-        this.isUnderCoating = isUnderCoating;
-        this.isSoundProof = isSoundProof;
-        this.request = request;
+        this.detail = detail;
+        this.region = region;
+    }
+
+    public Order updateOrder(User user, String detail, String region)
+    {
+        this.user = user;
+        this.detail = detail;
+        this.region = region;
+        return this;
     }
 }
