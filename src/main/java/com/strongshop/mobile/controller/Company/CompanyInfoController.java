@@ -1,15 +1,19 @@
 package com.strongshop.mobile.controller.Company;
 
+import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.dto.Company.CompanyInfoRequestDto;
 import com.strongshop.mobile.dto.Company.CompanyInfoResponseDto;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyInfoService;
+import com.strongshop.mobile.service.Company.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +22,10 @@ import org.springframework.web.bind.annotation.*;
 public class CompanyInfoController {
 
     private final CompanyInfoService companyInfoService;
+    private final CompanyService companyService;
 
     @PostMapping("/api/companyinfo")
-    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo(@RequestBody CompanyInfoRequestDto requestDto)
+    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo(@RequestBody CompanyInfoRequestDto requestDto, Authentication authentication)
     {
         CompanyInfoResponseDto responseDto = companyInfoService.registerCompanyInfo(requestDto);
 

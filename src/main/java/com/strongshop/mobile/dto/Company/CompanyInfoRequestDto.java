@@ -12,16 +12,23 @@ public class CompanyInfoRequestDto {
 
     private Long id;
     private Long company_id;
-
-    private float longitude;
-    private float latitude;
     private String introduction;
+    private String blogUrl;
+    private String siteUrl;
+    private String snsUrl;
+    private String contact;
+    private String address;
+    private String detailAddress;
 
     public CompanyInfo toEntity(){
         return CompanyInfo.builder()
-                .longitude(longitude)
-                .latitude(latitude)
                 .introduction(introduction)
+                .blogUrl(blogUrl)
+                .siteUrl(siteUrl)
+                .snsUrl(snsUrl)
+                .contact(contact)
+                .address(address)
+                .detailAddress(detailAddress)
                 .build();
     }
 }

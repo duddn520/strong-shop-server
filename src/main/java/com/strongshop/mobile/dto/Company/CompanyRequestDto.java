@@ -32,7 +32,6 @@ public class CompanyRequestDto {
                 .address(address)
                 .detailAddress(detailAddress)
                 .phoneNumber(phoneNumeber)
-                .contact(contact)
                 .businessNumber(businessNumber)
                 .build();
 

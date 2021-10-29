@@ -8,13 +8,18 @@ import com.strongshop.mobile.dto.Product.ProductResponseDto;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
+import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,10 +27,16 @@ public class ProductController {
 
     private final CompanyRepository companyRepository;
     private final ProductService productService;
+    private final CompanyService companyService;
 
     //제품 등록
-    @PostMapping("/api/product/register/{company_id}/{item}")
-    public ResponseEntity<ApiResponse<ProductResponseDto>> registerBlackbox(@RequestBody ProductRequestDto requestDto,@PathVariable("company_id") Long companyId, @PathVariable("item") String item){
+    @PostMapping("/api/product/register/{item}")
+    public ResponseEntity<ApiResponse<ProductResponseDto>> registerBlackbox(@RequestBody ProductRequestDto requestDto, @PathVariable("item") String item, Authentication authentication){
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
+        Company company = companyService.getCompanyByEmail(email);
+        requestDto.setCompany(company);
 
         switch (item){
             case "blackbox":
@@ -37,13 +48,31 @@ public class ProductController {
             case "ppf":
                 requestDto.setItem(Item.PPF);
                 break;
+            case "battery":
+                requestDto.setItem(Item.BATTERY);
+                break;
+            case"afterblow":
+                requestDto.setItem(Item.AFTERBLOW);
+                break;
+            case"deafening":
+                requestDto.setItem(Item.DEAFENING);
+                break;
+            case"wrapping":
+                requestDto.setItem(Item.WRAPPING);
+                break;
+            case"glasscoating":
+                requestDto.setItem(Item.GLASSCOATING);
+                break;
+            case"undercoating":
+                requestDto.setItem(Item.UNDERCOATING);
+                break;
+            case"etc":
+                requestDto.setItem(Item.ETC);
+                break;
             default:
                 break;
         }
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(()->new RuntimeException());
 
-        requestDto.setCompany(company);
         ProductResponseDto responseDto = productService.registerProduct(requestDto);
 
         return new ResponseEntity<>(ApiResponse.response(
@@ -66,6 +95,27 @@ public class ProductController {
             case "ppf":
                 requestDto.setItem(Item.PPF);
                 break;
+            case "battery":
+                requestDto.setItem(Item.BATTERY);
+                break;
+            case"afterblow":
+                requestDto.setItem(Item.AFTERBLOW);
+                break;
+            case"deafening":
+                requestDto.setItem(Item.DEAFENING);
+                break;
+            case"wrapping":
+                requestDto.setItem(Item.WRAPPING);
+                break;
+            case"glasscoating":
+                requestDto.setItem(Item.GLASSCOATING);
+                break;
+            case"undercoating":
+                requestDto.setItem(Item.UNDERCOATING);
+                break;
+            case"etc":
+                requestDto.setItem(Item.ETC);
+                break;
             default:
                 break;
         }
@@ -79,43 +129,43 @@ public class ProductController {
 
     //제품 조회
         //전체조회(회사 id)
-    @GetMapping("/api/product/get/{company_id}")
-    public ResponseEntity<ApiResponse<List<ProductResponseDto>>> getAllProductsByCompany(@PathVariable("company_id") Long company_id )
+    @GetMapping("/api/product")
+    public ResponseEntity<ApiResponse<Map<String,List<ProductResponseDto>>>> getAllProductsByCompany(Authentication authentication)
     {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
+        Company company = companyService.getCompanyByEmail(email);
+        Long company_id = company.getId();
 
-        List<ProductResponseDto> responseDtos = productService.getAllProductsByCompany(company_id);
+        Map<String,List<ProductResponseDto>> map = new HashMap<>();
+        map.put("tinting",productService.getSpecificItemsByCompany(company_id,Item.TINTING));
+        map.put("blackbox",productService.getSpecificItemsByCompany(company_id,Item.BLACKBOX));
+        map.put("ppf",productService.getSpecificItemsByCompany(company_id,Item.PPF));
+        map.put("battery",productService.getSpecificItemsByCompany(company_id,Item.BATTERY));
+        map.put("afterblow",productService.getSpecificItemsByCompany(company_id,Item.AFTERBLOW));
+        map.put("deafening",productService.getSpecificItemsByCompany(company_id,Item.DEAFENING));
+        map.put("wrapping",productService.getSpecificItemsByCompany(company_id,Item.WRAPPING));
+        map.put("glasscoating",productService.getSpecificItemsByCompany(company_id,Item.GLASSCOATING));
+        map.put("undercoating",productService.getSpecificItemsByCompany(company_id,Item.UNDERCOATING));
+        map.put("etc",productService.getSpecificItemsByCompany(company_id,Item.ETC));
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS,
-                responseDtos),HttpStatus.OK);
+                map),HttpStatus.OK);
     }
 
-    @GetMapping("/api/product/get/{company_id}/{item}")
-    public ResponseEntity<ApiResponse<List<ProductResponseDto>>> getSpecificItemsByCompany(@PathVariable("company_id") Long company_id,@PathVariable("item") String inputItem )
+    @DeleteMapping("/api/product")
+    public ResponseEntity<ApiResponse> deleteProduct(@RequestBody ProductRequestDto requestDto)
     {
-        Item item;
-        switch (inputItem){
-            case "blackbox":
-                item = Item.BLACKBOX;
-                break;
-            case "tinting":
-                item = Item.TINTING;
-                break;
-            case "ppf":
-                item = Item.PPF;
-                break;
-            default:
-                item = null;
-                break;
-        }
-
-        List<ProductResponseDto> responseDtos = productService.getSpecificItemsByCompany(company_id,item);
+        productService.deleteProduct(requestDto.getId());
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
-                HttpResponseMsg.GET_SUCCESS,
-                responseDtos),HttpStatus.OK);
+                HttpResponseMsg.DELETE_SUCCESS)
+                ,HttpStatus.OK);
+
     }
+
 
 }

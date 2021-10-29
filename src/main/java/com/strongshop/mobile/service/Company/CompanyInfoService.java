@@ -20,6 +20,7 @@ public class CompanyInfoService {
     @Transactional
     public CompanyInfoResponseDto registerCompanyInfo(CompanyInfoRequestDto requestDto)
     {
+
         Company company = companyRepository.findById(requestDto.getCompany_id())
                 .orElseThrow(()-> new IllegalArgumentException());
 

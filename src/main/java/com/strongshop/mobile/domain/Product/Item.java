@@ -9,7 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public enum Item {
     TINTING("tinting"),
     BLACKBOX("blackbox"),
-    PPF("ppf");
+    PPF("ppf"),
+    BATTERY("battery"),
+    AFTERBLOW("afterblow"),
+    DEAFENING("deafening"),
+    WRAPPING("wrapping"),
+    GLASSCOATING("glasscoating"),
+    UNDERCOATING("undercoating"),
+    ETC("etc");
 
     private final String key;
 }

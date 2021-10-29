@@ -30,7 +30,6 @@ public class BiddingController {
     public ResponseEntity<ApiResponse<BiddingResponseDto>> registerBidding(@RequestBody BiddingRequestDto requestDto)
     {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("userDetails = " + userDetails.getUsername());
         BiddingResponseDto responseDto = biddingService.registerBidding(requestDto);
 
         return new ResponseEntity<>(ApiResponse.response(

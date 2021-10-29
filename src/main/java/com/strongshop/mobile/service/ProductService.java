@@ -75,4 +75,13 @@ public class ProductService {
         return responseDtos;
 
     }
+
+    @Transactional
+    public void deleteProduct(Long id)
+    {
+        Product product = productRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("해당 제품을 찾을 수 없습니다."));
+
+        productRepository.delete(product);
+    }
 }

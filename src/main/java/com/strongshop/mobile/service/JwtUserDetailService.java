@@ -29,6 +29,9 @@ public class JwtUserDetailService implements UserDetailsService {
         // DB에서 사용자정보를 가져와서 반환
         User user = userRepository.findByEmail(email).orElseGet(()->new User());
         Company company = companyRepository.findByEmail(email).orElseGet(()->new Company());
+
+        System.out.println("company = " + company);
+        System.out.println("user = " + user);
         if(user.getEmail()!= null && company.getEmail()==null) {
             return user;
         }

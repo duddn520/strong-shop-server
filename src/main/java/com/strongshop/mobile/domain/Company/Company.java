@@ -29,7 +29,6 @@ public class Company implements UserDetails {
     private String address; // 주소
     private String detailAddress; // 상세주소
     private String phoneNumber;
-    private String contact; // 연락처
     private String businessNumber; // 사업자번호
 
     @OneToMany(mappedBy = "company")
@@ -37,7 +36,7 @@ public class Company implements UserDetails {
 
 
     @Builder
-    public Company(Long id, String name, String email, String bossName, String address, String detailAddress,String phoneNumber,String contact, String businessNumber, List<Bidding> biddings) {
+    public Company(Long id, String name, String email, String bossName, String address, String detailAddress,String phoneNumber, String businessNumber, List<Bidding> biddings) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -45,7 +44,6 @@ public class Company implements UserDetails {
         this.address = address;
         this.detailAddress = detailAddress;
         this.phoneNumber = phoneNumber;
-        this.contact = contact;
         this.businessNumber = businessNumber;
         this.biddings = biddings;
     }
@@ -56,7 +54,6 @@ public class Company implements UserDetails {
         this.bossName = company.getBossName();
         this.address = company.getAddress();
         this.detailAddress = company.getDetailAddress();
-        this.contact = company.getContact();
         this.businessNumber = company.getBusinessNumber();
 
         return this;

@@ -30,7 +30,6 @@ public class CompanyResponseDto {
         this.address = company.getAddress();
         this.detailAddress = company.getDetailAddress();
         this.phoneNumber = company.getPhoneNumber();
-        this.contact = company.getContact();
         this.businessNumber = company.getBusinessNumber();
     }
 }

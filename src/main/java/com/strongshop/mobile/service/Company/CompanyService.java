@@ -33,20 +33,12 @@ public class CompanyService {
     }
 
     @Transactional
-    public List<CompanyResponseDto> getCompaniesByName(String company_name)
-    {
-        List<Company> companies = companyRepository.findAllByName(company_name)
-                .orElseThrow(()->new IllegalArgumentException());
+    public Company getCompanyByEmail(String email){
+        Company company = companyRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException());
 
-        List<CompanyResponseDto> companyResponseDtos = new ArrayList<>();
-        for(Company c : companies)
-        {
-            companyResponseDtos.add(new CompanyResponseDto(c));
-        }
-
-        return companyResponseDtos;
+        return company;
     }
-
     @Transactional
     public void deleteCompany(Company company)
     {

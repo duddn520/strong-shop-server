@@ -11,16 +11,24 @@ import lombok.Setter;
 public class CompanyInfoResponseDto {
     private Long id;
     private Long company_id;
-    private float longitude;
-    private float latitude;
     private String introduction;
+    private String blogUrl;
+    private String siteUrl;
+    private String snsUrl;
+    private String contact;
+    private String address;
+    private String detailAddress;
 
     public CompanyInfoResponseDto(CompanyInfo companyInfo)
     {
         this.id = companyInfo.getId();
         this.company_id = companyInfo.getCompany().getId();
-        this.longitude = companyInfo.getLongitude();
-        this.latitude = companyInfo.getLatitude();
         this.introduction = companyInfo.getIntroduction();
+        this.blogUrl = companyInfo.getBlogUrl();
+        this.siteUrl = companyInfo.getSiteUrl();
+        this.snsUrl = companyInfo.getSnsUrl();
+        this.contact = companyInfo.getContact();
+        this.address = companyInfo.getAddress();
+        this.detailAddress = companyInfo.getDetailAddress();
     }
 }
