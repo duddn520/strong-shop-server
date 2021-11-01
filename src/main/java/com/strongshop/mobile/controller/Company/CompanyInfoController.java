@@ -63,19 +63,11 @@ public class CompanyInfoController {
         Long company_id = company.getId();
 
         CompanyInfo companyInfo = companyInfoService.getCompanyInfo(company_id);
+        CompanyInfoResponseDto responseDto = new CompanyInfoResponseDto(companyInfo);
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDto), HttpStatus.OK);
 
-        if (companyInfo.getId() != null) {
-            return new ResponseEntity<>(ApiResponse.response(
-                    HttpStatusCode.NO_CONTENT
-                    ,HttpResponseMsg.NO_CONTENT),HttpStatus.NO_CONTENT);
-
-        }
-        else {
-            CompanyInfoResponseDto responseDto = new CompanyInfoResponseDto(companyInfo);
-            return new ResponseEntity<>(ApiResponse.response(
-                    HttpStatusCode.OK,
-                    HttpResponseMsg.GET_SUCCESS,
-                    responseDto), HttpStatus.OK);
-        }
     }
 }
