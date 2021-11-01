@@ -17,7 +17,6 @@ public class OrderService {
 
     private final UserService userService;
     private final OrderRepository orderRepository;
-    private final TintingOptionRepository tintingOptionRepository;
     private final UserRepository userRepository;
     private final CarRepository carRepository;
 
