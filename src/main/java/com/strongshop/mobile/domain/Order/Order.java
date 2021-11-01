@@ -1,19 +1,12 @@
 package com.strongshop.mobile.domain.Order;
 
-import com.nimbusds.oauth2.sdk.util.JSONUtils;
 import com.strongshop.mobile.domain.BaseEntity;
-import com.strongshop.mobile.domain.Bidding.Bidding;
-import com.strongshop.mobile.domain.Car.Car;
 import com.strongshop.mobile.domain.User.User;
-import com.strongshop.mobile.vo.PpfOption;
-import com.strongshop.mobile.vo.TintingOption;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Getter
