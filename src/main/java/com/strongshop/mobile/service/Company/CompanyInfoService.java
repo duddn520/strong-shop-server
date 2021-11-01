@@ -41,10 +41,10 @@ public class CompanyInfoService {
     }
 
     @Transactional
-    public CompanyInfoResponseDto getCompanyInfo(Long companyId){
+    public CompanyInfo getCompanyInfo(Long companyId){
         CompanyInfo companyInfo = companyInfoRepository.findByCompanyId(companyId)
-                .orElseThrow(()-> new IllegalArgumentException());
+                .orElseGet(()->new CompanyInfo());
 
-        return new CompanyInfoResponseDto(companyInfo);
+        return companyInfo;
     }
 }

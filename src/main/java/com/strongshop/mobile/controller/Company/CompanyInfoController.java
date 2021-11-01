@@ -1,6 +1,7 @@
 package com.strongshop.mobile.controller.Company;
 
 import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Company.CompanyInfo;
 import com.strongshop.mobile.dto.Company.CompanyInfoRequestDto;
 import com.strongshop.mobile.dto.Company.CompanyInfoResponseDto;
 import com.strongshop.mobile.model.ApiResponse;
@@ -55,17 +56,26 @@ public class CompanyInfoController {
     }
 
     @GetMapping("/api/companyinfo")
-    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> getCompanyInfo()
-    {
+    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> getCompanyInfo() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetails.getUsername();
         Company company = companyService.getCompanyByEmail(email);
         Long company_id = company.getId();
-        CompanyInfoResponseDto responseDto = companyInfoService.getCompanyInfo(company_id);
 
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.OK,
-                HttpResponseMsg.GET_SUCCESS,
-                responseDto), HttpStatus.OK);
+        CompanyInfo companyInfo = companyInfoService.getCompanyInfo(company_id);
+
+        if (companyInfo.getId() != null) {
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.NO_CONTENT
+                    ,HttpResponseMsg.NO_CONTENT),HttpStatus.NO_CONTENT);
+
+        }
+        else {
+            CompanyInfoResponseDto responseDto = new CompanyInfoResponseDto(companyInfo);
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.OK,
+                    HttpResponseMsg.GET_SUCCESS,
+                    responseDto), HttpStatus.OK);
+        }
     }
 }
