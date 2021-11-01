@@ -71,8 +71,7 @@ public class JwtTokenProvider {
 
     // HTTP요청헤더에서 token추출
     public String getToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
-
+        return request.getHeader("Auth");
     }
 
     // 토큰 만료일자 확인

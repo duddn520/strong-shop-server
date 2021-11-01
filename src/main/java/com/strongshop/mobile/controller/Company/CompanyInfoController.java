@@ -4,12 +4,14 @@ import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyInfo;
 import com.strongshop.mobile.dto.Company.CompanyInfoRequestDto;
 import com.strongshop.mobile.dto.Company.CompanyInfoResponseDto;
+import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyInfoService;
 import com.strongshop.mobile.service.Company.CompanyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,18 +20,20 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RequiredArgsConstructor
 @RestController
 public class CompanyInfoController {
 
     private final CompanyInfoService companyInfoService;
     private final CompanyService companyService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/api/companyinfo")
-    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo(@RequestBody CompanyInfoRequestDto requestDto, Authentication authentication)
+    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo(@RequestBody CompanyInfoRequestDto requestDto, HttpServletRequest request)
     {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         requestDto.setCompany_id(company.getId());
         CompanyInfoResponseDto responseDto = companyInfoService.registerCompanyInfo(requestDto);
@@ -41,10 +45,9 @@ public class CompanyInfoController {
     }
 
     @PutMapping("/api/companyinfo")
-    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> updateCompanyInfo(@RequestBody CompanyInfoRequestDto requestDto)
+    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> updateCompanyInfo(@RequestBody CompanyInfoRequestDto requestDto,HttpServletRequest request)
     {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
+        String email  = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         requestDto.setCompany_id(company.getId());
         CompanyInfoResponseDto responseDto = companyInfoService.updateCompanyInfo(requestDto);
@@ -56,9 +59,8 @@ public class CompanyInfoController {
     }
 
     @GetMapping("/api/companyinfo")
-    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> getCompanyInfo() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
+    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> getCompanyInfo(HttpServletRequest request) {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         Long company_id = company.getId();
 
