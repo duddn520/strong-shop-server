@@ -114,7 +114,7 @@ public class UserController {
                 requestDto.setProfileImage((String) userInfo.get("profile_image_url"));
 
                 return new ResponseEntity<>(ApiResponse.response(       //존재하지 않는 회원, 헤더에 아무것도 없이 리턴되며, 추가 로그인 요청 필요.
-                        HttpStatusCode.OK,
+                        HttpStatusCode.CREATED,
                         HttpResponseMsg.GET_SUCCESS,
                         new UserResponseDto(requestDto.toEntity())), HttpStatus.OK);
             } else {
