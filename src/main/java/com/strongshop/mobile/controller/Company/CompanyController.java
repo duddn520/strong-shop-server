@@ -136,7 +136,7 @@ public class CompanyController {
                 requestDto.setEmail((String) companyInfo.get("email"));
 
                 return new ResponseEntity<>(ApiResponse.response(       //존재하지 않는 업체, 헤더에 아무것도 없이 리턴되며, 추가 회원가입 요청 필요.
-                        HttpStatusCode.OK,
+                        HttpStatusCode.CREATED,
                         HttpResponseMsg.GET_SUCCESS,
                         new CompanyResponseDto(requestDto.toEntity())), HttpStatus.OK);
             }
