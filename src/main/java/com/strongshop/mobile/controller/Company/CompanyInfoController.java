@@ -27,6 +27,10 @@ public class CompanyInfoController {
     @PostMapping("/api/companyinfo")
     public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo(@RequestBody CompanyInfoRequestDto requestDto, Authentication authentication)
     {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+        Company company = companyService.getCompanyByEmail(email);
+        requestDto.setCompany_id(company.getId());
         CompanyInfoResponseDto responseDto = companyInfoService.registerCompanyInfo(requestDto);
 
         return new ResponseEntity<>(ApiResponse.response(
@@ -38,6 +42,10 @@ public class CompanyInfoController {
     @PutMapping("/api/companyinfo")
     public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> updateCompanyInfo(@RequestBody CompanyInfoRequestDto requestDto)
     {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+        Company company = companyService.getCompanyByEmail(email);
+        requestDto.setCompany_id(company.getId());
         CompanyInfoResponseDto responseDto = companyInfoService.updateCompanyInfo(requestDto);
 
         return new ResponseEntity<>(ApiResponse.response(
@@ -47,8 +55,12 @@ public class CompanyInfoController {
     }
 
     @GetMapping("/api/companyinfo")
-    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> getCompanyInfo(@RequestParam("company_id") Long company_id)
+    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> getCompanyInfo()
     {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+        Company company = companyService.getCompanyByEmail(email);
+        Long company_id = company.getId();
         CompanyInfoResponseDto responseDto = companyInfoService.getCompanyInfo(company_id);
 
         return new ResponseEntity<>(ApiResponse.response(
