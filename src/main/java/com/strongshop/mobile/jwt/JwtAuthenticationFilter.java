@@ -22,6 +22,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 
 @Slf4j
@@ -38,6 +39,20 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         if (token != null && jwtTokenProvider.verifyToken(token)) {     //토큰 유효성 검증 및 auth객체 생성 후 SecurityContextHolder에 등록.
             Authentication auth = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
+        }
+        else if(token == null)
+        {
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter writer = response.getWriter();
+
+            writer.println("Token required");
+        }
+        else if(!jwtTokenProvider.verifyToken(token))
+        {
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter writer = response.getWriter();
+
+            writer.println("Token expoired");
         }
 
         chain.doFilter(request, response);

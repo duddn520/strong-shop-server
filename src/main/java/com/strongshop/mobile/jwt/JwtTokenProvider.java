@@ -31,9 +31,8 @@ public class JwtTokenProvider {
     // 보호키
     private String secretKey = "STRONG_DEALDER";
 
-    //토큰 지속시간 30분
-    private static final long TokenValidTime = 60 * 60 * 1000L;
-
+    //토큰 지속시간 60분
+    private static final long TokenValidTime = 60 * 60 * 1000L * 24 * 7 * 2; //jwt 유효기간 2주로
 
     //객체초기화, secretKey를 Base64로 인코딩한다.
     @PostConstruct
