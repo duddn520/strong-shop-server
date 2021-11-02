@@ -13,7 +13,6 @@ import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.FileService;
 import com.strongshop.mobile.service.GallaryService;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.pool.TypePool;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
