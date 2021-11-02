@@ -35,6 +35,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         String token = ((HttpServletRequest)request).getHeader("Auth");
+        PrintWriter writer = response.getWriter();
+        response.setCharacterEncoding("UTF-8");
 
         if (token != null && jwtTokenProvider.verifyToken(token)) {     //토큰 유효성 검증 및 auth객체 생성 후 SecurityContextHolder에 등록.
             Authentication auth = jwtTokenProvider.getAuthentication(token);
@@ -42,16 +44,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         }
         else if(token == null)
         {
-            response.setCharacterEncoding("UTF-8");
-            PrintWriter writer = response.getWriter();
-
             writer.println("Token required");
         }
         else if(!jwtTokenProvider.verifyToken(token))
         {
-            response.setCharacterEncoding("UTF-8");
-            PrintWriter writer = response.getWriter();
-
             writer.println("Token expoired");
         }
 
