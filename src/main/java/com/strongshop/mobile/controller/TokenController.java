@@ -28,6 +28,7 @@ public class TokenController {
 
         String token = request.getHeader("Auth");
         Object role = jwtTokenProvider.getRole(token);
+        System.out.println("token = " + token);
 
         System.out.println("role = " + role);
 
@@ -39,7 +40,8 @@ public class TokenController {
             response.setContentType("application/json;charset=UTF-8");
 
         }
-        throw new RuntimeException();
+        else
+            throw new RuntimeException();
 
     }
 
