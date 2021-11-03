@@ -1,6 +1,8 @@
 package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.OAuth2.Token;
+import com.strongshop.mobile.domain.User.Role;
+import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
@@ -19,19 +21,19 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 @Controller
 public class TokenController {
-    private final TokenService tokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/token/refresh")
-    public void refreshAuth(HttpServletRequest request, HttpServletResponse response){
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response){
 
-        String token = request.getHeader("Refresh");
+        String token = request.getHeader("Auth");
+        Role role = jwtTokenProvider.getRole(token);
 
-        if(token!= null && tokenService.verifyToken(token)){
-            String email = tokenService.getUserEmail(token);
-            Token newToken = tokenService.generateToken(email,"USER");
+        if(token!= null && jwtTokenProvider.verifyToken(token)){
+            String email = jwtTokenProvider.getEmail(token);
+            String newtoken = jwtTokenProvider.createToken(email,role);
 
-            response.addHeader("Auth",newToken.getToken());
-            response.addHeader("Refresh",newToken.getRefreshToken());
+            response.addHeader("Auth",newtoken);
             response.setContentType("application/json;charset=UTF-8");
 
         }

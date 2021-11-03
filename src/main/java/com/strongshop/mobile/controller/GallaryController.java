@@ -11,6 +11,7 @@ import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.FileService;
+import com.strongshop.mobile.service.FileUploadService;
 import com.strongshop.mobile.service.GallaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,23 +28,27 @@ import java.util.List;
 public class GallaryController {
 
     private final FileService fileService;
+    private final FileUploadService fileUploadService;
     private final GallaryService gallaryService;
     private final CompanyRepository companyRepository;
 
     @PostMapping("/api/{company_id}/gallary")
-    public ResponseEntity<ApiResponse<GallaryResponseDto>> registerGallaryContent(@RequestParam("files") List<MultipartFile> files, GallaryRequestDto requestDto,@PathVariable Long company_id)
+    public ResponseEntity<ApiResponse<List<String>>> registerGallaryContent(@RequestParam("files") List<MultipartFile> files, GallaryRequestDto requestDto,@PathVariable Long company_id)
     {
         requestDto.setCompany_id(company_id);
         GallaryResponseDto responseDto = gallaryService.registerGallary(requestDto);
         Long gallary_id = responseDto.getId();
 
-        fileService.uploadFilesToGallary(files,gallary_id);
-        responseDto = gallaryService.refreshResponseDto(gallary_id);
+//        fileService.uploadFilesToGallary(files,gallary_id);
+        List<String> urllist = new ArrayList<>();
+        for(MultipartFile f : files){
+            urllist.add(fileUploadService.uploadImage(f));
+        }
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,
                 HttpResponseMsg.POST_SUCCESS,
-                responseDto), HttpStatus.CREATED);
+                urllist), HttpStatus.CREATED);
 
     }
 

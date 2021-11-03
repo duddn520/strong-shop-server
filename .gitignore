@@ -85,7 +85,7 @@ gradle-app.setting
 .classpath
 
 # End of https://www.toptal.com/developers/gitignore/api/java,macos,gradle,intelli
-application.yml
+application.properties
 application-oauth.yml
 application-aws.yml
 application-credentials.yml

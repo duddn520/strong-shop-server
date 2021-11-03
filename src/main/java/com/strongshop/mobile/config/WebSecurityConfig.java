@@ -22,9 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final StrongShopOAuth2UserService strongShopOAuth2UserService;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
-    private final TokenService tokenService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
@@ -57,14 +54,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/token/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
 //                .antMatchers("/uauth/**").authenticated()
-                .anyRequest().permitAll()
-                .and()
-                    .logout()
-                        .logoutSuccessUrl("/")
-                .and()
-                    .oauth2Login().loginPage("/")
-                        .successHandler(oAuth2SuccessHandler)
-                        .userInfoEndpoint().userService(strongShopOAuth2UserService);
+                .anyRequest().permitAll();
+
 
         http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),UsernamePasswordAuthenticationFilter.class);
 
