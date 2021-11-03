@@ -87,5 +87,5 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/java,macos,gradle,intelli
 application.properties
 application-oauth.yml
-application-aws.yml
-application-credentials.yml
+#application-aws.yml
+#application-credentials.yml
