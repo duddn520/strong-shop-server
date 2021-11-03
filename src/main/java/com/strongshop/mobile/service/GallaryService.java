@@ -3,12 +3,10 @@ package com.strongshop.mobile.service;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.Gallary.Gallary;
-import com.strongshop.mobile.domain.Gallary.GallaryImage;
 import com.strongshop.mobile.domain.Gallary.GallaryRepository;
 import com.strongshop.mobile.dto.Gallary.GallaryRequestDto;
 import com.strongshop.mobile.dto.Gallary.GallaryResponseDto;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.pool.TypePool;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,17 +18,18 @@ import java.util.List;
 public class GallaryService {
 
     private final GallaryRepository gallaryRepository;
-    private final CompanyRepository companyRepository;
 
     @Transactional
-    public GallaryResponseDto registerGallary(GallaryRequestDto requestDto){
-        Company company = companyRepository.findById(requestDto.getCompany_id())
-                .orElseThrow(()->new IllegalArgumentException());
+    public Gallary registerGallary(GallaryRequestDto requestDto) {
+        return gallaryRepository.save(requestDto.toEntity());
+    }
 
-        Gallary gallary = requestDto.toEntity();
-        gallary.updateCompany(company);
-
-        return new GallaryResponseDto(gallaryRepository.save(gallary));
+    @Transactional
+    public Gallary updateGallary(GallaryRequestDto requestDto, Long gallaryId){
+        Gallary gallary = gallaryRepository.findById(gallaryId)
+                .orElseThrow(()->new RuntimeException("해당 갤러리는 존재하지 않습니다."));
+        gallary.updateImageUrls(requestDto.getGalleryImageUrls());
+        return gallary;
     }
 
     @Transactional

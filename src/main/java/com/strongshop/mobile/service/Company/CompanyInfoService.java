@@ -37,6 +37,7 @@ public class CompanyInfoService {
                 .orElseThrow(()-> new IllegalArgumentException());
 
         companyInfo.updateCompanyInfo(requestDto.toEntity());
+        companyInfoRepository.save(companyInfo);
         return new CompanyInfoResponseDto(companyInfo);
     }
 
