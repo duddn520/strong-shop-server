@@ -33,7 +33,7 @@ public class CompanyInfoService {
     @Transactional
     public CompanyInfoResponseDto updateCompanyInfo(CompanyInfoRequestDto requestDto)
     {
-        CompanyInfo companyInfo = companyInfoRepository.findById(requestDto.getId())
+        CompanyInfo companyInfo = companyInfoRepository.findByCompanyId(requestDto.getCompany_id())
                 .orElseThrow(()-> new IllegalArgumentException());
 
         companyInfo.updateCompanyInfo(requestDto.toEntity());
