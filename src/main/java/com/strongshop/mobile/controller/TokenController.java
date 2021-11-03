@@ -27,11 +27,13 @@ public class TokenController {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response){
 
         String token = request.getHeader("Auth");
-        Role role = jwtTokenProvider.getRole(token);
+        Object role = jwtTokenProvider.getRole(token);
+
+        System.out.println("role = " + role);
 
         if(token!= null && jwtTokenProvider.verifyToken(token)){
             String email = jwtTokenProvider.getEmail(token);
-            String newtoken = jwtTokenProvider.createToken(email,role);
+            String newtoken = jwtTokenProvider.createToken(email, Role.valueOf((String) role));
 
             response.addHeader("Auth",newtoken);
             response.setContentType("application/json;charset=UTF-8");

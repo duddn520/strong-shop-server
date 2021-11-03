@@ -68,8 +68,8 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public Role getRole(String token){
-        return (Role) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("roles");
+    public Object getRole(String token){
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("roles");
     }
 
     // HTTP요청헤더에서 token추출
