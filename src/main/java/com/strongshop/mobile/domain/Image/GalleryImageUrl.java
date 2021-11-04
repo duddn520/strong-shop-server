@@ -1,5 +1,6 @@
 package com.strongshop.mobile.domain.Image;
 
+import com.strongshop.mobile.domain.Gallery.Gallery;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,14 +16,21 @@ public class GalleryImageUrl {
     private Long id;
     private String imageUrl;
 
-    private Long galleryId;
+    @ManyToOne
+    @JoinColumn(name = "gallery_id")
+    private Gallery gallery;
 
     @Builder
-    public GalleryImageUrl(Long id, String imageUrl, Long galleryId)
+    public GalleryImageUrl(Long id, String imageUrl, Gallery gallery)
     {
         this.id = id;
         this.imageUrl = imageUrl;
-        this.galleryId = galleryId;
+        this.gallery = gallery;
+    }
+
+    public void updateGalleryId(Gallery gallery)
+    {
+        this.gallery = gallery;
     }
 
 }

@@ -17,7 +17,6 @@ public class GalleryImageUrlRequestDto {
     public GalleryImageUrl toEntity(){
         return GalleryImageUrl.builder()
                 .id(id)
-                .galleryId(galleryId)
                 .imageUrl(imageUrl)
                 .build();
     }

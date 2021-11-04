@@ -39,7 +39,7 @@ public class GalleryController {
 
 
 
-    @PostMapping("/api/gallary")
+    @PostMapping("/api/gallery")
     public ResponseEntity<ApiResponse<GalleryResponseDto>> registerGalleryContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content, HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
@@ -53,11 +53,13 @@ public class GalleryController {
         for(MultipartFile f : files){
             urllist.add(fileUploadService.uploadImage(f));              //이미지파일 S3에 업로드. url 반환.
         }
-        GalleryResponseDto responseDto = new GalleryResponseDto(galleryService.registerGallery(requestDto));        //갤러리 id를 얻기위해 일단 등록.
-        Long galleryId = responseDto.getId();
-        imageUrls = galleryImageUrlService.registerGalleryImageUrl(urllist,galleryId);         //이미지 파일 url만 저장하는 DB에 저장.
-        requestDto.setGalleryImageUrls(imageUrls);              //urllist추가된 requestdto
-        responseDto = new GalleryResponseDto(galleryService.updateGallery(requestDto,responseDto.getId()));       //DB 에 재등록.
+        Gallery gallery = new Gallery();
+        galleryService.registerGallery(gallery);
+        System.out.println("gallery.getId() = " + gallery.getId());
+        imageUrls = galleryImageUrlService.registerGalleryImageUrl(urllist,gallery.getId());         //이미지 파일 url만 저장하는 DB에 저장.
+        requestDto.setGalleryImageUrls(imageUrls);
+        galleryService.updateGalleryEntity(gallery,requestDto);
+        GalleryResponseDto responseDto = new GalleryResponseDto(gallery);       //DB 에 재등록.
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,

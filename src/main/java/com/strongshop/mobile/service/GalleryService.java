@@ -19,16 +19,15 @@ public class GalleryService {
     private final GalleryRepository galleryRepository;
 
     @Transactional
-    public Gallery registerGallery(GalleryRequestDto requestDto) {
-        return galleryRepository.save(requestDto.toEntity());
+    public Gallery registerGallery(Gallery gallery) {
+
+        return galleryRepository.save(gallery);
     }
 
     @Transactional
-    public Gallery updateGallery(GalleryRequestDto requestDto, Long galleryId){
-        Gallery gallery = galleryRepository.findById(galleryId)
-                .orElseThrow(()->new RuntimeException("해당 갤러리는 존재하지 않습니다."));
-        gallery.updateImageUrls(requestDto.getGalleryImageUrls());
-        return gallery;
+    public void updateGalleryEntity(Gallery gallery, GalleryRequestDto requestDto){
+        gallery.updateGallery(requestDto);
+        gallery.updateGalleryIdToUrls(requestDto.getGalleryImageUrls());
     }
 
     @Transactional

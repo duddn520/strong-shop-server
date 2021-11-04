@@ -2,6 +2,7 @@ package com.strongshop.mobile.domain.Gallery;
 
 import com.strongshop.mobile.domain.BaseEntity;
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
+import com.strongshop.mobile.dto.Gallery.GalleryRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ public class Gallery extends BaseEntity {
     private Long companyId;
     private String content;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "gallery")
     private List<GalleryImageUrl> imageUrls;
 
     @Builder
@@ -33,9 +34,19 @@ public class Gallery extends BaseEntity {
         this.imageUrls = imageUrls;
     }
 
-    public void updateImageUrls(List<GalleryImageUrl> imageUrls)
+    public void updateGallery(GalleryRequestDto requestDto)
     {
-        this.imageUrls = imageUrls;
+        this.companyId = requestDto.getCompany_id();
+        this.content = requestDto.getContent();
+        this.imageUrls = requestDto.getGalleryImageUrls();
+    }
+
+    public void updateGalleryIdToUrls(List<GalleryImageUrl> imageUrls)
+    {
+        for(GalleryImageUrl img : imageUrls)
+        {
+            img.updateGalleryId(this);
+        }
     }
 
 }
