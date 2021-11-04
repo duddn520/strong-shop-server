@@ -1,6 +1,6 @@
-package com.strongshop.mobile.dto.Gallary;
+package com.strongshop.mobile.dto.Gallery;
 
-import com.strongshop.mobile.domain.Gallary.Gallary;
+import com.strongshop.mobile.domain.Gallery.Gallery;
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class GallaryRequestDto {
+public class GalleryRequestDto {
 
     private Long id;
     private Long company_id;
@@ -22,8 +22,8 @@ public class GallaryRequestDto {
 
 
 
-    public Gallary toEntity(){
-        return Gallary.builder()
+    public Gallery toEntity(){
+        return Gallery.builder()
                 .companyId(company_id)
                 .content(content)
                 .imageUrls(galleryImageUrls)

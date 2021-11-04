@@ -1,17 +1,16 @@
 package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Company.Company;
-import com.strongshop.mobile.domain.Gallary.Gallary;
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
-import com.strongshop.mobile.dto.Gallary.GallaryRequestDto;
-import com.strongshop.mobile.dto.Gallary.GallaryResponseDto;
+import com.strongshop.mobile.dto.Gallery.GalleryRequestDto;
+import com.strongshop.mobile.dto.Gallery.GalleryResponseDto;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.FileUploadService;
-import com.strongshop.mobile.service.GallaryService;
+import com.strongshop.mobile.service.GalleryService;
 import com.strongshop.mobile.service.GalleryImageUrlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,22 +25,22 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class GallaryController {
+public class GalleryController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final GalleryImageUrlService galleryImageUrlService;
     private final CompanyService companyService;
     private final FileUploadService fileUploadService;
-    private final GallaryService gallaryService;
+    private final GalleryService galleryService;
 
 
 
     @PostMapping("/api/gallary")
-    public ResponseEntity<ApiResponse<GallaryResponseDto>> registerGallaryContent(@RequestParam("files") List<MultipartFile> files,@RequestParam("content")String content, HttpServletRequest request)
+    public ResponseEntity<ApiResponse<GalleryResponseDto>> registerGalleryContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content, HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        GallaryRequestDto requestDto = new GallaryRequestDto();
+        GalleryRequestDto requestDto = new GalleryRequestDto();
 
         requestDto.setCompany_id(company.getId());
         requestDto.setContent(content);
@@ -50,11 +49,11 @@ public class GallaryController {
         for(MultipartFile f : files){
             urllist.add(fileUploadService.uploadImage(f));              //이미지파일 S3에 업로드. url 반환.
         }
-        GallaryResponseDto responseDto = new GallaryResponseDto(gallaryService.registerGallary(requestDto));        //갤러리 id를 얻기위해 일단 등록.
-        Long gallaryId = responseDto.getId();
-        imageUrls = galleryImageUrlService.registerGalleryImageUrl(urllist,gallaryId);         //이미지 파일 url만 저장하는 DB에 저장.
+        GalleryResponseDto responseDto = new GalleryResponseDto(galleryService.registerGallery(requestDto));        //갤러리 id를 얻기위해 일단 등록.
+        Long galleryId = responseDto.getId();
+        imageUrls = galleryImageUrlService.registerGalleryImageUrl(urllist,galleryId);         //이미지 파일 url만 저장하는 DB에 저장.
         requestDto.setGalleryImageUrls(imageUrls);              //urllist추가된 requestdto
-        responseDto = new GallaryResponseDto(gallaryService.updateGallary(requestDto,responseDto.getId()));       //DB 에 재등록.
+        responseDto = new GalleryResponseDto(galleryService.updateGallery(requestDto,responseDto.getId()));       //DB 에 재등록.
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,

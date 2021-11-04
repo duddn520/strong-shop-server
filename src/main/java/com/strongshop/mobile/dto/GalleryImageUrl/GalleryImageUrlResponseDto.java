@@ -17,7 +17,7 @@ public class GalleryImageUrlResponseDto {
     public GalleryImageUrlResponseDto (GalleryImageUrl galleryImageUrl)
     {
         this.id = galleryImageUrl.getId();
-        this.galleryId = galleryImageUrl.getGallaryId();
+        this.galleryId = galleryImageUrl.getGalleryId();
         this.imageUrl = galleryImageUrl.getImageUrl();
     }
 }

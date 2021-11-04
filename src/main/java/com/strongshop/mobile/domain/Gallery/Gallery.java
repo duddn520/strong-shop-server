@@ -1,4 +1,4 @@
-package com.strongshop.mobile.domain.Gallary;
+package com.strongshop.mobile.domain.Gallery;
 
 import com.strongshop.mobile.domain.BaseEntity;
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Gallary extends BaseEntity {
+public class Gallery extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -25,7 +25,7 @@ public class Gallary extends BaseEntity {
     private List<GalleryImageUrl> imageUrls;
 
     @Builder
-    public Gallary(Long id, Long companyId, String content, List<GalleryImageUrl> imageUrls)
+    public Gallery(Long id, Long companyId, String content, List<GalleryImageUrl> imageUrls)
     {
         this.id = id;
         this.companyId = companyId;
