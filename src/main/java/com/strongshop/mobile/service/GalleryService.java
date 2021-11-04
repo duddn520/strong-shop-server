@@ -32,20 +32,9 @@ public class GalleryService {
     }
 
     @Transactional
-    public List<Gallery> findGallariesByCompany(Company company)
-    {
-        List<Gallery> gallaries = new ArrayList<>();
-        gallaries = galleryRepository.findAllByCompanyIdOrderByCreatedTimeDesc(company.getId());
-
-        return gallaries;
-    }
-
-    @Transactional
-    public GalleryResponseDto refreshResponseDto(Long gallary_id)
-    {
-        Gallery gallery = galleryRepository.findById(gallary_id)
-                .orElseThrow(()->new IllegalArgumentException());
-
-        return new GalleryResponseDto(gallery);
+    public List<Gallery> getAllGalleriesByCompanyId(Long companyId){
+        List<Gallery> galleries = galleryRepository.findAllByCompanyId(companyId)
+                .orElseThrow(()->new RuntimeException("갤러리가 존재하지 않습니다."));
+        return galleries;
     }
 }
