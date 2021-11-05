@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GalleryRepository extends JpaRepository<Gallery,Long> {
-    Optional<List<Gallery>> findAllByCompanyId(Long companyId);
+    Optional<List<Gallery>> findAllByCompanyIdOrderByCreatedTimeAsc(Long companyId);
 }

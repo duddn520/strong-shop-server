@@ -1,12 +1,15 @@
 package com.strongshop.mobile.dto.Review;
 
-import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Review.Review;
-import com.strongshop.mobile.domain.Review.ReviewImage;
+import com.strongshop.mobile.domain.Image.ReviewImageUrl;
+import com.strongshop.mobile.dto.Image.GalleryImageUrlResponseDto;
+import com.strongshop.mobile.dto.Image.ReviewImageUrlRequestDto;
+import com.strongshop.mobile.dto.Image.ReviewImageUrlResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,14 +22,27 @@ public class ReviewResponseDto {
     private Long companyId;
     private String content;
     private float rating;
-    private List<Long> reviewImagesId = new ArrayList<>();
+    private LocalDateTime createdTime;
+    private List<ReviewImageUrlResponseDto> imageUrls = new ArrayList<>();
 
     public ReviewResponseDto(Review review){
         this.id = review.getId();
-        this.companyId = review.getCompany().getId();
+        this.companyId = review.getCompanyId();
         this.content = review.getContent();
         this.rating = review.getRating();
-        for(ReviewImage ri : review.getReviewImages())
-            this.reviewImagesId.add(ri.getId());
+        this.createdTime = review.getCreatedTime();
+        this.imageUrls = makeUrlResponseDtos(review.getReviewImageUrls());
+
+    }
+
+    public List<ReviewImageUrlResponseDto> makeUrlResponseDtos(List<ReviewImageUrl> imageUrls)
+    {
+        List<ReviewImageUrlResponseDto> responseDtos = new ArrayList<>();
+        for (ReviewImageUrl img : imageUrls)
+        {
+            ReviewImageUrlResponseDto responseDto = new ReviewImageUrlResponseDto(img);
+            responseDtos.add(responseDto);
+        }
+        return responseDtos;
     }
 }

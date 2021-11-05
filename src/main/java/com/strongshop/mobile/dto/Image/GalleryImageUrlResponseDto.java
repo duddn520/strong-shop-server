@@ -1,4 +1,4 @@
-package com.strongshop.mobile.dto.GalleryImageUrl;
+package com.strongshop.mobile.dto.Image;
 
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
 import lombok.Getter;

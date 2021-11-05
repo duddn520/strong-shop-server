@@ -40,7 +40,7 @@ public class GalleryService {
 
     @Transactional
     public List<Gallery> getAllGalleriesByCompanyId(Long companyId){
-        List<Gallery> galleries = galleryRepository.findAllByCompanyId(companyId)
+        List<Gallery> galleries = galleryRepository.findAllByCompanyIdOrderByCreatedTimeAsc(companyId)
                 .orElseThrow(()->new RuntimeException("갤러리가 존재하지 않습니다."));
         return galleries;
     }

@@ -55,7 +55,6 @@ public class GalleryController {
         }
         Gallery gallery = new Gallery();
         galleryService.registerGallery(gallery);
-        System.out.println("gallery.getId() = " + gallery.getId());
         imageUrls = galleryImageUrlService.registerGalleryImageUrl(urllist,gallery.getId());         //이미지 파일 url만 저장하는 DB에 저장.
         requestDto.setGalleryImageUrls(imageUrls);
         galleryService.updateGalleryEntity(gallery,requestDto);
@@ -70,7 +69,7 @@ public class GalleryController {
 
     @GetMapping("/api/gallery")
     @Transactional
-    public ResponseEntity<ApiResponse<List<GalleryResponseDto>>> getAllUrls(HttpServletRequest request){
+    public ResponseEntity<ApiResponse<List<GalleryResponseDto>>> getAllGalleryImageUrls(HttpServletRequest request){
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         List<Gallery> galleries = galleryService.getAllGalleriesByCompanyId(company.getId());

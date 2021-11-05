@@ -1,8 +1,9 @@
 package com.strongshop.mobile.domain.Review;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.strongshop.mobile.domain.BaseEntity;
 import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Image.ReviewImageUrl;
+import com.strongshop.mobile.dto.Review.ReviewRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,28 +20,36 @@ public class Review extends BaseEntity {
     @Id @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    private Company company;
+    private Long companyId;
 
     @OneToMany(mappedBy = "review",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<ReviewImage> reviewImages = new ArrayList<>();
+    private List<ReviewImageUrl> reviewImageUrls = new ArrayList<>();
 
     private String content;
     private float rating;
 
     @Builder
-    public Review(Company company, String content, float rating)
+    public Review(Long id,Long companyId, String content, float rating, List<ReviewImageUrl> reviewImageUrls)
     {
-        this.company = company;
+        this.id = id;
+        this.companyId= companyId;
         this.content = content;
         this.rating = rating;
+        this.reviewImageUrls = reviewImageUrls;
     }
 
-    public void updateCompany(Company company)
+    public void updateReview(ReviewRequestDto requestDto)
     {
-        this.company = company;
+        this.companyId = requestDto.getCompany_id();
+        this.content = requestDto.getContent();
+        this.reviewImageUrls = requestDto.getReviewImageUrls();
     }
 
-
+    public void updateReviewIdToUrls(List<ReviewImageUrl> imageUrls)
+    {
+        for(ReviewImageUrl img : imageUrls){
+            img.updateReviewId(this);
+        }
+    }
 
 }

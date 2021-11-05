@@ -2,12 +2,11 @@ package com.strongshop.mobile.dto.Gallery;
 
 import com.strongshop.mobile.domain.Gallery.Gallery;
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
-import com.strongshop.mobile.dto.GalleryImageUrl.GalleryImageUrlResponseDto;
+import com.strongshop.mobile.dto.Image.GalleryImageUrlResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ public class GalleryResponseDto {
     private String content;
     private List<GalleryImageUrlResponseDto> imageUrls = new ArrayList<>();
     private LocalDateTime createdTime;
-    private List<ResponseEntity<byte[]>> responsepictures = new ArrayList<>();
 
     public GalleryResponseDto(Gallery gallery){
         this.id = gallery.getId();

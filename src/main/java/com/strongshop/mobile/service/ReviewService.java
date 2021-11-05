@@ -2,6 +2,8 @@ package com.strongshop.mobile.service;
 
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
+import com.strongshop.mobile.domain.Image.ReviewImageUrl;
+import com.strongshop.mobile.domain.Image.ReviewImageUrlRepository;
 import com.strongshop.mobile.domain.Review.Review;
 import com.strongshop.mobile.domain.Review.ReviewRepository;
 import com.strongshop.mobile.dto.Review.ReviewRequestDto;
@@ -11,30 +13,37 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final CompanyRepository companyRepository;
-
+    private final ReviewImageUrlRepository reviewImageUrlRepository;
     @Transactional
-    public ReviewResponseDto registerReview(ReviewRequestDto requestDto)
+    public ReviewResponseDto registerReview(Review review)
     {
-        Company company = companyRepository.findById(requestDto.getCompany_id())
-                .orElseThrow(()->new IllegalArgumentException());
-
-        Review review = requestDto.toEntity();
-        review.updateCompany(company);
-
         return new ReviewResponseDto(reviewRepository.save(review));
     }
 
     @Transactional
-    public ReviewResponseDto refreshResponseDto(Long reviewId){
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(()->new IllegalArgumentException());
+    public void updateReviewEntity(Review review, ReviewRequestDto requestDto)
+    {
+        review.updateReview(requestDto);
+        List<ReviewImageUrl> imageUrls = requestDto.getReviewImageUrls();
+        review.updateReviewIdToUrls(imageUrls);
+        reviewRepository.save(review);
+        for(ReviewImageUrl i : imageUrls)
+        {
+            reviewImageUrlRepository.save(i);
+        }
+    }
 
-        return new ReviewResponseDto(review);
+    @Transactional
+    public List<Review> getAllReviewsByCompanyId(Long companyId){
+        List<Review> reviews = reviewRepository.findAllByCompanyIdOrderByCreatedTimeAsc(companyId)
+                .orElseThrow(()-> new RuntimeException("리뷰가 존재하지 않습니다."));
+        return reviews;
     }
 }

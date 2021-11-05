@@ -3,7 +3,7 @@ package com.strongshop.mobile.service;
 import com.strongshop.mobile.domain.Gallery.GalleryRepository;
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
 import com.strongshop.mobile.domain.Image.GalleryImageUrlRepository;
-import com.strongshop.mobile.dto.GalleryImageUrl.GalleryImageUrlRequestDto;
+import com.strongshop.mobile.dto.Image.GalleryImageUrlRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
