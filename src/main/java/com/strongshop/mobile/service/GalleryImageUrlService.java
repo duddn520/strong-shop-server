@@ -15,9 +15,6 @@ import java.util.List;
 @Service
 public class GalleryImageUrlService {
 
-    private final GalleryImageUrlRepository galleryImageUrlRepository;
-    private final GalleryRepository galleryRepository;
-
     @Transactional
     public List<GalleryImageUrl> registerGalleryImageUrl(List<String> imageUrls, Long galleryId){
         GalleryImageUrlRequestDto requestDto = new GalleryImageUrlRequestDto();

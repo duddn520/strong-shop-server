@@ -22,7 +22,7 @@ public class Review extends BaseEntity {
 
     private Long companyId;
 
-    @OneToMany(mappedBy = "review",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "review")
     private List<ReviewImageUrl> reviewImageUrls = new ArrayList<>();
 
     private String content;
