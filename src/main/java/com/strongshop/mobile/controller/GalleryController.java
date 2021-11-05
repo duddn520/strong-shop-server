@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,7 +36,6 @@ public class GalleryController {
     private final CompanyService companyService;
     private final FileUploadService fileUploadService;
     private final GalleryService galleryService;
-    private final AWSS3DownloadService awss3DownloadService;
 
 
 
@@ -68,33 +68,22 @@ public class GalleryController {
 
     }
 
-    @GetMapping("/api/gallery")         //자신 회사의 전체 갤러리 리스트 조회
-    public ResponseEntity<ApiResponse<List<GalleryResponseDto>>> downloadAllGalleries(HttpServletRequest request) throws IOException{
+    @GetMapping("/api/gallery")
+    @Transactional
+    public ResponseEntity<ApiResponse<List<GalleryResponseDto>>> getAllUrls(HttpServletRequest request){
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        Long companyId = company.getId();
-
-        List<Gallery> galleries = galleryService.getAllGalleriesByCompanyId(companyId);
-        List<GalleryResponseDto> responseDtos = new ArrayList<>();                                                  //GalleryResponseDto에 List<responseEntity<byte[]>> 생성되어 있음.
-        for(Gallery g :galleries)
+        List<Gallery> galleries = galleryService.getAllGalleriesByCompanyId(company.getId());
+        List<GalleryResponseDto> responseDtos = new ArrayList<>();
+        for(Gallery g : galleries)
         {
             GalleryResponseDto responseDto = new GalleryResponseDto(g);
-            List<ResponseEntity<byte[]>> responseEntities = new ArrayList<>();
-            List<GalleryImageUrl> galleryImageUrls = g.getImageUrls();
-            for(GalleryImageUrl img : galleryImageUrls)                                             //각 갤러리마다 모든 사진 다운로드 후 responseDto에 저장.
-            {
-                ResponseEntity<byte[]> imgResponseEntity = awss3DownloadService.objectToFile(awss3DownloadService.downloadFile(img.getImageUrl()), img.getImageUrl());
-                responseEntities.add(imgResponseEntity);
-            }
-            responseDto.setResponsepictures(responseEntities);
-            responseDtos.add(responseDto);                                          //responseDto들의 뭉치 저장.
+            responseDtos.add(responseDto);
         }
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS,
                 responseDtos), HttpStatus.OK);
-
     }
-
 }

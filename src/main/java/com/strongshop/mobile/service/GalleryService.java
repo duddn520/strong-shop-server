@@ -3,6 +3,8 @@ package com.strongshop.mobile.service;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Gallery.Gallery;
 import com.strongshop.mobile.domain.Gallery.GalleryRepository;
+import com.strongshop.mobile.domain.Image.GalleryImageUrl;
+import com.strongshop.mobile.domain.Image.GalleryImageUrlRepository;
 import com.strongshop.mobile.dto.Gallery.GalleryRequestDto;
 import com.strongshop.mobile.dto.Gallery.GalleryResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.List;
 public class GalleryService {
 
     private final GalleryRepository galleryRepository;
+    private final GalleryImageUrlRepository galleryImageUrlRepository;
 
     @Transactional
     public Gallery registerGallery(Gallery gallery) {
@@ -27,7 +30,12 @@ public class GalleryService {
     @Transactional
     public void updateGalleryEntity(Gallery gallery, GalleryRequestDto requestDto){
         gallery.updateGallery(requestDto);
-        gallery.updateGalleryIdToUrls(requestDto.getGalleryImageUrls());
+        List<GalleryImageUrl> imageUrls = requestDto.getGalleryImageUrls();
+        gallery.updateGalleryIdToUrls(imageUrls);
+        galleryRepository.save(gallery);
+        for(GalleryImageUrl i : imageUrls) {
+            galleryImageUrlRepository.save(i);
+        }
     }
 
     @Transactional

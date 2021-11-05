@@ -26,7 +26,6 @@ public class GalleryImageUrlService {
         for(String i : imageUrls){
             requestDto.setImageUrl(i);
             GalleryImageUrl imgUrl = requestDto.toEntity();
-            galleryImageUrlRepository.save(imgUrl);
             galleryImageUrls.add(imgUrl);
         }
         return galleryImageUrls;
