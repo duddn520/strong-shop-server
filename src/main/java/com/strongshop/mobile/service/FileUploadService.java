@@ -19,7 +19,6 @@ public class FileUploadService {
 
     public String uploadImage(MultipartFile file){
         String filename = createFileName(file.getOriginalFilename());
-        log.info(file.getOriginalFilename());
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
         objectMetadata.setContentType(file.getContentType());
