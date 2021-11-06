@@ -2,6 +2,7 @@ package com.strongshop.mobile.service;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,12 +12,14 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class FileUploadService {
 
     private final UploadService uploadService;
 
     public String uploadImage(MultipartFile file){
         String filename = createFileName(file.getOriginalFilename());
+        log.info(file.getOriginalFilename());
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
         objectMetadata.setContentType(file.getContentType());
