@@ -20,6 +20,7 @@ public class ReviewRequestDto {
     private String content;
     private float rating;
     private List<ReviewImageUrl> reviewImageUrls = new ArrayList<>();
+    private String reply;
 
     public Review toEntity(){
         return Review.builder()
@@ -27,6 +28,7 @@ public class ReviewRequestDto {
                 .content(content)
                 .rating(rating)
                 .reviewImageUrls(reviewImageUrls)
+                .reply(reply)
                 .build();
     }
 }

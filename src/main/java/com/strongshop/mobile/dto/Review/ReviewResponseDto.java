@@ -24,6 +24,7 @@ public class ReviewResponseDto {
     private float rating;
     private LocalDateTime createdTime;
     private List<ReviewImageUrlResponseDto> imageUrls = new ArrayList<>();
+    private String reply;
 
     public ReviewResponseDto(Review review){
         this.id = review.getId();
@@ -32,6 +33,7 @@ public class ReviewResponseDto {
         this.rating = review.getRating();
         this.createdTime = review.getCreatedTime();
         this.imageUrls = makeUrlResponseDtos(review.getReviewImageUrls());
+        this.reply= review.getReply();
 
     }
 

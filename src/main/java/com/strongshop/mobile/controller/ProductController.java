@@ -89,6 +89,7 @@ public class ProductController {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         requestDto.setCompanyId(company.getId());
+
         switch (item){
             case "blackbox":
                 requestDto.setItem(Item.BLACKBOX);

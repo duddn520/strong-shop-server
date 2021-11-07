@@ -83,4 +83,19 @@ public class ReviewController {
                 HttpResponseMsg.GET_SUCCESS,
                 responseDtos), HttpStatus.OK);
     }
+
+    @PutMapping("api/review/reply")
+    public ResponseEntity<ApiResponse<ReviewResponseDto>> makeReply(@RequestBody ReviewRequestDto requestDto)
+    {
+        Long reviewId = requestDto.getId();
+        Review review = reviewService.findReviewById(reviewId);
+        reviewService.updateReply(review,requestDto.getReply());
+        ReviewResponseDto responseDto = new ReviewResponseDto(review);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.UPDATE_SUCCESS,
+                responseDto), HttpStatus.OK);
+
+    }
 }

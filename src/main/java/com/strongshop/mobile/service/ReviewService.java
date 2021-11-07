@@ -46,4 +46,19 @@ public class ReviewService {
                 .orElseThrow(()-> new RuntimeException("리뷰가 존재하지 않습니다."));
         return reviews;
     }
+
+    @Transactional
+    public void updateReply(Review review, String reply){
+        review.updateReply(reply);
+        reviewRepository.save(review);
+    }
+
+    @Transactional
+    public Review findReviewById(Long reviewId)
+    {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new RuntimeException("해당 리뷰가 존재하지 않습니다."));
+
+        return review;
+    }
 }

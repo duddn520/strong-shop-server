@@ -27,15 +27,19 @@ public class Review extends BaseEntity {
 
     private String content;
     private float rating;
+    private String reply;
+
 
     @Builder
-    public Review(Long id,Long companyId, String content, float rating, List<ReviewImageUrl> reviewImageUrls)
+    public Review(Long id,Long companyId, String content, float rating, List<ReviewImageUrl> reviewImageUrls,String reply)
     {
         this.id = id;
         this.companyId= companyId;
         this.content = content;
         this.rating = rating;
         this.reviewImageUrls = reviewImageUrls;
+        this.reply = reply;
+
     }
 
     public void updateReview(ReviewRequestDto requestDto)
@@ -50,6 +54,11 @@ public class Review extends BaseEntity {
         for(ReviewImageUrl img : imageUrls){
             img.updateReviewId(this);
         }
+    }
+
+    public void updateReply(String reply)
+    {
+        this.reply = reply;
     }
 
 }
