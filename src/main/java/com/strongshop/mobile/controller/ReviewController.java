@@ -36,7 +36,7 @@ public class ReviewController {
     private final FileUploadService fileUploadService;
     private final ReviewService reviewService;
 
-    @PostMapping("/api/review")
+    @PostMapping("/api/review")                 //TODO 리뷰 등록시 유저 프로필 사진 필요. UserRepository에서 뜯어와야할듯.. Review 엔티티와 Dto들 추가 수정 필요.
     public ResponseEntity<ApiResponse<ReviewResponseDto>> registerReviewContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content, HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
