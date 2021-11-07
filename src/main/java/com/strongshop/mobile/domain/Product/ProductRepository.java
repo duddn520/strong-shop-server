@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product,Long> {
 
-    Optional<List<Product>> findAllByCompany(Company company);
-    Optional<List<Product>> findAllByItemAndCompany(Item item,Company company);
+    Optional<List<Product>> findAllByCompanyId(Long companyId);
+    Optional<List<Product>> findAllByItemAndCompanyId(Item item,Long companyId);
 }

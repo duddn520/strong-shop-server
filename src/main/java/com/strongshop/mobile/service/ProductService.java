@@ -42,9 +42,7 @@ public class ProductService {
     @Transactional
     public List<ProductResponseDto> getAllProductsByCompany(Long companyId)
     {
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(()-> new RuntimeException());
-        List<Product> products = productRepository.findAllByCompany(company)
+        List<Product> products = productRepository.findAllByCompanyId(companyId)
                 .orElseThrow(()-> new RuntimeException());
 
         List<ProductResponseDto> responseDtos = new ArrayList<>();
@@ -60,9 +58,7 @@ public class ProductService {
     @Transactional
     public List<ProductResponseDto> getSpecificItemsByCompany(Long companyId, Item item)
     {
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(()-> new RuntimeException("존재하지 않는 업체입니다."));
-        List<Product> products = productRepository.findAllByItemAndCompany(item,company)
+        List<Product> products = productRepository.findAllByItemAndCompanyId(item,companyId)
                 .orElseGet(()-> new ArrayList<Product>());
 
         List<ProductResponseDto> responseDtos = new ArrayList<>();
