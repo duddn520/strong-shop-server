@@ -18,7 +18,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Item item;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
 
