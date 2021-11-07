@@ -16,7 +16,7 @@ public class ProductRequestDto {
     private String name;
     private String additionalInfo;
     private Item item;
-    private Company company;
+    private Long companyId;
 
     public Product toEntity(){
         return Product.builder()
@@ -24,7 +24,7 @@ public class ProductRequestDto {
                 .name(name)
                 .additionalInfo(additionalInfo)
                 .item(item)
-                .company(company)
+                .companyId(companyId)
                 .build();
     }
 

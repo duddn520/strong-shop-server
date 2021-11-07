@@ -61,9 +61,9 @@ public class ProductService {
     public List<ProductResponseDto> getSpecificItemsByCompany(Long companyId, Item item)
     {
         Company company = companyRepository.findById(companyId)
-                .orElseThrow(()-> new RuntimeException());
+                .orElseThrow(()-> new RuntimeException("존재하지 않는 업체입니다."));
         List<Product> products = productRepository.findAllByItemAndCompany(item,company)
-                .orElseThrow(()-> new RuntimeException());
+                .orElseGet(()-> new ArrayList<Product>());
 
         List<ProductResponseDto> responseDtos = new ArrayList<>();
         for(Product p : products)

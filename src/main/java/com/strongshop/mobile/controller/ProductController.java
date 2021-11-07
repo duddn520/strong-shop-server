@@ -37,7 +37,7 @@ public class ProductController {
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        requestDto.setCompany(company);
+        requestDto.setCompanyId(company.getId());
 
         switch (item){
             case "blackbox":
@@ -88,7 +88,7 @@ public class ProductController {
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        requestDto.setCompany(company);
+        requestDto.setCompanyId(company.getId());
         switch (item){
             case "blackbox":
                 requestDto.setItem(Item.BLACKBOX);
