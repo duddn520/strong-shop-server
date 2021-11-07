@@ -84,7 +84,7 @@ public class ReviewController {
                 responseDtos), HttpStatus.OK);
     }
 
-    @PutMapping("api/review/reply")
+    @PutMapping("/api/review/reply")
     public ResponseEntity<ApiResponse<ReviewResponseDto>> makeReply(@RequestBody ReviewRequestDto requestDto)
     {
         Long reviewId = requestDto.getId();
