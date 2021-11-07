@@ -28,12 +28,11 @@ import java.util.Map;
 public class ProductController {
 
     private final JwtTokenProvider jwtTokenProvider;
-
     private final ProductService productService;
     private final CompanyService companyService;
 
     //제품 등록
-    @PostMapping("/api/product/register/{item}")
+    @PostMapping("/api/product/{item}")
     public ResponseEntity<ApiResponse<ProductResponseDto>> registerBlackbox(@RequestBody ProductRequestDto requestDto, @PathVariable("item") String item, HttpServletRequest request){
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
@@ -84,7 +83,7 @@ public class ProductController {
     }
 
     //제품 수정
-    @PutMapping("/api/product/update/{item}")
+    @PutMapping("/api/product/{item}")
     public ResponseEntity<ApiResponse<ProductResponseDto>> updateProduct(@RequestBody ProductRequestDto requestDto,@PathVariable("item") String item, HttpServletRequest request){
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
