@@ -5,6 +5,7 @@ import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.Product.Item;
 import com.strongshop.mobile.dto.Product.ProductRequestDto;
 import com.strongshop.mobile.dto.Product.ProductResponseDto;
+import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
@@ -17,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,16 +27,16 @@ import java.util.Map;
 @RestController
 public class ProductController {
 
-    private final CompanyRepository companyRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+
     private final ProductService productService;
     private final CompanyService companyService;
 
     //제품 등록
     @PostMapping("/api/product/register/{item}")
-    public ResponseEntity<ApiResponse<ProductResponseDto>> registerBlackbox(@RequestBody ProductRequestDto requestDto, @PathVariable("item") String item, Authentication authentication){
+    public ResponseEntity<ApiResponse<ProductResponseDto>> registerBlackbox(@RequestBody ProductRequestDto requestDto, @PathVariable("item") String item, HttpServletRequest request){
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String email = userDetails.getUsername();
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         requestDto.setCompany(company);
 
@@ -83,8 +85,11 @@ public class ProductController {
 
     //제품 수정
     @PutMapping("/api/product/update/{item}")
-    public ResponseEntity<ApiResponse<ProductResponseDto>> updateProduct(@RequestBody ProductRequestDto requestDto,@PathVariable("item") String item){
+    public ResponseEntity<ApiResponse<ProductResponseDto>> updateProduct(@RequestBody ProductRequestDto requestDto,@PathVariable("item") String item, HttpServletRequest request){
 
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        Company company = companyService.getCompanyByEmail(email);
+        requestDto.setCompany(company);
         switch (item){
             case "blackbox":
                 requestDto.setItem(Item.BLACKBOX);
@@ -130,10 +135,9 @@ public class ProductController {
     //제품 조회
         //전체조회(회사 id)
     @GetMapping("/api/product")
-    public ResponseEntity<ApiResponse<Map<String,List<ProductResponseDto>>>> getAllProductsByCompany(Authentication authentication)
+    public ResponseEntity<ApiResponse<Map<String,List<ProductResponseDto>>>> getAllProductsByCompany(HttpServletRequest request)
     {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String email = userDetails.getUsername();
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         Long company_id = company.getId();
 
