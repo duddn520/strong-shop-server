@@ -57,6 +57,7 @@ public class ReviewController {
             urllist.add(fileUploadService.uploadImage(f));
         }
         Review review = new Review();
+        review.updateUser(user);
         reviewService.registerReview(review);
         imageUrls = reviewImageUrlService.registerReviewImageUrl(urllist,review.getId());
         requestDto.setReviewImageUrls(imageUrls);

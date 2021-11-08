@@ -67,4 +67,6 @@ public class Review extends BaseEntity {
         this.reply = reply;
     }
 
+    public void updateUser(User user) { this.user = user;}
+
 }
