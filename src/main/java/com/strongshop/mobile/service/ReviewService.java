@@ -42,7 +42,7 @@ public class ReviewService {
 
     @Transactional
     public List<Review> getAllReviewsByCompanyId(Long companyId){
-        List<Review> reviews = reviewRepository.findAllByCompanyIdOrderByCreatedTimeAsc(companyId)
+        List<Review> reviews = reviewRepository.findAllByCompanyIdOrderByCreatedTimeDesc(companyId)
                 .orElseThrow(()-> new RuntimeException("리뷰가 존재하지 않습니다."));
         return reviews;
     }

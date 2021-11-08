@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review,Long> {
-    Optional<List<Review>> findAllByCompanyIdOrderByCreatedTimeAsc(Long companyId);
+    Optional<List<Review>> findAllByCompanyIdOrderByCreatedTimeDesc(Long companyId);
 }
