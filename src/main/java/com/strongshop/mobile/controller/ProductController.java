@@ -171,5 +171,24 @@ public class ProductController {
 
     }
 
+    @GetMapping("/api/product/{company_id}")
+    public ResponseEntity<ApiResponse<Map<String,List<ProductResponseDto>>>> getAllProductsByCompany4User(@PathVariable("company_id")Long companyId)
+    {
+        Map<String,List<ProductResponseDto>> map = new HashMap<>();
+        map.put("tinting",productService.getSpecificItemsByCompany(companyId,Item.TINTING));
+        map.put("blackbox",productService.getSpecificItemsByCompany(companyId,Item.BLACKBOX));
+        map.put("ppf",productService.getSpecificItemsByCompany(companyId,Item.PPF));
+        map.put("battery",productService.getSpecificItemsByCompany(companyId,Item.BATTERY));
+        map.put("afterblow",productService.getSpecificItemsByCompany(companyId,Item.AFTERBLOW));
+        map.put("deafening",productService.getSpecificItemsByCompany(companyId,Item.DEAFENING));
+        map.put("wrapping",productService.getSpecificItemsByCompany(companyId,Item.WRAPPING));
+        map.put("glasscoating",productService.getSpecificItemsByCompany(companyId,Item.GLASSCOATING));
+        map.put("undercoating",productService.getSpecificItemsByCompany(companyId,Item.UNDERCOATING));
+        map.put("etc",productService.getSpecificItemsByCompany(companyId,Item.ETC));
 
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                map),HttpStatus.OK);
+    }
 }

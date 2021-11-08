@@ -81,4 +81,25 @@ public class CompanyInfoController {
         }
 
     }
+
+    @GetMapping("/api/companyinfo/{company_id}")            //유저가 요청하는 get요청, conmpnayId를 인자로 받는다.
+    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> getCompanyInfo4User(@PathVariable("company_id") Long companyId)
+    {
+        CompanyInfo companyInfo = companyInfoService.getCompanyInfo(companyId);
+        if(companyInfo.getId()==null)
+        {
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.NO_CONTENT,
+                    HttpResponseMsg.NO_CONTENT), HttpStatus.NO_CONTENT);
+
+        }
+        else {
+            CompanyInfoResponseDto responseDto = new CompanyInfoResponseDto(companyInfo);
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.OK,
+                    HttpResponseMsg.GET_SUCCESS,
+                    responseDto), HttpStatus.OK);
+        }
+
+    }
 }

@@ -67,12 +67,30 @@ public class GalleryController {
 
     }
 
-    @GetMapping("/api/gallery")
+    @GetMapping("/api/gallery")         //company입장에서 자신의 gallery조회
     @Transactional
     public ResponseEntity<ApiResponse<List<GalleryResponseDto>>> getAllGalleryImageUrls(HttpServletRequest request){
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         List<Gallery> galleries = galleryService.getAllGalleriesByCompanyId(company.getId());
+        List<GalleryResponseDto> responseDtos = new ArrayList<>();
+        for(Gallery g : galleries)
+        {
+            GalleryResponseDto responseDto = new GalleryResponseDto(g);
+            responseDtos.add(responseDto);
+        }
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDtos), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/gallery/{company_id}")
+    @Transactional
+    public ResponseEntity<ApiResponse<List<GalleryResponseDto>>> getAllGalleryImageUrls4User(@PathVariable("company_id") Long companyId)
+    {
+        List<Gallery> galleries = galleryService.getAllGalleriesByCompanyId(companyId);
         List<GalleryResponseDto> responseDtos = new ArrayList<>();
         for(Gallery g : galleries)
         {

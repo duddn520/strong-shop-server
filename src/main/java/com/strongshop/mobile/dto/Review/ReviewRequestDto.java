@@ -3,6 +3,7 @@ package com.strongshop.mobile.dto.Review;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Image.ReviewImageUrl;
 import com.strongshop.mobile.domain.Review.Review;
+import com.strongshop.mobile.domain.User.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class ReviewRequestDto {
     private float rating;
     private List<ReviewImageUrl> reviewImageUrls = new ArrayList<>();
     private String reply;
+    private User user;
 
     public Review toEntity(){
         return Review.builder()
@@ -29,6 +31,7 @@ public class ReviewRequestDto {
                 .rating(rating)
                 .reviewImageUrls(reviewImageUrls)
                 .reply(reply)
+                .user(user)
                 .build();
     }
 }

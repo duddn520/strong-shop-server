@@ -3,6 +3,7 @@ package com.strongshop.mobile.domain.Review;
 import com.strongshop.mobile.domain.BaseEntity;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Image.ReviewImageUrl;
+import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.dto.Review.ReviewRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,9 +30,12 @@ public class Review extends BaseEntity {
     private float rating;
     private String reply;
 
+    @OneToOne
+    private User user;
+
 
     @Builder
-    public Review(Long id,Long companyId, String content, float rating, List<ReviewImageUrl> reviewImageUrls,String reply)
+    public Review(Long id,Long companyId, String content, float rating, List<ReviewImageUrl> reviewImageUrls,String reply,User user)
     {
         this.id = id;
         this.companyId= companyId;
@@ -39,6 +43,8 @@ public class Review extends BaseEntity {
         this.rating = rating;
         this.reviewImageUrls = reviewImageUrls;
         this.reply = reply;
+        this.user = user;
+
 
     }
 

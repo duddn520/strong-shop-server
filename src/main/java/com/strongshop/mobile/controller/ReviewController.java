@@ -5,6 +5,7 @@ import com.strongshop.mobile.domain.Gallery.Gallery;
 import com.strongshop.mobile.domain.Image.ReviewImageUrl;
 import com.strongshop.mobile.domain.Image.ReviewImageUrlRepository;
 import com.strongshop.mobile.domain.Review.Review;
+import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.dto.Review.ReviewRequestDto;
 import com.strongshop.mobile.dto.Review.ReviewResponseDto;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
@@ -15,6 +16,7 @@ import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.FileUploadService;
 import com.strongshop.mobile.service.ReviewImageUrlService;
 import com.strongshop.mobile.service.ReviewService;
+import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,15 +37,18 @@ public class ReviewController {
     private final CompanyService companyService;
     private final FileUploadService fileUploadService;
     private final ReviewService reviewService;
+    private final UserService userService;
 
-    @PostMapping("/api/review")                 //TODO 리뷰 등록시 유저 프로필 사진 필요. UserRepository에서 뜯어와야할듯.. Review 엔티티와 Dto들 추가 수정 필요.
-    public ResponseEntity<ApiResponse<ReviewResponseDto>> registerReviewContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content, HttpServletRequest request)
+    @PostMapping("/api/review/{company_id}")
+    public ResponseEntity<ApiResponse<ReviewResponseDto>> registerReviewContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content,@PathVariable("company_id") Long companyId ,HttpServletRequest request)
     {
-        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
-        Company company = companyService.getCompanyByEmail(email);
-        ReviewRequestDto requestDto = new ReviewRequestDto();
 
-        requestDto.setCompany_id(company.getId());
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        User user = userService.getUserByEmail(email);
+        ReviewRequestDto requestDto = new ReviewRequestDto();
+        requestDto.setUser(user);
+
+        requestDto.setCompany_id(companyId);
         requestDto.setContent(content);
         List<ReviewImageUrl> imageUrls = new ArrayList<>();
         List<String> urllist = new ArrayList<>();
@@ -64,7 +69,7 @@ public class ReviewController {
                 responseDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/review")
+    @GetMapping("/api/review")          //회사가 조회하는 경우.
     @Transactional
     public ResponseEntity<ApiResponse<List<ReviewResponseDto>>> getAllReviewImageUrls(HttpServletRequest request)
     {
@@ -95,5 +100,23 @@ public class ReviewController {
                 HttpStatusCode.OK,
                 HttpResponseMsg.UPDATE_SUCCESS), HttpStatus.OK);
 
+    }
+
+    @GetMapping("/api/review/{company_id}")         //유저가 조회하는 경우, companyid 수동으로 공급.
+    @Transactional
+    public ResponseEntity<ApiResponse<List<ReviewResponseDto>>> getAllReviewImageUrls4User(@PathVariable("company_id") Long companyId, HttpServletRequest request)
+    {
+        List<Review> reviews = reviewService.getAllReviewsByCompanyId(companyId);
+        List<ReviewResponseDto> responseDtos = new ArrayList<>();
+        for(Review r : reviews)
+        {
+            ReviewResponseDto responseDto = new ReviewResponseDto(r);
+            responseDtos.add(responseDto);
+        }
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDtos), HttpStatus.OK);
     }
 }
