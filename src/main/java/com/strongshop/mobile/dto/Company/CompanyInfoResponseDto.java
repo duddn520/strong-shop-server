@@ -18,6 +18,8 @@ public class CompanyInfoResponseDto {
     private String contact;
     private String address;
     private String detailAddress;
+    private String backgroundImageUrl;
+
 
     public CompanyInfoResponseDto(CompanyInfo companyInfo)
     {
@@ -30,5 +32,6 @@ public class CompanyInfoResponseDto {
         this.contact = companyInfo.getContact();
         this.address = companyInfo.getAddress();
         this.detailAddress = companyInfo.getDetailAddress();
+        this.backgroundImageUrl = companyInfo.getBackgroundImageUrl();
     }
 }

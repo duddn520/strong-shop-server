@@ -22,6 +22,7 @@ public class CompanyResponseDto {
     private String businessNumber; // 사업자번호
 
 
+
     public CompanyResponseDto(Company company) {
         this.id = company.getId();
         this.name = company.getName();

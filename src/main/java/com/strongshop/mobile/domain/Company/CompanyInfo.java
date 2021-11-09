@@ -24,10 +24,14 @@ public class CompanyInfo {
     private String contact;
     private String address;
     private String detailAddress;
+    private String backgroundImageUrl;
+    private String latitude;
+    private String longitude;
+
 
 
     @Builder
-    public CompanyInfo (Long id, Company company, String introduction, String blogUrl, String siteUrl, String snsUrl, String contact, String address, String detailAddress)
+    public CompanyInfo (Long id, Company company, String introduction, String blogUrl, String siteUrl, String snsUrl, String contact, String address, String detailAddress, String backgroundImageUrl, String latitude, String longitude)
     {
         this.id = id;
         this.company = company;
@@ -38,6 +42,9 @@ public class CompanyInfo {
         this.contact = contact;
         this.address = address;
         this.detailAddress = detailAddress;
+        this.backgroundImageUrl = backgroundImageUrl;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public void updateCompany(Company company)
@@ -54,6 +61,9 @@ public class CompanyInfo {
         this.contact = companyInfo.getContact();
         this.address = companyInfo.getAddress();
         this.detailAddress = companyInfo.getDetailAddress();
+        this.backgroundImageUrl = companyInfo.getBackgroundImageUrl();
+        this.latitude = companyInfo.getLatitude();
+        this.longitude = companyInfo.getLongitude();
     }
 
 }

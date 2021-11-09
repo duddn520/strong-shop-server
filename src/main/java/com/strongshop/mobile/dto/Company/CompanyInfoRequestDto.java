@@ -19,6 +19,9 @@ public class CompanyInfoRequestDto {
     private String contact;
     private String address;
     private String detailAddress;
+    private String backgroundImageUrl;
+    private String latitude;
+    private String longitude;
 
     public CompanyInfo toEntity(){
         return CompanyInfo.builder()
@@ -29,6 +32,9 @@ public class CompanyInfoRequestDto {
                 .contact(contact)
                 .address(address)
                 .detailAddress(detailAddress)
+                .backgroundImageUrl(backgroundImageUrl)
+                .latitude(latitude)
+                .longitude(longitude)
                 .build();
     }
 }
