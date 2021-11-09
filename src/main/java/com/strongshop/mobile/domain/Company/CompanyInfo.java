@@ -47,8 +47,6 @@ public class CompanyInfo {
 
     public void updateCompanyInfo(CompanyInfo companyInfo)
     {
-        this.id = companyInfo.getId();
-        this.company = companyInfo.getCompany();
         this.introduction = companyInfo.getIntroduction();
         this.blogUrl = companyInfo.getBlogUrl();
         this.snsUrl = companyInfo.getSnsUrl();
