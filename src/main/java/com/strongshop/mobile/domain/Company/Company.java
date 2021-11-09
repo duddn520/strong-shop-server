@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 public class Company implements UserDetails {
 
-    @Id
+    @Id @GeneratedValue
     private Long id;
 
     private String name; // 회사명
