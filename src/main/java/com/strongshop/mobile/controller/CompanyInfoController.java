@@ -34,13 +34,11 @@ public class CompanyInfoController {
     private final FileUploadService fileUploadService;
 
     @PostMapping("/api/companyinfo")
-    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo(@RequestParam MultipartFile file, @RequestBody CompanyInfoRequestDto requestDto, HttpServletRequest request)
+    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo( @RequestBody CompanyInfoRequestDto requestDto, HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         requestDto.setCompany_id(company.getId());
-        String url = fileUploadService.uploadImage(file);
-        requestDto.setBackgroundImageUrl(url);
         CompanyInfoResponseDto responseDto = companyInfoService.registerCompanyInfo(requestDto);
 
         return new ResponseEntity<>(ApiResponse.response(
