@@ -24,45 +24,17 @@ import java.util.Optional;
 public class BiddingService {
 
     private final BiddingRepository biddingRepository;
-    private final CompanyRepository companyRepository;
     private final OrderRepository orderRepository;
 
 
     @Transactional
-    public BiddingResponseDto registerBidding(BiddingRequestDto requestDto){
-        Bidding bidding = requestDto.toEntity();
+    public BiddingResponseDto registerBidding(BiddingRequestDto requestDto,Company company){
+        Bidding bidding = new Bidding();
         Order order = orderRepository.findById(requestDto.getOrder_id())
-                .orElseThrow(()-> new IllegalArgumentException());
-
-        Company company = companyRepository.findById(requestDto.getCompany_id())
-                .orElseThrow(()-> new IllegalArgumentException());
-
-        bidding.updateOrderCompany(order,company);
-
-        return new BiddingResponseDto(biddingRepository.save(bidding));
+                .orElseThrow(()-> new RuntimeException("해당 주문이 존재하지 않습니다."));
+        bidding.updateBiddingAndOrderAndCompany(order,company);
+        biddingRepository.save(bidding);
+        return new BiddingResponseDto(bidding);
     }
 
-    @Transactional
-    public BiddingResponseDto updateBidding(BiddingRequestDto requestDto){
-        Bidding bidding = biddingRepository.findById(requestDto.getId())
-                .orElseThrow(()-> new IllegalArgumentException());
-
-        return new BiddingResponseDto(bidding.updateBidding(requestDto.toEntity()));
-    }
-
-    @Transactional
-    public List<BiddingResponseDto> getBiddingsByCompany(String companyName){
-        Company company = companyRepository.findByName(companyName)
-                .orElseThrow(()-> new IllegalArgumentException());
-
-        List<Bidding> biddings = biddingRepository.findAllByCompany(company)
-                .orElseThrow(()-> new IllegalArgumentException());
-
-        List<BiddingResponseDto> responseDtos = new ArrayList<>();
-        for(Bidding b : biddings) {
-            responseDtos.add(new BiddingResponseDto(b));
-        }
-
-        return responseDtos;
-    }
 }

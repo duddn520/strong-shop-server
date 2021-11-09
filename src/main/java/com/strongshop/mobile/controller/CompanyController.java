@@ -166,7 +166,7 @@ public class CompanyController {
         {
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.FORBIDDEN,
-                    HttpResponseMsg.POST_SUCCESS
+                    HttpResponseMsg.LOGIN_FAIL
                     ),HttpStatus.FORBIDDEN);
         }
 
