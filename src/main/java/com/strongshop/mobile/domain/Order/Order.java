@@ -25,6 +25,7 @@ public class Order extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(length = 1024)
@@ -44,11 +45,12 @@ public class Order extends BaseEntity {
         this.biddings = biddings;
     }
 
-    public Order updateOrder(User user, String detail, String region)
+    public Order updateOrder(User user, String detail, String region)       //연관관계 편의 메서드.
     {
         this.user = user;
         this.detail = detail;
         this.region = region;
+        user.getOrders().add(this);
         return this;
     }
 }

@@ -1,5 +1,6 @@
 package com.strongshop.mobile.domain.User;
 
+import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.dto.User.UserDto;
 import com.strongshop.mobile.dto.User.UserRequestDto;
 import lombok.Builder;
@@ -7,10 +8,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -28,8 +32,11 @@ public class User implements UserDetails{
     private String gender;  //카카오
     private LocalDate birth;
 
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
+
     @Builder
-    public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, LocalDate birth) {
+    public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, LocalDate birth, List<Order> orders) {
         this.id = id;
         this.realName = realName;
         this.email = email;
@@ -39,6 +46,8 @@ public class User implements UserDetails{
         this.thumbnailImage = thumbnailImage;
         this.gender = gender;
         this.birth = birth;
+        this.orders =orders;
+
 
     }
 
