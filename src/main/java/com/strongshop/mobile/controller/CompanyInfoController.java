@@ -1,4 +1,4 @@
-package com.strongshop.mobile.controller.Company;
+package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyInfo;

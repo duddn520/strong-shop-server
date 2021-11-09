@@ -1,4 +1,4 @@
-package com.strongshop.mobile.controller.Company;
+package com.strongshop.mobile.controller;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
