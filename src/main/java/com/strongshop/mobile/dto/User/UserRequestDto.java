@@ -22,12 +22,11 @@ public class UserRequestDto {
     private String profileImage; // 카카오
     private String thumbnailImage;  //카카오
     private String gender;  //카카오
-    private String refreshToken; //카카오
     private LocalDate birth;
 
     @Builder
     public UserRequestDto(Long id,String realname,String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender
-                          , String refreshToken, LocalDate birth) {
+                          , LocalDate birth) {
         this.id = id;
         this.realname = realname;
         this.email = email;
@@ -36,7 +35,6 @@ public class UserRequestDto {
         this.profileImage = profileImage;
         this.thumbnailImage = thumbnailImage;
         this.gender = gender;
-        this.refreshToken = refreshToken;
         this.birth = birth;
     }
 
@@ -50,7 +48,6 @@ public class UserRequestDto {
                 .profileImage(profileImage)
                 .thumbnailImage(thumbnailImage)
                 .gender(gender)
-                .refreshToken(refreshToken)
                 .birth(birth)
                 .build();
     }

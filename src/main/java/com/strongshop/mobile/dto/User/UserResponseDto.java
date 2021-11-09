@@ -20,7 +20,6 @@ public class UserResponseDto {
     private String profileImage; // 카카오
     private String thumbnailImage;  //카카오
     private String gender;  //카카오
-    private String refreshToken; //카카오
     private LocalDate birth;
 
 
@@ -34,7 +33,6 @@ public class UserResponseDto {
         this.profileImage = user.getProfileImage();
         this.thumbnailImage = user.getThumbnailImage();
         this.gender = user.getGender();
-        this.refreshToken = user.getRefreshToken();
         this.birth = user.getBirth();
     }
 }
