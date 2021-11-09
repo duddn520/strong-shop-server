@@ -162,6 +162,14 @@ public class CompanyController {
     @PostMapping("/api/login/company/kakao")
     public ResponseEntity<ApiResponse<CompanyResponseDto>> completeCompanyLoginKakao(@RequestBody CompanyRequestDto requestDto)
     {
+        if(companyRepository.findByBusinessNumber(requestDto.getBusinessNumber()).isPresent())
+        {
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.POST_SUCCESS
+                    ),HttpStatus.FORBIDDEN);
+        }
+
         if(requestDto.getEmail()!=null && requestDto.getBusinessNumber()!= null)       //필수항목 중 가장 중요한 두개 검사.
         {
             Company company = requestDto.toEntity();

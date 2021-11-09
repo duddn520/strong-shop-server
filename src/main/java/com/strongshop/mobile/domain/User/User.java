@@ -26,11 +26,10 @@ public class User implements UserDetails{
     private String profileImage; // 카카오
     private String thumbnailImage;  //카카오
     private String gender;  //카카오
-    private String refreshToken; //카카오
     private LocalDate birth;
 
     @Builder
-    public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, String refreshToken, LocalDate birth, Role role) {
+    public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, LocalDate birth) {
         this.id = id;
         this.realName = realName;
         this.email = email;
@@ -39,7 +38,6 @@ public class User implements UserDetails{
         this.profileImage = profileImage;
         this.thumbnailImage = thumbnailImage;
         this.gender = gender;
-        this.refreshToken = refreshToken;
         this.birth = birth;
 
     }
@@ -50,7 +48,6 @@ public class User implements UserDetails{
         this.email = requestDto.getEmail();
         this.profileImage = requestDto.getProfileImage();
         this.thumbnailImage = requestDto.getThumbnailImage();
-        this.refreshToken = requestDto.getRefreshToken();
         return this;
     }
 
@@ -64,7 +61,6 @@ public class User implements UserDetails{
                 .phoneNumber(phoneNumber)
                 .thumbnailImage(thumbnailImage)
                 .gender(gender)
-                .refreshToken(refreshToken)
                 .birth(birth)
                 .build();
     }
