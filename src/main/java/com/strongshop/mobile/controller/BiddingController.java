@@ -45,27 +45,5 @@ public class BiddingController {
 
     }
 
-    //입찰 수정
-    @PutMapping("/api/bidding")
-    public ResponseEntity<ApiResponse<BiddingResponseDto>> updateBidding(@RequestBody BiddingRequestDto requestDto)
-    {
-        BiddingResponseDto responseDto = biddingService.updateBidding(requestDto);
 
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.OK,
-                HttpResponseMsg.UPDATE_SUCCESS,
-                responseDto), HttpStatus.OK);
-    }
-
-    //입찰 조회
-    @GetMapping("/api/bidding")
-    public ResponseEntity<ApiResponse<List<BiddingResponseDto>>> getBiddingsByCompany(@RequestParam("company_name") String companyName){
-
-        List<BiddingResponseDto> responseDtos = biddingService.getBiddingsByCompany(companyName);
-
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.OK,
-                HttpResponseMsg.GET_SUCCESS,
-                responseDtos),HttpStatus.OK);
-    }
 }

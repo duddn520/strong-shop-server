@@ -15,19 +15,13 @@ import java.time.LocalDateTime;
 public class BiddingResponseDto {
 
     private Long id;
-    private int tintingPrice;
-    private int blackboxPrice;
-    private int ppfPrice;
-    private int totalPrice;
+    private String detail;
     private Long order_id;
     private Long company_id;
 
     public BiddingResponseDto(Bidding bidding){
         this.id = bidding.getId();
-        this.tintingPrice = bidding.getTintingPrice();
-        this.blackboxPrice = bidding.getBlackboxPrice();
-        this.ppfPrice = bidding.getPpfPrice();
-        this.totalPrice = bidding.getTotalPrice();
+        this.detail = bidding.getDetail();
         this.order_id = bidding.getOrder().getId();
         this.company_id = bidding.getCompany().getId();
     }
