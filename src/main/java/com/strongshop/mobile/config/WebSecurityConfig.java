@@ -1,12 +1,7 @@
 package com.strongshop.mobile.config;
 
-import com.strongshop.mobile.OAuth2.OAuth2SuccessHandler;
-import com.strongshop.mobile.OAuth2.StrongShopOAuth2UserService;
-import com.strongshop.mobile.domain.User.Role;
-import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.jwt.JwtAuthenticationFilter;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
-import com.strongshop.mobile.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor

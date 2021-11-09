@@ -1,6 +1,8 @@
 package com.strongshop.mobile.jwt;
 
 import com.strongshop.mobile.domain.User.Role;
+import com.strongshop.mobile.service.JwtCompanyUserDetailService;
+import com.strongshop.mobile.service.JwtUserUserDetailService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -26,7 +28,8 @@ Filter는 검증이 끝난 JWT로부터 유저정보를 받아와서 UsernamePas
 public class JwtTokenProvider {
 
     // Security UserDetailService
-    private final UserDetailsService userDetailsService;
+    private final JwtUserUserDetailService jwtUserUserDetailService;
+    private final JwtCompanyUserDetailService jwtCompanyUserDetailService;
 
     // 보호키
     private String secretKey = "STRONG_DEALDER";
@@ -56,11 +59,19 @@ public class JwtTokenProvider {
 
 
     //JWT토큰에서 인증정보 조회
-    public Authentication getAuthentication(String token){
-        // 토큰에서 추출한 회원정보를 받아 유저를 로드하고 이를 userDetails에 담아 UsernamePasswordAuthenticationToken에 담아보낸다.
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getEmail(token));
-        // UsernamePasswordAuthenticationToken - Authentication의 구현체
+    public Authentication getAuthentication(String token, Role role){
+        // 토큰에서 추출한 회원정보를 받아 유저를 로드하고 이를 userDetails에 담아 UsernamePasswordAuthenticationToken에 담아보낸다.x
+        if(role==Role.USER) {
+            UserDetails userDetails = jwtUserUserDetailService.loadUserByUsername(this.getEmail(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        }
+        else if(role == Role.COMPANY)
+        {
+            UserDetails userDetails = jwtCompanyUserDetailService.loadUserByUsername(this.getEmail(token));
+            return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        }
+        else
+            throw new RuntimeException("유저 정보 조회 실패");
     }
 
     //토큰에서 회원정보(username) 추출

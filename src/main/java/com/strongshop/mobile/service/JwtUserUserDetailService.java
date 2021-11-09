@@ -17,7 +17,7 @@ DB에서 UserDetail을 얻어와 AuthenticationManager에게 제공하는 역할
  */
 @RequiredArgsConstructor
 @Service
-public class JwtUserDetailService implements UserDetailsService {
+public class JwtUserUserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
@@ -27,17 +27,9 @@ public class JwtUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // DB에서 사용자정보를 가져와서 반환
-        User user = userRepository.findByEmail(email).orElseGet(()->new User());
-        Company company = companyRepository.findByEmail(email).orElseGet(()->new Company());
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("해당 유저가 존재하지 않습니다."));
 
-        System.out.println("company = " + company);
-        System.out.println("user = " + user);
-        if(user.getEmail()!= null && company.getEmail()==null) {
-            return user;
-        }
-        else if(user.getEmail()==null&& company.getEmail()!=null){
-            return company;
-        }
-        else throw new RuntimeException();
+        return user;
+
     }
 }

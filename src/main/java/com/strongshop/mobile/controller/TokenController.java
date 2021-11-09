@@ -1,12 +1,10 @@
 package com.strongshop.mobile.controller;
 
-import com.strongshop.mobile.OAuth2.Token;
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
-import com.strongshop.mobile.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;

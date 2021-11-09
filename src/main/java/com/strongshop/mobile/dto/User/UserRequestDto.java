@@ -1,7 +1,5 @@
 package com.strongshop.mobile.dto.User;
 
-import com.strongshop.mobile.OAuth2.Token;
-import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,8 +55,4 @@ public class UserRequestDto {
                 .build();
     }
 
-    public void updateRefreshToken(Token token)
-    {
-        this.refreshToken = token.getRefreshToken();
-    }
 }
