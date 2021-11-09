@@ -4,14 +4,17 @@ package com.strongshop.mobile.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.dto.Order.OrderRequestDto;
 import com.strongshop.mobile.dto.Order.OrderResponseDto;
+import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
+import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.OrderService;
 import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -40,7 +45,6 @@ public class OrderController {
 
     private final OrderService orderService;
     private final UserService userService;
-    private final UserRepository userRepository;
 
     @PostMapping(value = "/api/orders",produces = "application/json; charset=utf8")
     public ResponseEntity<ApiResponse<OrderResponseDto>> registerOrder(@RequestBody Map<String,Object> param)
@@ -60,6 +64,26 @@ public class OrderController {
                 HttpStatusCode.CREATED,
                 HttpResponseMsg.POST_SUCCESS,
                 responseDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/api/orders")
+    public ResponseEntity<ApiResponse<List<OrderResponseDto>>> GetOrders(@RequestBody List<String> regions)
+    {
+        List<OrderResponseDto> responseDtos = new ArrayList<>();
+        for(String reg : regions)
+        {
+            List<Order> orders = orderService.getOrdersByRegion(reg);
+            for(Order o : orders)
+            {
+                OrderResponseDto responseDto = new OrderResponseDto(o);
+                responseDtos.add(responseDto);
+            }
+        }
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDtos), HttpStatus.OK);
     }
 
 }
