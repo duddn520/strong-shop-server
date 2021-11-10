@@ -30,7 +30,10 @@ public class BiddingService {
 
     @Transactional
     public BiddingResponseDto registerBidding(BiddingRequestDto requestDto,Company company){
-        Bidding bidding = new Bidding();
+        Bidding bidding = Bidding.builder()
+                .detail(requestDto.getDetail())
+                .company(company)
+                .build();
         Order order = orderRepository.findById(requestDto.getOrder_id())
                 .orElseThrow(()-> new RuntimeException("해당 주문이 존재하지 않습니다."));
         bidding.updateBiddingAndOrderAndCompany(order,company);
