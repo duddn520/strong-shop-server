@@ -53,10 +53,10 @@ public class BiddingController {
 
     }
 
-    @GetMapping("/api/bidding")
-    public ResponseEntity<ApiResponse<List<BiddingResponseDto>>> getAllBiddings4User(@RequestBody Long order_id)
+    @GetMapping("/api/bidding/{order_id}")
+    public ResponseEntity<ApiResponse<List<BiddingResponseDto>>> getAllBiddings4User(@PathVariable("order_id") Long orderId)
     {
-        List<Bidding> biddings = biddingService.getAllBiddingsByOrderId(order_id);
+        List<Bidding> biddings = biddingService.getAllBiddingsByOrderId(orderId);
 
         List<BiddingResponseDto> responseDtos = new ArrayList<>();
         for(Bidding b : biddings)
