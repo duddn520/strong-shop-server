@@ -88,7 +88,7 @@ public class OrderController {
 
                 for (String region : regions) {
 
-                    if (o.getRegion() == region) {
+                    if (o.getRegion().equals(region)) {
                         OrderResponseDto responseDto = new OrderResponseDto(o);
                         responseDtos.add(responseDto);
                     }
