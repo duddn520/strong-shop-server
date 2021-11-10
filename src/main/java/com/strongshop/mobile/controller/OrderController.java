@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
+import com.strongshop.mobile.domain.Order.State;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.dto.Order.OrderRequestDto;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,9 +57,12 @@ public class OrderController {
 
         String details = (String) param.get("details");
         String region = (String) param.get("region");
-        System.out.println("details.length() = " + details.length());
-        Order order = new Order();
-        order.updateOrder(user,details,region);
+        Order order = Order.builder()
+                .detail(details)
+                .region(region)
+                .state(State.BIDDING)
+                .build();
+        order.updateOrder(user);
 
         OrderResponseDto responseDto = orderService.saveOrder(order);
 
@@ -68,23 +73,61 @@ public class OrderController {
     }
 
     @GetMapping("/api/orders")
-    public ResponseEntity<ApiResponse<List<OrderResponseDto>>> GetOrders(@RequestParam List<String> regions)
+    public ResponseEntity<ApiResponse<List<OrderResponseDto>>> getOrdersNowBidding(@RequestParam List<String> regions)
     {
         List<OrderResponseDto> responseDtos = new ArrayList<>();
-        for(String reg : regions)
+
+        List<Order> orders = orderService.getOrdersStateIsBidding();
+        for(Order o : orders)
         {
-            List<Order> orders = orderService.getOrdersByRegion(reg);
-            for(Order o : orders)
+            if (o.getCreatedTime().plusMinutes(1).isBefore(LocalDateTime.now()))
             {
-                OrderResponseDto responseDto = new OrderResponseDto(o);
-                responseDtos.add(responseDto);
+                orderService.updateState2BiddingComplete(o);
+            }
+            else {
+
+                for (String region : regions) {
+
+                    if (o.getRegion() == region) {
+                        OrderResponseDto responseDto = new OrderResponseDto(o);
+                        responseDtos.add(responseDto);
+                    }
+                }
             }
         }
-
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS,
                 responseDtos), HttpStatus.OK);
     }
+
+    @GetMapping("/api/orders/user")     //유저가 조회
+    public ResponseEntity<ApiResponse<List<OrderResponseDto>>> getMyOrders(HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        User user = userService.getUserByEmail(email);
+
+        List<Order> orders = orderService.getOrdersByUser(user);
+
+        List<OrderResponseDto> responseDtos = new ArrayList<>();
+
+        for (Order o : orders)
+        {
+            if(o.getState()== State.BIDDING)
+            {
+                if (o.getCreatedTime().plusMinutes(1).isBefore(LocalDateTime.now()))
+                {
+                    orderService.updateState2BiddingComplete(o);
+                }
+            }
+            OrderResponseDto responseDto = new OrderResponseDto(o);
+            responseDtos.add(responseDto);
+        }
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDtos), HttpStatus.OK);
+    }
+
 
 }

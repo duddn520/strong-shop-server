@@ -10,8 +10,6 @@ import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.dto.Company.CompanyRequestDto;
 import com.strongshop.mobile.dto.Company.CompanyResponseDto;
-import com.strongshop.mobile.dto.User.UserRequestDto;
-import com.strongshop.mobile.dto.User.UserResponseDto;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
@@ -32,7 +30,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

@@ -1,9 +1,9 @@
 package com.strongshop.mobile.service;
 
-import com.strongshop.mobile.domain.Car.CarRepository;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Order.OrderRepository;
-import com.strongshop.mobile.domain.User.UserRepository;
+import com.strongshop.mobile.domain.Order.State;
+import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.dto.Order.OrderResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +34,31 @@ public class OrderService {
                 .orElseGet(()->new ArrayList<>());
 
         return orders;
+    }
+
+    @Transactional
+    public List<Order> getOrdersStateIsBidding()
+    {
+        List<Order> orders = orderRepository.findAllByStateOrderByCreatedTimeAsc(State.BIDDING)
+                .orElseGet(()-> new ArrayList<>());
+
+        return orders;
+    }
+
+    @Transactional
+    public List<Order> getOrdersByUser(User user)
+    {
+        List<Order> orders = orderRepository.findAllByUser(user)
+                .orElseGet(()->new ArrayList<>());
+
+        return orders;
+    }
+
+    @Transactional
+    public void updateState2BiddingComplete(Order order)
+    {
+        order.updateState(State.BIDDING_COMPLETE);
+        orderRepository.save(order);
     }
 
 

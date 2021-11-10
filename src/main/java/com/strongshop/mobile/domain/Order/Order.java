@@ -28,29 +28,37 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(length = 1024)
+    @Column(length = 1500)
     private String detail;
     private String region;
+
+    @Enumerated(EnumType.STRING)
+    private State state;
 
     @OneToMany(mappedBy = "order")
     private List<Bidding> biddings = new ArrayList<>();
 
     @Builder
-    public Order(Long id, User user, String detail,String region,List<Bidding> biddings)
+    public Order(Long id, User user, String detail,String region,State state, List<Bidding> biddings)
     {
         this.id = id;
         this.user = user;
         this.detail = detail;
         this.region = region;
+        this.state = state;
         this.biddings = biddings;
+
     }
 
-    public Order updateOrder(User user, String detail, String region)       //연관관계 편의 메서드.
+    public void updateOrder(User user)       //연관관계 편의 메서드.
     {
         this.user = user;
-        this.detail = detail;
-        this.region = region;
         user.getOrders().add(this);
-        return this;
+    }
+
+    public void updateState(State state)
+    {
+        this.state = state;
+
     }
 }
