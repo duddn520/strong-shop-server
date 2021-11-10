@@ -2,7 +2,6 @@ package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Company.Company;
-import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.dto.Bidding.BiddingRequestDto;
 import com.strongshop.mobile.dto.Bidding.BiddingResponseDto;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
@@ -13,14 +12,8 @@ import com.strongshop.mobile.service.BiddingService;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
