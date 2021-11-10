@@ -1,6 +1,7 @@
 package com.strongshop.mobile.dto.Order;
 
 import com.strongshop.mobile.domain.Order.Order;
+import com.strongshop.mobile.domain.Order.State;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class OrderResponseDto {
     private Long userId;
     private String details;
     private String region;
+    private State state;
     private LocalDateTime created_time;
 
     public OrderResponseDto(Order order)
@@ -24,6 +26,7 @@ public class OrderResponseDto {
         this.userId = order.getUser().getId();
         this.details = order.getDetail();
         this.region = order.getRegion();
+        this.state = order.getState();
         this.created_time = order.getCreatedTime();
     }
 }
