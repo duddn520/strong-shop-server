@@ -1,6 +1,7 @@
 package com.strongshop.mobile.domain.Company;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
+import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Product.Product;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,6 +35,9 @@ public class Company implements UserDetails {
     @OneToMany(mappedBy = "company")
     private List<Bidding> biddings = new ArrayList<>();
 
+    @OneToMany
+    private List<Order> biddedorders = new ArrayList<>();       //내가 입찰한 order를 리스트로 갖고 있기 위함.
+
 
     @Builder
     public Company(Long id, String name, String email, String bossName, String address, String detailAddress,String phoneNumber, String businessNumber, List<Bidding> biddings) {
@@ -57,6 +61,11 @@ public class Company implements UserDetails {
         this.businessNumber = company.getBusinessNumber();
 
         return this;
+    }
+
+    public void updateBiddedOrders(Order order)
+    {
+        this.biddedorders.add(order);
     }
 
     @Override

@@ -37,6 +37,14 @@ public class OrderService {
     }
 
     @Transactional
+    public Order getOrderByOrderId(Long orderId)
+    {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(()-> new RuntimeException("해당 주문이 존재하지 않습니다."));
+        return order;
+    }
+
+    @Transactional
     public List<Order> getOrdersStateIsBidding()
     {
         List<Order> orders = orderRepository.findAllByStateOrderByCreatedTimeAsc(State.BIDDING)

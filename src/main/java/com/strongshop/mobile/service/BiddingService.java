@@ -25,6 +25,7 @@ public class BiddingService {
 
     private final BiddingRepository biddingRepository;
     private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
 
     @Transactional
@@ -33,8 +34,18 @@ public class BiddingService {
         Order order = orderRepository.findById(requestDto.getOrder_id())
                 .orElseThrow(()-> new RuntimeException("해당 주문이 존재하지 않습니다."));
         bidding.updateBiddingAndOrderAndCompany(order,company);
+        company.updateBiddedOrders(order);
         biddingRepository.save(bidding);
         return new BiddingResponseDto(bidding);
     }
 
+    @Transactional
+    public List<Bidding> getAllBiddingsByOrderId(Long orderId)
+    {
+        Order order = orderService.getOrderByOrderId(orderId);
+        List<Bidding> biddings = biddingRepository.findAllByOrder(order)
+                .orElseGet(()->new ArrayList<>());
+
+        return biddings;
+    }
 }
