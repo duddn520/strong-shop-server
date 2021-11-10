@@ -44,19 +44,19 @@ public class OrderController {
 
     private final OrderService orderService;
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping(value = "/api/orders",produces = "application/json; charset=utf8")
     @Transactional
-    public ResponseEntity<ApiResponse<OrderResponseDto>> registerOrder(@RequestBody Map<String,Object> param)
+    public ResponseEntity<ApiResponse<OrderResponseDto>> registerOrder(@RequestBody Map<String,Object> param,HttpServletRequest request)
     {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
 
-        String jstr = param.toString();
+        String details = (String) param.get("details");
         String region = (String) param.get("region");
         Order order = new Order();
-        order.updateOrder(user,jstr,region);
+        order.updateOrder(user,details,region);
 
         OrderResponseDto responseDto = orderService.saveOrder(order);
 
