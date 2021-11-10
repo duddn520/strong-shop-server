@@ -55,6 +55,7 @@ public class OrderController {
 
         String details = (String) param.get("details");
         String region = (String) param.get("region");
+        System.out.println("details.length() = " + details.length());
         Order order = new Order();
         order.updateOrder(user,details,region);
 
