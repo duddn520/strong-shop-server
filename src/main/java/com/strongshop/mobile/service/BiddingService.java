@@ -60,4 +60,13 @@ public class BiddingService {
                 .orElseGet(()->new ArrayList<>());
         return biddings;
     }
+
+    @Transactional
+    public Bidding getBiddingByBiddingId(Long biddingId)
+    {
+        Bidding bidding = biddingRepository.findById(biddingId)
+                .orElseThrow(()->new RuntimeException("해당 입찰이 존재하지 않습니다."));
+
+        return bidding;
+    }
 }

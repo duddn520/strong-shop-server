@@ -19,6 +19,8 @@ public class CompanyInfoResponseDto {
     private String address;
     private String detailAddress;
     private String backgroundImageUrl;
+    private String longitude;
+    private String latitude;
 
 
     public CompanyInfoResponseDto(CompanyInfo companyInfo)
@@ -33,5 +35,7 @@ public class CompanyInfoResponseDto {
         this.address = companyInfo.getAddress();
         this.detailAddress = companyInfo.getDetailAddress();
         this.backgroundImageUrl = companyInfo.getBackgroundImageUrl();
+        this.longitude = companyInfo.getLongitude();
+        this.latitude = companyInfo.getLatitude();
     }
 }

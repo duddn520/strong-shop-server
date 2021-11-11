@@ -30,6 +30,7 @@ public class Contract {
     private Bidding bidding;
 
     private String detail;
+    private String shipmentLocation;
 
     @Enumerated(EnumType.STRING)
     private State state;
@@ -41,9 +42,16 @@ public class Contract {
     private List<InspectionImageUrl> inspectionImageUrls = new ArrayList<>();
 
     @Builder
-    public Contract (Long id, Order order, Bidding bidding, String detail, State state)
+    public Contract (Long id, Order order, Bidding bidding,String shipmentLocation, String detail, State state, List<ConstructionImageUrl> constructionImageUrls, List<InspectionImageUrl> inspectionImageUrls)
     {
-
+        this.id = id;
+        this.order = order;
+        this.bidding = bidding;
+        this.shipmentLocation = shipmentLocation;
+        this.detail = detail;
+        this.state = state;
+        this.constructionImageUrls = constructionImageUrls;
+        this.inspectionImageUrls = inspectionImageUrls;
     }
 
 }

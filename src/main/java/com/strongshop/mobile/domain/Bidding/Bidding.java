@@ -3,6 +3,7 @@ package com.strongshop.mobile.domain.Bidding;
 import com.strongshop.mobile.domain.BaseEntity;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
+import jdk.jshell.Snippet;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,6 +50,11 @@ public class Bidding extends BaseEntity {
         this.company = company;
         order.getBiddings().add(this);
         company.getBiddings().add(this);
+    }
+
+    public void updateStatus(BiddingStatus status)
+    {
+        this.status = status;
     }
 
 }
