@@ -18,11 +18,15 @@ public class BiddingResponseDto {
     private String detail;
     private Long order_id;
     private Long company_id;
+    private String address;
+    private String company_name;
 
     public BiddingResponseDto(Bidding bidding){
         this.id = bidding.getId();
         this.detail = bidding.getDetail();
         this.order_id = bidding.getOrder().getId();
         this.company_id = bidding.getCompany().getId();
+        this.address = bidding.getCompany().getAddress();
+        this.company_name = bidding.getCompany().getName();
     }
 }
