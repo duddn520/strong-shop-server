@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Controller
@@ -32,6 +33,7 @@ public class ContractController {
 
     //TODO orderId와 biddingId를 받아서 contract생성, order의 상태, contract상태 변경 필요. Bidding상태도 변경.(POST)
     @PostMapping("/api/contract")
+    @Transactional
     public ResponseEntity<ApiResponse<ContractResponseDto>> registerContract(@RequestBody ContractRequestDto requestDto)
     {
         Order order = orderService.getOrderByOrderId(requestDto.getOrder_id());
