@@ -1,6 +1,7 @@
 package com.strongshop.mobile.dto.Bidding;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
+import com.strongshop.mobile.domain.Bidding.BiddingStatus;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class BiddingResponseDto {
     private String detail;
     private Long order_id;
     private Long company_id;
+    private BiddingStatus status;
     private String address;
     private String company_name;
 
@@ -26,6 +28,7 @@ public class BiddingResponseDto {
         this.detail = bidding.getDetail();
         this.order_id = bidding.getOrder().getId();
         this.company_id = bidding.getCompany().getId();
+        this.status = bidding.getStatus();
         this.address = bidding.getCompany().getCompanyInfo().getAddress();
         this.company_name = bidding.getCompany().getName();
     }
