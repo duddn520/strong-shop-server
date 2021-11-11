@@ -9,8 +9,7 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<List<Order>> findAllByUser(User user);
-    Optional<List<Order>> findAllByRegionOrderByCreatedTimeAsc(String region);
-    Optional<List<Order>> findAllByStateOrderByCreatedTimeAsc(State state);
+    Optional<List<Order>> findAllByStateAndRegionOrderByCreatedTimeAsc(State state,String region);
 
 
 }

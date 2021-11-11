@@ -28,15 +28,6 @@ public class OrderService {
     }
 
     @Transactional
-    public List<Order> getOrdersByRegion(String region)
-    {
-        List<Order> orders = orderRepository.findAllByRegionOrderByCreatedTimeAsc(region)
-                .orElseGet(()->new ArrayList<>());
-
-        return orders;
-    }
-
-    @Transactional
     public Order getOrderByOrderId(Long orderId)
     {
         Order order = orderRepository.findById(orderId)
@@ -45,9 +36,9 @@ public class OrderService {
     }
 
     @Transactional
-    public List<Order> getOrdersStateIsBidding()
+    public List<Order> getOrdersStateIsBiddingAndSearchedByRegion(String region)
     {
-        List<Order> orders = orderRepository.findAllByStateOrderByCreatedTimeAsc(State.BIDDING)
+        List<Order> orders = orderRepository.findAllByStateAndRegionOrderByCreatedTimeAsc(State.BIDDING,region)
                 .orElseGet(()-> new ArrayList<>());
 
         return orders;

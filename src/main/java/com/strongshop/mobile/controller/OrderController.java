@@ -61,28 +61,21 @@ public class OrderController {
                 responseDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/orders")          //업체용. 내가 이미 입찰했으면 목록에서 제외.
-    public ResponseEntity<ApiResponse<List<OrderResponseDto>>> getOrdersNowBidding(@RequestParam List<String> regions, HttpServletRequest request)
-    {
+    @GetMapping("/api/orders")          //업체용. TODO 내가 이미 입찰했으면 목록에서 제외하도록 해야함.
+    public ResponseEntity<ApiResponse<List<OrderResponseDto>>> getOrdersNowBidding(@RequestParam List<String> regions, HttpServletRequest request) {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         List<OrderResponseDto> responseDtos = new ArrayList<>();
 
-        List<Order> orders = orderService.getOrdersStateIsBidding();
-        for(Order o : orders)
-        {
-            if (o.getCreatedTime().plusDays(2).isBefore(LocalDateTime.now()))
-            {
-                orderService.updateState2BiddingComplete(o);
-            }
-            else {
+        for (String region : regions) {
+            List<Order> orders = orderService.getOrdersStateIsBiddingAndSearchedByRegion(region);
 
-                for (String region : regions) {
-
-                    if (o.getRegion().equals(region)) {
-                        OrderResponseDto responseDto = new OrderResponseDto(o);
-                        responseDtos.add(responseDto);
-                    }
+            for (Order order : orders) {
+                if (order.getCreatedTime().plusDays(2).isBefore(LocalDateTime.now()))
+                    orderService.updateState2BiddingComplete(order);
+                else {
+                    OrderResponseDto responseDto = new OrderResponseDto(order);
+                    responseDtos.add(responseDto);
                 }
             }
         }
