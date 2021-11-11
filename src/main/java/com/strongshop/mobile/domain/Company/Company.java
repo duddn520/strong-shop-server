@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.nio.charset.CoderMalfunctionError;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,45 +28,34 @@ public class Company implements UserDetails {
     private String name; // 회사명
     private String email;
     private String bossName; // 대표자성명
-    private String address; // 주소
-    private String detailAddress; // 상세주소
     private String phoneNumber;
     private String businessNumber; // 사업자번호
 
     @OneToMany(mappedBy = "company")
     private List<Bidding> biddings = new ArrayList<>();
 
-    @OneToMany
-    private List<Order> biddedorders = new ArrayList<>();       //내가 입찰한 order를 리스트로 갖고 있기 위함.
-
+    @OneToOne(mappedBy = "company",orphanRemoval = true)
+    private CompanyInfo companyInfo;
 
     @Builder
-    public Company(Long id, String name, String email, String bossName, String address, String detailAddress,String phoneNumber, String businessNumber, List<Bidding> biddings) {
+    public Company(Long id, String name, String email, String bossName,String phoneNumber, String businessNumber, List<Bidding> biddings, CompanyInfo companyInfo) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.bossName = bossName;
-        this.address = address;
-        this.detailAddress = detailAddress;
         this.phoneNumber = phoneNumber;
         this.businessNumber = businessNumber;
         this.biddings = biddings;
+        this.companyInfo = companyInfo;
     }
 
     public Company updateCompany(Company company)
     {
         this.name = company.getName();
         this.bossName = company.getBossName();
-        this.address = company.getAddress();
-        this.detailAddress = company.getDetailAddress();
         this.businessNumber = company.getBusinessNumber();
 
         return this;
-    }
-
-    public void updateBiddedOrders(Order order)
-    {
-        this.biddedorders.add(order);
     }
 
     @Override

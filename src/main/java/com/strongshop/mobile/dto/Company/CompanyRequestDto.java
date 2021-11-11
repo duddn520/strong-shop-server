@@ -14,10 +14,7 @@ public class CompanyRequestDto {
     private String name; // 회사명
     private String email;
     private String bossName; // 대표자성명
-    private String address; // 주소
-    private String detailAddress; // 상세주소
     private String phoneNumeber;
-    private String contact; // 연락처
     private String businessNumber; // 사업자번호
 
 
@@ -29,8 +26,6 @@ public class CompanyRequestDto {
                 .name(name)
                 .email(email)
                 .bossName(bossName)
-                .address(address)
-                .detailAddress(detailAddress)
                 .phoneNumber(phoneNumeber)
                 .businessNumber(businessNumber)
                 .build();
