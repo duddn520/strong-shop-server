@@ -30,13 +30,17 @@ public class Bidding extends BaseEntity {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @Enumerated(EnumType.STRING)
+    private BiddingStatus status;
+
     @Builder
-    public Bidding(Long id,String detail, Order order, Company company)
+    public Bidding(Long id,String detail, Order order, Company company, BiddingStatus status)
     {
         this.id = id;
         this.detail = detail;
         this.order = order;
         this.company = company;
+        this.status = status;
     }
 
     public void updateBiddingAndOrderAndCompany(Order order,Company company)        //bidding register시 필수 실행.

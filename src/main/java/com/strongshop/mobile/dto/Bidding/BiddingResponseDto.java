@@ -26,7 +26,7 @@ public class BiddingResponseDto {
         this.detail = bidding.getDetail();
         this.order_id = bidding.getOrder().getId();
         this.company_id = bidding.getCompany().getId();
-        this.address = bidding.getCompany().getAddress();
+        this.address = bidding.getCompany().getCompanyInfo().getAddress();
         this.company_name = bidding.getCompany().getName();
     }
 }

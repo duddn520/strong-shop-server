@@ -2,9 +2,11 @@ package com.strongshop.mobile.service;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingRepository;
+import com.strongshop.mobile.domain.Bidding.BiddingStatus;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Order.OrderRepository;
+import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.dto.Bidding.BiddingRequestDto;
 import com.strongshop.mobile.dto.Bidding.BiddingResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +31,17 @@ public class BiddingService {
         Bidding bidding = Bidding.builder()
                 .detail(requestDto.getDetail())
                 .company(company)
+                .status(BiddingStatus.ONGOING)
                 .build();
         Order order = orderRepository.findById(requestDto.getOrder_id())
                 .orElseThrow(()-> new RuntimeException("해당 주문이 존재하지 않습니다."));
-        bidding.updateBiddingAndOrderAndCompany(order,company);
-        company.updateBiddedOrders(order);
-        biddingRepository.save(bidding);
-        return new BiddingResponseDto(bidding);
+        if (order.getState().equals(State.BIDDING)) {
+            bidding.updateBiddingAndOrderAndCompany(order, company);
+            biddingRepository.save(bidding);
+            return new BiddingResponseDto(bidding);
+        }
+        else
+            throw new RuntimeException("입찰 진행중인 주문에 한해서만 입찰 가능합니다.");
     }
 
     @Transactional
