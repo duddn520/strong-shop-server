@@ -3,20 +3,16 @@ package com.strongshop.mobile.service;
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingRepository;
 import com.strongshop.mobile.domain.Company.Company;
-import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Order.OrderRepository;
 import com.strongshop.mobile.dto.Bidding.BiddingRequestDto;
 import com.strongshop.mobile.dto.Bidding.BiddingResponseDto;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.pool.TypePool;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -29,7 +25,7 @@ public class BiddingService {
 
 
     @Transactional
-    public BiddingResponseDto registerBidding(BiddingRequestDto requestDto,Company company){
+    public BiddingResponseDto registerBidding(BiddingRequestDto requestDto, Company company){
         Bidding bidding = Bidding.builder()
                 .detail(requestDto.getDetail())
                 .company(company)
@@ -49,6 +45,14 @@ public class BiddingService {
         List<Bidding> biddings = biddingRepository.findAllByOrder(order)
                 .orElseGet(()->new ArrayList<>());
 
+        return biddings;
+    }
+
+    @Transactional
+    public List<Bidding> getAllBiddingsByCompany(Company company)
+    {
+        List<Bidding> biddings = biddingRepository.findAllByCompany(company)
+                .orElseGet(()->new ArrayList<>());
         return biddings;
     }
 }

@@ -12,4 +12,5 @@ public interface BiddingRepository extends JpaRepository<Bidding,Long> {
     Optional<List<Bidding>> findAllByCompany(Company company);
     Optional<List<Bidding>> findAllByOrder(Order order);
 
+
 }

@@ -33,7 +33,7 @@ public class BiddingController {
     //입찰 등록
     @PostMapping("/api/bidding")
     @Transactional
-    public ResponseEntity<ApiResponse<BiddingResponseDto>> registerBidding(@RequestBody BiddingRequestDto requestDto,HttpServletRequest request)
+    public ResponseEntity<ApiResponse<BiddingResponseDto>> registerBidding(@RequestBody BiddingRequestDto requestDto, HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
@@ -52,6 +52,26 @@ public class BiddingController {
         List<Bidding> biddings = biddingService.getAllBiddingsByOrderId(orderId);
 
         List<BiddingResponseDto> responseDtos = new ArrayList<>();
+        for(Bidding b : biddings)
+        {
+            BiddingResponseDto responseDto = new BiddingResponseDto(b);
+            responseDtos.add(responseDto);
+        }
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDtos), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/bidding")             //업체의 입찰목록 조회
+    public ResponseEntity<ApiResponse<List<BiddingResponseDto>>> getMyBiddings(HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        Company company = companyService.getCompanyByEmail(email);
+        List<Bidding> biddings = biddingService.getAllBiddingsByCompany(company);
+        List<BiddingResponseDto> responseDtos = new ArrayList<>();
+
         for(Bidding b : biddings)
         {
             BiddingResponseDto responseDto = new BiddingResponseDto(b);
