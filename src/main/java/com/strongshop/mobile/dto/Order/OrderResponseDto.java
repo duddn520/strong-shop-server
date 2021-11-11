@@ -1,11 +1,10 @@
 package com.strongshop.mobile.dto.Order;
 
 import com.strongshop.mobile.domain.Order.Order;
-import com.strongshop.mobile.domain.Order.State;
+import com.strongshop.mobile.domain.State;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 

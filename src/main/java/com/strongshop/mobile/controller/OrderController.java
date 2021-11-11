@@ -3,7 +3,7 @@ package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
-import com.strongshop.mobile.domain.Order.State;
+import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.dto.Order.OrderResponseDto;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
