@@ -6,7 +6,6 @@ import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Contract.Contract;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
-import com.strongshop.mobile.dto.Company.CompanyResponseDto;
 import com.strongshop.mobile.dto.Contract.ContractRequestDto;
 import com.strongshop.mobile.dto.Contract.ContractResponseDto;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
@@ -22,13 +21,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -61,6 +63,7 @@ public class ContractController {
                 .detail(bidding.getDetail())
                 .order(order)
                 .bidding(bidding)
+                .shipmentLocation(bidding.getCompany().getCompanyInfo().getAddress() +" " +bidding.getCompany().getCompanyInfo().getDetailAddress())
                 .state(State.DESIGNATING_SHIPMENT_LOCATION)
                 .build();
 
@@ -94,6 +97,21 @@ public class ContractController {
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS,
                 responseDtos), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/contract/3/{order_id}")
+    public ResponseEntity<ApiResponse<Map<String,Object>>> getShipmentLocation4User(@PathVariable("order_id") Long orderId)
+    {
+        Order order = orderService.getOrderByOrderId(orderId);
+        Contract contract = contractService.getContractByOrder(order);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("shipment_location",contract.getShipmentLocation());
+
+        return new ResponseEntity<>(ApiResponse.response(
+            HttpStatusCode.OK,
+            HttpResponseMsg.GET_SUCCESS,
+            map), HttpStatus.OK);
     }
 
 }
