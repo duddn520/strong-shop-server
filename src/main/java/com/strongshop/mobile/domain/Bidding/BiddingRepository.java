@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface BiddingRepository extends JpaRepository<Bidding,Long> {
     Optional<List<Bidding>> findAllByCompany(Company company);
     Optional<List<Bidding>> findAllByOrder(Order order);
-
+    Optional<List<Bidding>> findAllByStatusAndCompany(BiddingStatus status,Company company);
 
 }

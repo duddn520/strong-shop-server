@@ -2,25 +2,32 @@ package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingStatus;
+import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Contract.Contract;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
-import com.strongshop.mobile.dto.Bidding.BiddingResponseDto;
+import com.strongshop.mobile.dto.Company.CompanyResponseDto;
 import com.strongshop.mobile.dto.Contract.ContractRequestDto;
 import com.strongshop.mobile.dto.Contract.ContractResponseDto;
+import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.BiddingService;
+import com.strongshop.mobile.service.Company.CompanyService;
+import com.strongshop.mobile.service.ContractService;
 import com.strongshop.mobile.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -29,7 +36,9 @@ public class ContractController {
 
     private final OrderService orderService;
     private final BiddingService biddingService;
-
+    private final JwtTokenProvider jwtTokenProvider;
+    private final CompanyService companyService;
+    private final ContractService contractService;
 
     //TODO orderId와 biddingId를 받아서 contract생성, order의 상태, contract상태 변경 필요. Bidding상태도 변경.(POST)
     @PostMapping("/api/contract")
@@ -63,6 +72,28 @@ public class ContractController {
                 responseDto), HttpStatus.CREATED);
 
 
+    }
+
+    @GetMapping("/api/contract")            //특정 company의 성사계약 목록 조회
+    public ResponseEntity<ApiResponse<List<ContractResponseDto>>> getContract4Company(HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        Company company = companyService.getCompanyByEmail(email);
+
+        List<Bidding> biddings = biddingService.getAllBiddingsInSuccessAndCompany(company);
+
+        List<ContractResponseDto> responseDtos = new ArrayList<>();
+
+        for (Bidding b : biddings)
+        {
+            ContractResponseDto responseDto = new ContractResponseDto(contractService.getContractByBidding(b));
+            responseDtos.add(responseDto);
+        }
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDtos), HttpStatus.OK);
     }
 
 }

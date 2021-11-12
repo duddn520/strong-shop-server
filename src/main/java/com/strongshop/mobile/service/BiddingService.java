@@ -69,4 +69,12 @@ public class BiddingService {
 
         return bidding;
     }
+
+    @Transactional
+    public List<Bidding> getAllBiddingsInSuccessAndCompany(Company company)
+    {
+        List<Bidding> biddings = biddingRepository.findAllByStatusAndCompany(BiddingStatus.SUCCESS,company)
+                .orElseGet(()-> new ArrayList<>());
+        return biddings;
+    }
 }

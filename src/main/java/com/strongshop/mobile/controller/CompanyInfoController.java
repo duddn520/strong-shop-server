@@ -10,17 +10,10 @@ import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyInfoService;
 import com.strongshop.mobile.service.Company.CompanyService;
-import com.strongshop.mobile.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,7 +24,6 @@ public class CompanyInfoController {
     private final CompanyInfoService companyInfoService;
     private final CompanyService companyService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final FileUploadService fileUploadService;
 
     @PostMapping("/api/companyinfo")
     public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo( @RequestBody CompanyInfoRequestDto requestDto, HttpServletRequest request)

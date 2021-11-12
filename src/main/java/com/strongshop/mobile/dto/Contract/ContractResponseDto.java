@@ -4,6 +4,7 @@ import com.strongshop.mobile.domain.Contract.Contract;
 import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.dto.Image.ConstructionImageUrlResponseDto;
 import com.strongshop.mobile.dto.Image.InspectionImageUrlRequestDto;
+import com.strongshop.mobile.dto.User.UserResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class ContractResponseDto {
     private Long id;
     private Long order_id;
     private Long bidding_id;
+    private UserResponseDto userResponseDto;
     private String detail;
     private String shipmentLocation;
     private State state;
@@ -30,6 +32,7 @@ public class ContractResponseDto {
         this.id = contract.getId();
         this.order_id = contract.getOrder().getId();
         this.bidding_id = contract.getBidding().getId();
+        this.userResponseDto = new UserResponseDto(contract.getOrder().getUser());
         this.detail = contract.getDetail();
         this.shipmentLocation = contract.getShipmentLocation();
         this.state = contract.getState();
