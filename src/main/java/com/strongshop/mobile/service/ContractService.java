@@ -15,6 +15,12 @@ public class ContractService {
     private final ContractRepository contractRepository;
 
     @Transactional
+    public Contract registerContract(Contract contract)
+    {
+        return contractRepository.save(contract);
+    }
+
+    @Transactional
     public Contract getContractByBidding(Bidding bidding)
     {
         Contract contract = contractRepository.findByBidding(bidding)

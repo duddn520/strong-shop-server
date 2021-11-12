@@ -64,7 +64,7 @@ public class ContractController {
                 .state(State.DESIGNATING_SHIPMENT_LOCATION)
                 .build();
 
-        ContractResponseDto responseDto = new ContractResponseDto(contract);
+        ContractResponseDto responseDto = new ContractResponseDto(contractService.registerContract(contract));
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,
