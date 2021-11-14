@@ -63,7 +63,7 @@ public class ContractController {
                 .detail(bidding.getDetail())
                 .order(order)
                 .bidding(bidding)
-                .shipmentLocation(bidding.getCompany().getCompanyInfo().getAddress().concat(bidding.getCompany().getCompanyInfo().getDetailAddress()))
+                .shipmentLocation(bidding.getCompany().getCompanyInfo().getAddress() + " " + bidding.getCompany().getCompanyInfo().getDetailAddress())
                 .state(State.DESIGNATING_SHIPMENT_LOCATION)
                 .build();
 

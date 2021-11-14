@@ -2,6 +2,7 @@ package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyInfo;
+import com.strongshop.mobile.domain.Company.CompanyInfoRepository;
 import com.strongshop.mobile.dto.Company.CompanyInfoRequestDto;
 import com.strongshop.mobile.dto.Company.CompanyInfoResponseDto;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
@@ -31,6 +32,7 @@ public class CompanyInfoController {
     private final CompanyService companyService;
     private final JwtTokenProvider jwtTokenProvider;
     private final FileUploadService fileUploadService;
+    private final CompanyInfoRepository companyInfoRepository;
 
     @PostMapping("/api/companyinfo")
     public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo( @RequestBody CompanyInfoRequestDto requestDto, HttpServletRequest request)
@@ -119,6 +121,7 @@ public class CompanyInfoController {
 
         Map<String,Object> map = new HashMap<>();
         map.put("url",url);
+        companyInfoRepository.save(companyInfo);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
