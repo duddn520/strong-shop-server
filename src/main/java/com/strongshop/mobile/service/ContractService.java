@@ -37,4 +37,12 @@ public class ContractService {
                 .orElseThrow(()->new RuntimeException("해당 계약이 존재하지 않습니다."));
         return contract;
     }
+
+    @Transactional
+    public Contract getContractById(Long contract_Id)
+    {
+        Contract contract = contractRepository.findById(contract_Id)
+                .orElseThrow(()->new RuntimeException(("해당 계약이 존재하지 않습니다.")));
+        return contract;
+    }
 }

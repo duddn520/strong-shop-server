@@ -19,7 +19,6 @@ import com.strongshop.mobile.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -141,14 +140,59 @@ public class ContractController {
 //    }         검수 사진 등록.
 
 
-//    @PutMapping("/api/contract/4")            state 4->5
-//    public ResponseEntity<ApiResponse> finishInspection(HttpServletRequest request)
-//    {
-//        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
-//        Company company = companyService.getCompanyByEmail(email);
-//    }
+    @PutMapping("/api/contract/4")           // state 4->5
+    public ResponseEntity<ApiResponse> finishCarExamination(@RequestBody Long contract_id)
+    {
+        Contract contract = contractService.getContractById(contract_id);
 
+        Order order = contract.getOrder();
 
+        order.updateState(State.CAR_EXAMINATION_FIN);
 
+        contract.updateState(State.CAR_EXAMINATION_FIN);
+
+        orderService.saveOrder(order);
+        contractService.registerContract(contract);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS), HttpStatus.OK);
+    }
+
+    @PutMapping("/api/contract/5/{order_id}")               //state 5->6
+    public ResponseEntity<ApiResponse> confirmExamnation(@PathVariable("order_id") Long orderId)
+    {
+        Order order = orderService.getOrderByOrderId(orderId);
+        Contract contract = contractService.getContractByOrder(order);
+
+        contract.updateState(State.CONSTRUCTING);
+        contractService.registerContract(contract);
+        order.updateState(State.CONSTRUCTING);
+        orderService.saveOrder(order);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS), HttpStatus.OK);
+    }
+
+    @PutMapping("api/contract/6")           //state 6->7
+    public ResponseEntity<ApiResponse> finishConstruction(@RequestBody Long contract_id)
+    {
+        Contract contract = contractService.getContractById(contract_id);
+
+        Order order = contract.getOrder();
+
+        order.updateState(State.CONTSTRUCTION_COMPLETED);
+
+        contract.updateState(State.CONTSTRUCTION_COMPLETED);
+
+        orderService.saveOrder(order);
+        contractService.registerContract(contract);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS), HttpStatus.OK);
+
+    }
 
 }
