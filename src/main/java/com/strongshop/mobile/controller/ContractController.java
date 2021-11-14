@@ -19,11 +19,10 @@ import com.strongshop.mobile.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -57,13 +56,15 @@ public class ContractController {
             if(b.getId()!=requestDto.getBidding_id())
                 b.updateStatus(BiddingStatus.FAILED);           //선택 비딩 제외 모두 fail 설정
         }
-        bidding.updateStatus(BiddingStatus.SUCCESS);        //선택비딩 상태 성공으로 설정.
+
+        bidding.updateStatus(BiddingStatus.SUCCESS);
+
 
         Contract contract = Contract.builder()
                 .detail(bidding.getDetail())
                 .order(order)
                 .bidding(bidding)
-                .shipmentLocation(bidding.getCompany().getCompanyInfo().getAddress() +" " +bidding.getCompany().getCompanyInfo().getDetailAddress())
+                .shipmentLocation(bidding.getCompany().getCompanyInfo().getAddress().concat(bidding.getCompany().getCompanyInfo().getDetailAddress()))
                 .state(State.DESIGNATING_SHIPMENT_LOCATION)
                 .build();
 
@@ -113,5 +114,41 @@ public class ContractController {
             HttpResponseMsg.GET_SUCCESS,
             map), HttpStatus.OK);
     }
+
+    @PutMapping("/api/contract/3/{order_id}")               //state 3->4
+    public ResponseEntity<ApiResponse> finishChangeShipmentLocation(@PathVariable("order_id") Long orderId)
+    {
+        Order order = orderService.getOrderByOrderId(orderId);
+        Contract contract = contractService.getContractByOrder(order);
+
+        contract.updateState(State.CAR_EXAMINATION);
+        contractService.registerContract(contract);
+        order.updateState(State.CAR_EXAMINATION);
+        orderService.saveOrder(order);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS), HttpStatus.OK);
+
+    }
+
+//    @PostMapping("/api/contract/4")
+//    public ResponseEntity<ApiResponse<Map<String,Object>>> uploadInspectionImages(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request)
+//    {
+//        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+//        Company company = companyService.getCompanyByEmail(email);
+//
+//    }         검수 사진 등록.
+
+
+//    @PutMapping("/api/contract/4")            state 4->5
+//    public ResponseEntity<ApiResponse> finishInspection(HttpServletRequest request)
+//    {
+//        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+//        Company company = companyService.getCompanyByEmail(email);
+//    }
+
+
+
 
 }

@@ -54,4 +54,9 @@ public class Contract {
         this.inspectionImageUrls = inspectionImageUrls;
     }
 
+    public void updateState(State state)
+    {
+        this.state = state;
+    }
+
 }
