@@ -66,4 +66,11 @@ public class CompanyInfo {
         this.longitude = companyInfo.getLongitude();
     }
 
+
+    public CompanyInfo updateBackgroundImageUrl(String url)
+    {
+        this.backgroundImageUrl = url;
+        return this;
+    }
+
 }

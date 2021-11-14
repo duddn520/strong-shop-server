@@ -10,12 +10,18 @@ import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyInfoService;
 import com.strongshop.mobile.service.Company.CompanyService;
+import com.strongshop.mobile.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Key;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,6 +30,7 @@ public class CompanyInfoController {
     private final CompanyInfoService companyInfoService;
     private final CompanyService companyService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final FileUploadService fileUploadService;
 
     @PostMapping("/api/companyinfo")
     public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo( @RequestBody CompanyInfoRequestDto requestDto, HttpServletRequest request)
@@ -95,6 +102,28 @@ public class CompanyInfoController {
                     HttpResponseMsg.GET_SUCCESS,
                     responseDto), HttpStatus.OK);
         }
+
+    }
+
+    @PostMapping("/api/companyinfo/bgi")
+    public ResponseEntity<ApiResponse<Map<String,Object>>> registerBackgroundImage(@RequestParam("file") MultipartFile file, HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        Company company = companyService.getCompanyByEmail(email);
+
+        CompanyInfo companyInfo = company.getCompanyInfo();
+
+        String url = fileUploadService.uploadImage(file);
+
+        companyInfo.updateBackgroundImageUrl(url);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("url",url);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.POST_SUCCESS,
+                map), HttpStatus.OK);
 
     }
 }
