@@ -141,9 +141,9 @@ public class ContractController {
 
 
     @PutMapping("/api/contract/4")           // state 4->5
-    public ResponseEntity<ApiResponse> finishCarExamination(@RequestBody Long contract_id)
+    public ResponseEntity<ApiResponse> finishCarExamination(@RequestBody ContractRequestDto requestDto )
     {
-        Contract contract = contractService.getContractById(contract_id);
+        Contract contract = contractService.getContractById(requestDto.getId());
 
         Order order = contract.getOrder();
 
