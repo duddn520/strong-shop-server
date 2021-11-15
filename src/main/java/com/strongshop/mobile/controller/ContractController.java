@@ -217,9 +217,9 @@ public class ContractController {
 
         Order order = contract.getOrder();
 
-        order.updateState(State.CONTSTRUCTION_COMPLETED);
+        order.updateState(State.CONSTRUCTION_COMPLETED);
 
-        contract.updateState(State.CONTSTRUCTION_COMPLETED);
+        contract.updateState(State.CONSTRUCTION_COMPLETED);
 
         orderService.saveOrder(order);
         contractService.registerContract(contract);
