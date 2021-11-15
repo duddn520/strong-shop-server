@@ -23,10 +23,11 @@ public class UserRequestDto {
     private String thumbnailImage;  //카카오
     private String gender;  //카카오
     private LocalDate birth;
+    private String fcmToken;
 
     @Builder
     public UserRequestDto(Long id,String realname,String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender
-                          , LocalDate birth) {
+                          , LocalDate birth, String fcmToken) {
         this.id = id;
         this.realname = realname;
         this.email = email;
@@ -36,6 +37,7 @@ public class UserRequestDto {
         this.thumbnailImage = thumbnailImage;
         this.gender = gender;
         this.birth = birth;
+        this.fcmToken = fcmToken;
     }
 
     public User toEntity(){
@@ -49,6 +51,7 @@ public class UserRequestDto {
                 .thumbnailImage(thumbnailImage)
                 .gender(gender)
                 .birth(birth)
+                .fcmToken(fcmToken)
                 .build();
     }
 

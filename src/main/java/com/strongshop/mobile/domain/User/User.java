@@ -1,14 +1,12 @@
 package com.strongshop.mobile.domain.User;
 
 import com.strongshop.mobile.domain.Order.Order;
-import com.strongshop.mobile.dto.User.UserDto;
 import com.strongshop.mobile.dto.User.UserRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.persistence.*;
 import java.time.LocalDate;

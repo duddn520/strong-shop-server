@@ -8,6 +8,7 @@ import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.dto.Contract.ContractRequestDto;
 import com.strongshop.mobile.dto.Contract.ContractResponseDto;
+import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +41,7 @@ public class ContractController {
     private final JwtTokenProvider jwtTokenProvider;
     private final CompanyService companyService;
     private final ContractService contractService;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     //TODO orderId와 biddingId를 받아서 contract생성, order의 상태, contract상태 변경 필요. Bidding상태도 변경.(POST)
     @PostMapping("/api/contract")
@@ -69,6 +72,13 @@ public class ContractController {
 
         ContractResponseDto responseDto = new ContractResponseDto(contractService.registerContract(contract));
 
+        try {
+            firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "낙찰", "낙찰");
+        }
+        catch (IOException e)
+        {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,
                 HttpResponseMsg.POST_SUCCESS,
@@ -114,7 +124,7 @@ public class ContractController {
             map), HttpStatus.OK);
     }
 
-    @PutMapping("/api/contract/3/{order_id}")               //state 3->4
+    @PutMapping("/api/contract/3/{order_id}")               //state 3->4   **알림필요
     public ResponseEntity<ApiResponse> finishChangeShipmentLocation(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
@@ -124,6 +134,15 @@ public class ContractController {
         contractService.registerContract(contract);
         order.updateState(State.CAR_EXAMINATION);
         orderService.saveOrder(order);
+
+        try {
+            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "출고지 설정 완료", "출고지 설정 완료.");
+        }
+        catch (IOException e)
+        {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
+
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
@@ -140,7 +159,7 @@ public class ContractController {
 //    }         검수 사진 등록.
 
 
-    @PutMapping("/api/contract/4")           // state 4->5
+    @PutMapping("/api/contract/4")           // state 4->5   **알림필요
     public ResponseEntity<ApiResponse> finishCarExamination(@RequestBody ContractRequestDto requestDto )
     {
         Contract contract = contractService.getContractById(requestDto.getId());
@@ -154,12 +173,20 @@ public class ContractController {
         orderService.saveOrder(order);
         contractService.registerContract(contract);
 
+        try {
+            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "차량 검수 완료", "차량 검수 완료");
+        }
+        catch (IOException e)
+        {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
+
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS), HttpStatus.OK);
     }
 
-    @PutMapping("/api/contract/5/{order_id}")               //state 5->6
+    @PutMapping("/api/contract/5/{order_id}")               //state 5->6  **알림필요.
     public ResponseEntity<ApiResponse> confirmExamnation(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
@@ -170,12 +197,20 @@ public class ContractController {
         order.updateState(State.CONSTRUCTING);
         orderService.saveOrder(order);
 
+        try {
+            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "차량 인수 결정 완료", "차량 인수 결정 완료.");
+        }
+        catch (IOException e)
+        {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
+
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS), HttpStatus.OK);
     }
 
-    @PutMapping("api/contract/6")           //state 6->7
+    @PutMapping("api/contract/6")           //state 6->7 **알림필요
     public ResponseEntity<ApiResponse> finishConstruction(@RequestBody ContractRequestDto requestDto)
     {
         Contract contract = contractService.getContractById(requestDto.getId());
@@ -188,6 +223,14 @@ public class ContractController {
 
         orderService.saveOrder(order);
         contractService.registerContract(contract);
+
+        try {
+            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "시공 완료", "시공 완료");
+        }
+        catch (IOException e)
+        {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,

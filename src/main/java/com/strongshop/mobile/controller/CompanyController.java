@@ -40,7 +40,6 @@ public class CompanyController {
     private final JwtTokenProvider jwtTokenProvider;
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
-    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
 
     @PostMapping("/api/company")
@@ -177,14 +176,6 @@ public class CompanyController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Auth",token);
-
-            try{
-                firebaseCloudMessageService.sendMessageTo(requestDto.getFcmToken(),"알림","123412341234");
-            }
-            catch(IOException e)
-            {
-                System.out.println("e.getmessage = " + e.getMessage());
-            }
 
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.OK,
