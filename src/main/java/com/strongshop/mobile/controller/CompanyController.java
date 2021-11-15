@@ -183,7 +183,7 @@ public class CompanyController {
             }
             catch(IOException e)
             {
-                throw new RuntimeException("입출력 에러.");
+                System.out.println("e.getmessage = " + e.getMessage());
             }
 
             return new ResponseEntity<>(ApiResponse.response(
