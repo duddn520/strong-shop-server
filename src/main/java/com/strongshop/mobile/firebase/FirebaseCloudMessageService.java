@@ -5,25 +5,34 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class FirebaseCloudMessageService {
 
+    @Autowired
+    ResourceLoader resourceLoader;
+
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/strongshop-3fc81/messages:send";
     private final ObjectMapper objectMapper;
 
-    private String getAccessToken() throws IOException{
-        String firebaseConfigPath = "//firebase/strongshop-3fc81-firebase-adminsdk-jypdg-8ae68bebe7.json";
 
-        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
+
+    private String getAccessToken() throws IOException{
+        Resource resource = resourceLoader.getResource("classpath:strongshop-3fc81-firebase-adminsdk-jypdg-8ae68bebe7.json");
+        InputStream inputStream = resource.getInputStream();
+        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(inputStream)
                 .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
 
         googleCredentials.refreshIfExpired();
