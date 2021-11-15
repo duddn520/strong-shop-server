@@ -1,7 +1,6 @@
 package com.strongshop.mobile.domain.Image;
 
 import com.strongshop.mobile.domain.Contract.Contract;
-import com.strongshop.mobile.domain.Gallery.Gallery;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

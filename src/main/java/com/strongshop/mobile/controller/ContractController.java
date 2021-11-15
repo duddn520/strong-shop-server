@@ -4,6 +4,7 @@ import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingStatus;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Contract.Contract;
+import com.strongshop.mobile.domain.Image.InspectionImageUrl;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.dto.Contract.ContractRequestDto;
@@ -16,6 +17,7 @@ import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.BiddingService;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.ContractService;
+import com.strongshop.mobile.service.FileUploadService;
 import com.strongshop.mobile.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -42,6 +45,7 @@ public class ContractController {
     private final CompanyService companyService;
     private final ContractService contractService;
     private final FirebaseCloudMessageService firebaseCloudMessageService;
+    private final FileUploadService fileUploadService;
 
     //TODO orderId와 biddingId를 받아서 contract생성, order의 상태, contract상태 변경 필요. Bidding상태도 변경.(POST)
     @PostMapping("/api/contract")
@@ -125,10 +129,12 @@ public class ContractController {
     }
 
     @PutMapping("/api/contract/3/{order_id}")               //state 3->4   **알림필요
-    public ResponseEntity<ApiResponse> finishChangeShipmentLocation(@PathVariable("order_id") Long orderId)
+    public ResponseEntity<ApiResponse<Map<String,Object>>> finishChangeShipmentLocation(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
         Contract contract = contractService.getContractByOrder(order);
+        Map<String,Object> map = new HashMap<>();
+        map.put("company_name",contract.getBidding().getCompany().getName());
 
         contract.updateState(State.CAR_EXAMINATION);
         contractService.registerContract(contract);
@@ -146,17 +152,28 @@ public class ContractController {
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
-                HttpResponseMsg.GET_SUCCESS), HttpStatus.OK);
+                HttpResponseMsg.GET_SUCCESS,
+                map), HttpStatus.OK);
 
     }
-
-//    @PostMapping("/api/contract/4")
-//    public ResponseEntity<ApiResponse<Map<String,Object>>> uploadInspectionImages(@RequestParam("files") List<MultipartFile> files, HttpServletRequest request)
-//    {
-//        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
-//        Company company = companyService.getCompanyByEmail(email);
 //
-//    }         검수 사진 등록.
+//    @PostMapping("/api/contract/4")
+//    public ResponseEntity<ApiResponse<Map<String,Object>>> uploadInspectionImages(@RequestParam("files") List<MultipartFile> files,@RequestBody ContractRequestDto requestDto, HttpServletRequest request)
+//    {
+//        List<String> urls = new ArrayList<>();
+//
+//        for(MultipartFile file : files)
+//        {
+//            String url = fileUploadService.uploadImage(file);
+//            urls.add(url);
+//            InspectionImageUrl inspectionImageUrl = InspectionImageUrl.builder()
+//                    .imageUrl(url)
+//                    .build();
+//            contractService.
+//        }
+//
+//
+//    }
 
 
     @PutMapping("/api/contract/4")           // state 4->5   **알림필요
@@ -187,10 +204,12 @@ public class ContractController {
     }
 
     @PutMapping("/api/contract/5/{order_id}")               //state 5->6  **알림필요.
-    public ResponseEntity<ApiResponse> confirmExamnation(@PathVariable("order_id") Long orderId)
+    public ResponseEntity<ApiResponse<Map<String,Object>>> confirmExamnation(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
         Contract contract = contractService.getContractByOrder(order);
+        Map<String,Object> map = new HashMap<>();
+        map.put("company_name",contract.getBidding().getCompany().getName());
 
         contract.updateState(State.CONSTRUCTING);
         contractService.registerContract(contract);
@@ -207,7 +226,8 @@ public class ContractController {
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
-                HttpResponseMsg.GET_SUCCESS), HttpStatus.OK);
+                HttpResponseMsg.GET_SUCCESS
+                ,map), HttpStatus.OK);
     }
 
     @PutMapping("api/contract/6")           //state 6->7 **알림필요

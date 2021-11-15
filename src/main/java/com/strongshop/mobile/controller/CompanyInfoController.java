@@ -13,14 +13,12 @@ import com.strongshop.mobile.service.Company.CompanyInfoService;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
 
