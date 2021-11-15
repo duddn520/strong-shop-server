@@ -31,12 +31,13 @@ public class User implements UserDetails{
     private String thumbnailImage;  //카카오
     private String gender;  //카카오
     private LocalDate birth;
+    private String fcmToken;
 
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
     @Builder
-    public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, LocalDate birth, List<Order> orders) {
+    public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, LocalDate birth, List<Order> orders, String fcmToken) {
         this.id = id;
         this.realName = realName;
         this.email = email;
@@ -47,6 +48,7 @@ public class User implements UserDetails{
         this.gender = gender;
         this.birth = birth;
         this.orders =orders;
+        this.fcmToken = fcmToken;
 
 
     }
@@ -58,20 +60,6 @@ public class User implements UserDetails{
         this.profileImage = requestDto.getProfileImage();
         this.thumbnailImage = requestDto.getThumbnailImage();
         return this;
-    }
-
-    public UserDto toUserDto(){
-        return UserDto.builder()
-                .id(id)
-                .realName(realName)
-                .email(email)
-                .nickname(nickname)
-                .profileImage(profileImage)
-                .phoneNumber(phoneNumber)
-                .thumbnailImage(thumbnailImage)
-                .gender(gender)
-                .birth(birth)
-                .build();
     }
 
     @Override

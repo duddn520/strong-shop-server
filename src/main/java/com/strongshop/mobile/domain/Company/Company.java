@@ -30,6 +30,7 @@ public class Company implements UserDetails {
     private String bossName; // 대표자성명
     private String phoneNumber;
     private String businessNumber; // 사업자번호
+    private String fcmToken;
 
     @OneToMany(mappedBy = "company")
     private List<Bidding> biddings = new ArrayList<>();
@@ -38,13 +39,14 @@ public class Company implements UserDetails {
     private CompanyInfo companyInfo;
 
     @Builder
-    public Company(Long id, String name, String email, String bossName,String phoneNumber, String businessNumber, List<Bidding> biddings, CompanyInfo companyInfo) {
+    public Company(Long id, String name, String email, String bossName,String phoneNumber, String businessNumber,String fcmToken, List<Bidding> biddings, CompanyInfo companyInfo) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.bossName = bossName;
         this.phoneNumber = phoneNumber;
         this.businessNumber = businessNumber;
+        this.fcmToken = fcmToken;
         this.biddings = biddings;
         this.companyInfo = companyInfo;
     }

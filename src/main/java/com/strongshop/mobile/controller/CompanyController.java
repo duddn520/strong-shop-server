@@ -10,6 +10,7 @@ import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.dto.Company.CompanyRequestDto;
 import com.strongshop.mobile.dto.Company.CompanyResponseDto;
+import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
@@ -39,6 +40,7 @@ public class CompanyController {
     private final JwtTokenProvider jwtTokenProvider;
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
 
     @PostMapping("/api/company")
@@ -175,6 +177,14 @@ public class CompanyController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Auth",token);
+
+            try{
+                firebaseCloudMessageService.sendMessageTo(requestDto.getFcmToken(),"알림","123412341234");
+            }
+            catch(IOException e)
+            {
+                throw new RuntimeException("입출력 에러.");
+            }
 
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.OK,
