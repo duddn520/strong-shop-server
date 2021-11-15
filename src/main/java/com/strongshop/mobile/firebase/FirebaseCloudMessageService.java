@@ -21,7 +21,7 @@ public class FirebaseCloudMessageService {
     private final ObjectMapper objectMapper;
 
     private String getAccessToken() throws IOException{
-        String firebaseConfigPath = "/firebase/strongshop-3fc81-firebase-adminsdk-jypdg-8ae68bebe7.json";
+        String firebaseConfigPath = "//firebase/strongshop-3fc81-firebase-adminsdk-jypdg-8ae68bebe7.json";
 
         GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
                 .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
