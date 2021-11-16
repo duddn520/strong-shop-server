@@ -1,5 +1,6 @@
 package com.strongshop.mobile.controller;
 
+import com.google.protobuf.Api;
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingStatus;
 import com.strongshop.mobile.domain.Company.Company;
@@ -23,13 +24,13 @@ import com.strongshop.mobile.service.ContractService;
 import com.strongshop.mobile.service.FileUploadService;
 import com.strongshop.mobile.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import okhttp3.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -137,7 +138,7 @@ public class ContractController {
         Order order = orderService.getOrderByOrderId(orderId);
         Contract contract = contractService.getContractByOrder(order);
         Map<String,Object> map = new HashMap<>();
-        map.put("company_name",contract.getBidding().getCompany().getName());
+        map.put("contract_id",contract.getId());
 
         contract.updateState(State.CAR_EXAMINATION);
         contractService.registerContract(contract);
@@ -179,7 +180,7 @@ public class ContractController {
         contractService.registerContract(contract);
         ContractInspectionImageResponseDto responseDto = new ContractInspectionImageResponseDto(contract);
         try {
-            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "차량 검수 사진 등록", "차량 검수 사진 등록됨.","210");
+            firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 검수 사진 등록", "차량 검수 사진 등록됨.","210");
         }
         catch (IOException e)
         {
@@ -191,6 +192,19 @@ public class ContractController {
                 HttpResponseMsg.POST_SUCCESS,
                 responseDto), HttpStatus.OK);
 
+    }
+
+    @GetMapping("/api/contract/4/{contract_id}")
+    public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> getInspectionImageUrls(@PathVariable("contract_id") Long contractId)
+    {
+        Contract contract = contractService.getContractById(contractId);
+
+        ContractInspectionImageResponseDto responseDto = new ContractInspectionImageResponseDto(contract);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDto), HttpStatus.OK);
     }
 
     @PutMapping("/api/contract/4")           // state 4->5   **알림필요
@@ -226,7 +240,7 @@ public class ContractController {
         Order order = orderService.getOrderByOrderId(orderId);
         Contract contract = contractService.getContractByOrder(order);
         Map<String,Object> map = new HashMap<>();
-        map.put("company_name",contract.getBidding().getCompany().getName());
+        map.put("contract_id",contract.getId());
 
         contract.updateState(State.CONSTRUCTING);
         contractService.registerContract(contract);
@@ -268,7 +282,7 @@ public class ContractController {
         contractService.registerContract(contract);
         ContractConstructionImageResponseDto responseDto = new ContractConstructionImageResponseDto(contract);
         try {
-            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "차량 시공 사진 등록", "차량 시공 사진 등록됨.","212");
+            firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 시공 사진 등록", "차량 시공 사진 등록됨.","212");
         }
         catch (IOException e)
         {
@@ -280,6 +294,19 @@ public class ContractController {
                 HttpResponseMsg.POST_SUCCESS,
                 responseDto), HttpStatus.OK);
 
+    }
+
+    @GetMapping("/api/contract/6/{contract_id}")
+    public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> getConstructionImageUrls(@PathVariable("contract_id") Long contractId)
+    {
+        Contract contract = contractService.getContractById(contractId);
+
+        ContractConstructionImageResponseDto responseDto = new ContractConstructionImageResponseDto(contract);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDto), HttpStatus.OK);
     }
 
     @PutMapping("api/contract/6")           //state 6->7 **알림필요
