@@ -40,8 +40,8 @@ public class FirebaseCloudMessageService {
         return googleCredentials.getAccessToken().getTokenValue();
     }
 
-    public void sendMessageTo(String targetToken, String title, String body) throws IOException {
-            String message = makeMessage(targetToken, title, body);
+    public void sendMessageTo(String targetToken, String title, String body, String data) throws IOException {
+            String message = makeMessage(targetToken, title, body,data);
 
             OkHttpClient client = new OkHttpClient();
             RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
@@ -59,10 +59,11 @@ public class FirebaseCloudMessageService {
             System.out.println(response.body().string());
     }
 
-    private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException{
+    private String makeMessage(String targetToken, String title, String body,String data) throws JsonProcessingException{
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
+                        .data(data)
                         .notification(FcmMessage.Notification.builder()
                                 .title(title)
                                 .body(body)

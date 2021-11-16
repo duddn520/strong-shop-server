@@ -77,7 +77,7 @@ public class ContractController {
         ContractResponseDto responseDto = new ContractResponseDto(contractService.registerContract(contract));
 
         try {
-            firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "낙찰", "낙찰");
+            firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "낙찰", "낙찰","110");
         }
         catch (IOException e)
         {
@@ -142,7 +142,7 @@ public class ContractController {
         orderService.saveOrder(order);
 
         try {
-            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "출고지 설정 완료", "출고지 설정 완료.");
+            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "출고지 설정 완료", "출고지 설정 완료.","112");
         }
         catch (IOException e)
         {
@@ -156,7 +156,8 @@ public class ContractController {
                 map), HttpStatus.OK);
 
     }
-//
+//TODO: 차량 검수중 사진 등록, 알림 보내기(210)
+
 //    @PostMapping("/api/contract/4")
 //    public ResponseEntity<ApiResponse<Map<String,Object>>> uploadInspectionImages(@RequestParam("files") List<MultipartFile> files,@RequestBody ContractRequestDto requestDto, HttpServletRequest request)
 //    {
@@ -191,7 +192,7 @@ public class ContractController {
         contractService.registerContract(contract);
 
         try {
-            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "차량 검수 완료", "차량 검수 완료");
+            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "차량 검수 완료", "차량 검수 완료","211");
         }
         catch (IOException e)
         {
@@ -217,7 +218,7 @@ public class ContractController {
         orderService.saveOrder(order);
 
         try {
-            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "차량 인수 결정 완료", "차량 인수 결정 완료.");
+            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "차량 인수 결정 완료", "차량 인수 결정 완료.","113");
         }
         catch (IOException e)
         {
@@ -229,6 +230,23 @@ public class ContractController {
                 HttpResponseMsg.GET_SUCCESS
                 ,map), HttpStatus.OK);
     }
+
+    //TODO:시공중 사진 등록, 사진 등록시 알림 보내기(212)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @PutMapping("api/contract/6")           //state 6->7 **알림필요
     public ResponseEntity<ApiResponse> finishConstruction(@RequestBody ContractRequestDto requestDto)
@@ -245,7 +263,7 @@ public class ContractController {
         contractService.registerContract(contract);
 
         try {
-            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "시공 완료", "시공 완료");
+            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "시공 완료", "시공 완료","213");
         }
         catch (IOException e)
         {
