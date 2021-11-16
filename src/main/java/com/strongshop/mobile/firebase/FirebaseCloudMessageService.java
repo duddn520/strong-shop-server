@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -58,10 +60,12 @@ public class FirebaseCloudMessageService {
     }
 
     private String makeMessage(String targetToken, String title, String body,String index) throws JsonProcessingException{
+        Map<String,Object> map = new HashMap<>();
+        map.put("index",index);
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
-                        .data(null)
+                        .data(map)
                         .notification(FcmMessage.Notification.builder()
                                 .title(title)
                                 .body(body)
@@ -72,7 +76,6 @@ public class FirebaseCloudMessageService {
                 )
                 .validate_only(false)
                 .build();
-        fcmMessage.getMessage().getData().put("index",index);
 
         return objectMapper.writeValueAsString(fcmMessage);
     }
