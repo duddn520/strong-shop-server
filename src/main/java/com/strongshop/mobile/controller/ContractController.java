@@ -161,6 +161,7 @@ public class ContractController {
     }
 
     @PostMapping("/api/contract/4")                 //차량검수사진 업로드.
+    @Transactional
     public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> uploadInspectionImages(@RequestParam("files") List<MultipartFile> files,@RequestBody ContractRequestDto requestDto)
     {
         List<String> urls = new ArrayList<>();
@@ -249,6 +250,7 @@ public class ContractController {
     //TODO:시공중 사진 등록, 사진 등록시 알림 보내기(212)
 
     @PostMapping("/api/contract/6")                 //차량검수사진 업로드.
+    @Transactional
     public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> uploadConstructionImages(@RequestParam("files") List<MultipartFile> files, @RequestBody ContractRequestDto requestDto)
     {
         List<String> urls = new ArrayList<>();
