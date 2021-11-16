@@ -4,9 +4,12 @@ import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingStatus;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Contract.Contract;
+import com.strongshop.mobile.domain.Image.ConstructionImageUrl;
 import com.strongshop.mobile.domain.Image.InspectionImageUrl;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
+import com.strongshop.mobile.dto.Contract.ContractConstructionImageResponseDto;
+import com.strongshop.mobile.dto.Contract.ContractInspectionImageResponseDto;
 import com.strongshop.mobile.dto.Contract.ContractRequestDto;
 import com.strongshop.mobile.dto.Contract.ContractResponseDto;
 import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
@@ -156,26 +159,38 @@ public class ContractController {
                 map), HttpStatus.OK);
 
     }
-//TODO: 차량 검수중 사진 등록, 알림 보내기(210)
 
-//    @PostMapping("/api/contract/4")
-//    public ResponseEntity<ApiResponse<Map<String,Object>>> uploadInspectionImages(@RequestParam("files") List<MultipartFile> files,@RequestBody ContractRequestDto requestDto, HttpServletRequest request)
-//    {
-//        List<String> urls = new ArrayList<>();
-//
-//        for(MultipartFile file : files)
-//        {
-//            String url = fileUploadService.uploadImage(file);
-//            urls.add(url);
-//            InspectionImageUrl inspectionImageUrl = InspectionImageUrl.builder()
-//                    .imageUrl(url)
-//                    .build();
-//            contractService.
-//        }
-//
-//
-//    }
+    @PostMapping("/api/contract/4")                 //차량검수사진 업로드.
+    public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> uploadInspectionImages(@RequestParam("files") List<MultipartFile> files,@RequestBody ContractRequestDto requestDto)
+    {
+        List<String> urls = new ArrayList<>();
+        Contract contract = contractService.getContractById(requestDto.getId());
 
+        for(MultipartFile file : files)
+        {
+            String url = fileUploadService.uploadImage(file);
+            urls.add(url);
+            InspectionImageUrl inspectionImageUrl = InspectionImageUrl.builder()
+                    .imageUrl(url)
+                    .build();
+            contractService.registerInspectionImageUrl(contract,inspectionImageUrl);
+        }
+        contractService.registerContract(contract);
+        ContractInspectionImageResponseDto responseDto = new ContractInspectionImageResponseDto(contract);
+        try {
+            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "차량 검수 사진 등록", "차량 검수 사진 등록됨.","210");
+        }
+        catch (IOException e)
+        {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.POST_SUCCESS,
+                responseDto), HttpStatus.OK);
+
+    }
 
     @PutMapping("/api/contract/4")           // state 4->5   **알림필요
     public ResponseEntity<ApiResponse> finishCarExamination(@RequestBody ContractRequestDto requestDto )
@@ -233,20 +248,37 @@ public class ContractController {
 
     //TODO:시공중 사진 등록, 사진 등록시 알림 보내기(212)
 
+    @PostMapping("/api/contract/6")                 //차량검수사진 업로드.
+    public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> uploadConstructionImages(@RequestParam("files") List<MultipartFile> files, @RequestBody ContractRequestDto requestDto)
+    {
+        List<String> urls = new ArrayList<>();
+        Contract contract = contractService.getContractById(requestDto.getId());
 
+        for(MultipartFile file : files)
+        {
+            String url = fileUploadService.uploadImage(file);
+            urls.add(url);
+            ConstructionImageUrl constructionImageUrl = ConstructionImageUrl.builder()
+                    .imageUrl(url)
+                    .build();
+            contractService.registerConstructionImageUrl(contract,constructionImageUrl);
+        }
+        contractService.registerContract(contract);
+        ContractConstructionImageResponseDto responseDto = new ContractConstructionImageResponseDto(contract);
+        try {
+            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "차량 시공 사진 등록", "차량 시공 사진 등록됨.","212");
+        }
+        catch (IOException e)
+        {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
 
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.POST_SUCCESS,
+                responseDto), HttpStatus.OK);
 
-
-
-
-
-
-
-
-
-
-
-
+    }
 
     @PutMapping("api/contract/6")           //state 6->7 **알림필요
     public ResponseEntity<ApiResponse> finishConstruction(@RequestBody ContractRequestDto requestDto)

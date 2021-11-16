@@ -28,4 +28,10 @@ public class InspectionImageUrl {
         this.imageUrl = imageUrl;
         this.contract = contract;
     }
+
+    public void updateContract(Contract contract)
+    {
+        this.contract = contract;
+        contract.getInspectionImageUrls().add(this);
+    }
 }
