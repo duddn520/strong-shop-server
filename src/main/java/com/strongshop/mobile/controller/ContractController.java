@@ -125,6 +125,8 @@ public class ContractController {
 
         Map<String, Object> map = new HashMap<>();
         map.put("shipment_location",contract.getShipmentLocation());
+        map.put("company_name",contract.getBidding().getCompany().getName());
+        map.put("contract_id",contract.getId());
 
         return new ResponseEntity<>(ApiResponse.response(
             HttpStatusCode.OK,
@@ -138,7 +140,6 @@ public class ContractController {
         Order order = orderService.getOrderByOrderId(orderId);
         Contract contract = contractService.getContractByOrder(order);
         Map<String,Object> map = new HashMap<>();
-        map.put("contract_id",contract.getId());
 
         contract.updateState(State.CAR_EXAMINATION);
         contractService.registerContract(contract);
@@ -235,12 +236,10 @@ public class ContractController {
     }
 
     @PutMapping("/api/contract/5/{order_id}")               //state 5->6  **알림필요.
-    public ResponseEntity<ApiResponse<Map<String,Object>>> confirmExamnation(@PathVariable("order_id") Long orderId)
+    public ResponseEntity<ApiResponse> confirmExamnation(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
         Contract contract = contractService.getContractByOrder(order);
-        Map<String,Object> map = new HashMap<>();
-        map.put("contract_id",contract.getId());
 
         contract.updateState(State.CONSTRUCTING);
         contractService.registerContract(contract);
@@ -258,7 +257,7 @@ public class ContractController {
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS
-                ,map), HttpStatus.OK);
+                ), HttpStatus.OK);
     }
 
     //TODO:시공중 사진 등록, 사진 등록시 알림 보내기(212)
