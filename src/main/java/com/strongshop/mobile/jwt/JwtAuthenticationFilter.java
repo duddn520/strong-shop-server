@@ -1,6 +1,7 @@
 package com.strongshop.mobile.jwt;
 
 import com.strongshop.mobile.domain.User.Role;
+import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -31,6 +33,18 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             System.out.println("role = " + role);
             Authentication auth = jwtTokenProvider.getAuthentication(token,role);
             SecurityContextHolder.getContext().setAuthentication(auth);
+        }
+        else if(token!=null)
+        {
+            String fcmToken = jwtTokenProvider.getFcmTokenByJwtToken(token);
+
+            try {
+                firebaseCloudMessageService.sendMessageTo(fcmToken,"토큰 만료","토큰 만료","000");
+            }
+            catch(IOException e)
+            {
+                System.out.println("e.getMessage() = " + e.getMessage());
+            }
         }
 
 

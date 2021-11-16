@@ -1,5 +1,6 @@
 package com.strongshop.mobile.config;
 
+import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtAuthenticationFilter;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @Bean
     @Override
@@ -51,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll();
 
 
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,firebaseCloudMessageService),UsernamePasswordAuthenticationFilter.class);
 
     }
 }

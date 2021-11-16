@@ -1,8 +1,15 @@
 package com.strongshop.mobile.jwt;
 
+import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Company.CompanyInfoRepository;
+import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.User.Role;
+import com.strongshop.mobile.domain.User.User;
+import com.strongshop.mobile.domain.User.UserRepository;
+import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.JwtCompanyUserDetailService;
 import com.strongshop.mobile.service.JwtUserUserDetailService;
+import com.strongshop.mobile.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -16,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.Base64;
 import java.util.Date;
 
@@ -30,12 +38,15 @@ public class JwtTokenProvider {
     // Security UserDetailService
     private final JwtUserUserDetailService jwtUserUserDetailService;
     private final JwtCompanyUserDetailService jwtCompanyUserDetailService;
+    private final CompanyService companyService;
+    private final UserService userService;
 
     // 보호키
     private String secretKey = "STRONG_DEALDER";
 
     //토큰 지속시간 60분
     private static final long TokenValidTime = 60 * 60 * 1000L * 24 * 7 * 2; //jwt 유효기간 2주로
+//    private static final long TokenValidTime = 60 * 60 * 1000L * 24 * 7 * 2; //jwt 유효기간 2주로
 
     //객체초기화, secretKey를 Base64로 인코딩한다.
     @PostConstruct
@@ -96,5 +107,24 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Transactional
+    public String getFcmTokenByJwtToken (String token)
+    {
+        Role role = Role.valueOf((String) getRole(token));
+        String email = getEmail(token);
+        if (role.equals(Role.COMPANY))
+        {
+            Company company = companyService.getCompanyByEmail(email);
+            return company.getFcmToken();
+        }
+        else if(role.equals(Role.USER))
+        {
+            User user = userService.getUserByEmail(email);
+            return user.getFcmToken();
+        }
+        else
+            return null;
     }
 }
