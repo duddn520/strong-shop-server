@@ -2,8 +2,10 @@ package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.dto.Bidding.BiddingRequestDto;
 import com.strongshop.mobile.dto.Bidding.BiddingResponseDto;
+import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class BiddingController {
     private final BiddingService biddingService;
     private final JwtTokenProvider jwtTokenProvider;
     private final CompanyService companyService;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
     private final OrderService orderService;
 
     //입찰 등록
@@ -38,6 +42,16 @@ public class BiddingController {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         BiddingResponseDto responseDto = biddingService.registerBidding(requestDto,company);
+
+        Order order = orderService.getOrderByOrderId(requestDto.getOrder_id());
+
+        try {
+            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(),"새로운 입찰이 있습니다.","새로운 입찰이 있습니다.","200");
+        }
+        catch (IOException e)
+        {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,
