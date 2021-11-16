@@ -6,8 +6,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
@@ -40,8 +38,8 @@ public class FirebaseCloudMessageService {
         return googleCredentials.getAccessToken().getTokenValue();
     }
 
-    public void sendMessageTo(String targetToken, String title, String body, String data) throws IOException {
-            String message = makeMessage(targetToken, title, body,data);
+    public void sendMessageTo(String targetToken, String title, String body, String index) throws IOException {
+            String message = makeMessage(targetToken, title, body, index);
 
             OkHttpClient client = new OkHttpClient();
             RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
@@ -59,11 +57,10 @@ public class FirebaseCloudMessageService {
             System.out.println(response.body().string());
     }
 
-    private String makeMessage(String targetToken, String title, String body,String data) throws JsonProcessingException{
+    private String makeMessage(String targetToken, String title, String body,String index) throws JsonProcessingException{
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
-                        .data(data)
                         .notification(FcmMessage.Notification.builder()
                                 .title(title)
                                 .body(body)
@@ -74,6 +71,7 @@ public class FirebaseCloudMessageService {
                 )
                 .validate_only(false)
                 .build();
+        fcmMessage.getMessage().getData().put("index",index);
 
         return objectMapper.writeValueAsString(fcmMessage);
     }
