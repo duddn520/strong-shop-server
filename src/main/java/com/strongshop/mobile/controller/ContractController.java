@@ -127,6 +127,7 @@ public class ContractController {
         map.put("shipment_location",contract.getShipmentLocation());
         map.put("company_name",contract.getBidding().getCompany().getName());
         map.put("contract_id",contract.getId());
+        map.put("company_id",contract.getBidding().getCompany().getId());
 
         return new ResponseEntity<>(ApiResponse.response(
             HttpStatusCode.OK,
