@@ -35,10 +35,10 @@ public class Contract {
     @Enumerated(EnumType.STRING)
     private State state;
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "contract",cascade = CascadeType.ALL)
     private List<ConstructionImageUrl> constructionImageUrls = new ArrayList<>();
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "contract",cascade= CascadeType.ALL)
     private List<InspectionImageUrl> inspectionImageUrls = new ArrayList<>();
 
     @Builder
