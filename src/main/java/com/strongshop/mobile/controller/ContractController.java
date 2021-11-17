@@ -20,7 +20,6 @@ import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.*;
 import com.strongshop.mobile.service.Company.CompanyService;
 import lombok.RequiredArgsConstructor;
-import okhttp3.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,7 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.DoubleStream;
 
 @Controller
 @RequiredArgsConstructor

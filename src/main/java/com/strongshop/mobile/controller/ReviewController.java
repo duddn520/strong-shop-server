@@ -8,6 +8,7 @@ import com.strongshop.mobile.domain.Review.Review;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.dto.Review.ReviewRequestDto;
 import com.strongshop.mobile.dto.Review.ReviewResponseDto;
+import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,17 +35,18 @@ import java.util.List;
 public class ReviewController {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final ReviewImageUrlService reviewImageUrlService;
     private final CompanyService companyService;
     private final FileUploadService fileUploadService;
     private final ReviewService reviewService;
     private final UserService userService;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @PostMapping("/api/review/{company_id}")
     public ResponseEntity<ApiResponse<ReviewResponseDto>> registerReviewContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content,@RequestParam("rating") float rating,@PathVariable("company_id") Long companyId ,HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
+        Company company = companyService.getCompanyByEmail(email);
         Review review = Review.builder()
                 .user(user)
                 .rating(rating)
@@ -65,6 +68,13 @@ public class ReviewController {
         review.updateReviewImageUrls(imageUrls);
         reviewService.registerReview(review);
         ReviewResponseDto responseDto = new ReviewResponseDto(review);
+        try {
+            firebaseCloudMessageService.sendMessageTo(company.getFcmToken(), "새로운 리뷰가 있습니다.", "새로운 리뷰가 있습니다.","120");
+        }
+        catch (IOException e)
+        {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,
