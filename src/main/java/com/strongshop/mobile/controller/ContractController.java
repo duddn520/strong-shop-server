@@ -339,6 +339,7 @@ public class ContractController {
     }
 
     @PutMapping("api/contract/7/{contract_id}")
+    @Transactional
     public ResponseEntity<ApiResponse<CompletedContractResponseDto>> finishContract(@PathVariable("contract_id") Long contractId)
     {
         Contract contract = contractService.getContractById(contractId);
