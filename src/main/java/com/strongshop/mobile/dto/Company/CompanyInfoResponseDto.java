@@ -11,6 +11,7 @@ import lombok.Setter;
 public class CompanyInfoResponseDto {
     private Long id;
     private Long company_id;
+    private String company_name;
     private String introduction;
     private String blogUrl;
     private String siteUrl;
@@ -27,6 +28,7 @@ public class CompanyInfoResponseDto {
     {
         this.id = companyInfo.getId();
         this.company_id = companyInfo.getCompany().getId();
+        this.company_name = companyInfo.getCompany().getName();
         this.introduction = companyInfo.getIntroduction();
         this.blogUrl = companyInfo.getBlogUrl();
         this.siteUrl = companyInfo.getSiteUrl();

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class ContractInspectionImageResponseDto {
         this.imageUrlResponseDtos = imageUrl2ResponseDto(contract);
     }
 
+    @Transactional
     public List<InspectionImageUrlResponseDto> imageUrl2ResponseDto(Contract contract)
     {
         List<InspectionImageUrl> imageUrls = contract.getInspectionImageUrls();

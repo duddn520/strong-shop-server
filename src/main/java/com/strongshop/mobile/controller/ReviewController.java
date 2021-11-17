@@ -42,9 +42,9 @@ public class ReviewController {
     @PostMapping("/api/review/{company_id}")
     public ResponseEntity<ApiResponse<ReviewResponseDto>> registerReviewContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content,@RequestParam("rating") float rating,@PathVariable("company_id") Long companyId ,HttpServletRequest request)
     {
-
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
+
         ReviewRequestDto requestDto = new ReviewRequestDto();
         requestDto.setUser(user);
         requestDto.setRating(rating);

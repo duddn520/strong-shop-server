@@ -128,6 +128,7 @@ public class ContractController {
         map.put("company_name",contract.getBidding().getCompany().getName());
         map.put("contract_id",contract.getId());
         map.put("company_id",contract.getBidding().getCompany().getId());
+        map.put("receipt",contract.getBidding().getDetail());
 
         return new ResponseEntity<>(ApiResponse.response(
             HttpStatusCode.OK,
@@ -197,6 +198,7 @@ public class ContractController {
     }
 
     @GetMapping("/api/contract/4/{contract_id}")
+    @Transactional
     public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> getInspectionImageUrls(@PathVariable("contract_id") Long contractId)
     {
         Contract contract = contractService.getContractById(contractId);
@@ -297,6 +299,7 @@ public class ContractController {
     }
 
     @GetMapping("/api/contract/6/{contract_id}")
+    @Transactional
     public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> getConstructionImageUrls(@PathVariable("contract_id") Long contractId)
     {
         Contract contract = contractService.getContractById(contractId);
