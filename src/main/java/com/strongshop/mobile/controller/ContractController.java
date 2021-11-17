@@ -1,28 +1,24 @@
 package com.strongshop.mobile.controller;
 
-import com.google.protobuf.Api;
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingStatus;
 import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Contract.CompletedContract;
 import com.strongshop.mobile.domain.Contract.Contract;
+import com.strongshop.mobile.domain.Contract.ReviewStatus;
 import com.strongshop.mobile.domain.Image.ConstructionImageUrl;
 import com.strongshop.mobile.domain.Image.InspectionImageUrl;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
-import com.strongshop.mobile.dto.Contract.ContractConstructionImageResponseDto;
-import com.strongshop.mobile.dto.Contract.ContractInspectionImageResponseDto;
-import com.strongshop.mobile.dto.Contract.ContractRequestDto;
-import com.strongshop.mobile.dto.Contract.ContractResponseDto;
+import com.strongshop.mobile.domain.User.User;
+import com.strongshop.mobile.dto.Contract.*;
 import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
-import com.strongshop.mobile.service.BiddingService;
+import com.strongshop.mobile.service.*;
 import com.strongshop.mobile.service.Company.CompanyService;
-import com.strongshop.mobile.service.ContractService;
-import com.strongshop.mobile.service.FileUploadService;
-import com.strongshop.mobile.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import okhttp3.Response;
 import org.springframework.http.HttpStatus;
@@ -38,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.DoubleStream;
 
 @Controller
 @RequiredArgsConstructor
@@ -50,6 +47,7 @@ public class ContractController {
     private final ContractService contractService;
     private final FirebaseCloudMessageService firebaseCloudMessageService;
     private final FileUploadService fileUploadService;
+    private final CompletedContractService completedContractService;
 
     //TODO orderId와 biddingId를 받아서 contract생성, order의 상태, contract상태 변경 필요. Bidding상태도 변경.(POST)
     @PostMapping("/api/contract")
@@ -338,6 +336,35 @@ public class ContractController {
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS), HttpStatus.OK);
 
+    }
+
+    @PutMapping("api/contract/7/{contract_id}")
+    public ResponseEntity<ApiResponse<CompletedContractResponseDto>> finishContract(@PathVariable("contract_id") Long contractId)
+    {
+        Contract contract = contractService.getContractById(contractId);
+        CompletedContract completedContract = CompletedContract.builder()
+                .companyName(contract.getBidding().getCompany().getName())
+                .details(contract.getDetail())
+                .shipmentLocation(contract.getShipmentLocation())
+                .reviewStatus(ReviewStatus.NOT_WRITTEN)
+                .build();
+
+        Order order = contract.getOrder();
+        Bidding bidding = contract.getBidding();
+        User user = order.getUser();
+        completedContractService.registerCompletedContract(completedContract);
+        contractService.deleteContract(contract);
+        orderService.deleteOrder(order);
+        biddingService.deleteBidding(bidding);
+
+        System.out.println("user.getOrders() = " + user.getOrders());
+
+        CompletedContractResponseDto responseDto = new CompletedContractResponseDto(completedContract);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.DELETE_SUCCESS,
+                responseDto), HttpStatus.OK);
     }
 
 }

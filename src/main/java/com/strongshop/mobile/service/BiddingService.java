@@ -77,4 +77,10 @@ public class BiddingService {
                 .orElseGet(()-> new ArrayList<>());
         return biddings;
     }
+
+    @Transactional
+    public void deleteBidding(Bidding bidding)
+    {
+        biddingRepository.delete(bidding);
+    }
 }

@@ -60,6 +60,12 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    @Transactional
+    public void deleteOrder(Order order)
+    {
+        orderRepository.delete(order);
+    }
+
 
 
 

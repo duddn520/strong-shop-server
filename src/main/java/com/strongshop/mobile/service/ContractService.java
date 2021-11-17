@@ -68,4 +68,10 @@ public class ContractService {
         return constructionImageUrlRepository.save(imageUrl);
     }
 
+    @Transactional
+    public void deleteContract(Contract contract)
+    {
+        contractRepository.delete(contract);
+    }
+
 }
