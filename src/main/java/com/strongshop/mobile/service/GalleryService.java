@@ -33,14 +33,4 @@ public class GalleryService {
                 .orElseThrow(()->new RuntimeException("갤러리가 존재하지 않습니다."));
         return galleries;
     }
-
-    @Transactional
-    public void updateGalleryImageUrlsGalleryId(List<GalleryImageUrl> imageUrls,Gallery gallery)
-    {
-        for(GalleryImageUrl img : imageUrls)
-        {
-            img.updateGalleryId(gallery);
-            galleryImageUrlRepository.save(img);
-        }
-    }
 }
