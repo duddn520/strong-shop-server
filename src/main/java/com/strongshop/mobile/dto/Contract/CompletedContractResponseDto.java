@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 public class CompletedContractResponseDto {
 
     private Long id;
+    private Long user_id;
     private String company_name;
     private String details;
     private String shipment_location;
@@ -22,6 +23,7 @@ public class CompletedContractResponseDto {
     public CompletedContractResponseDto(CompletedContract completedContract)
     {
         this.id = completedContract.getId();
+        this.user_id = completedContract.getUserId();
         this.company_name = completedContract.getCompanyName();
         this.details = completedContract.getDetails();
         this.shipment_location = completedContract.getShipmentLocation();
