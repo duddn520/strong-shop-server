@@ -22,7 +22,7 @@ public class Gallery extends BaseEntity {
     private Long companyId;
     private String content;
 
-    @OneToMany(mappedBy = "gallery")
+    @OneToMany(mappedBy = "gallery",cascade = CascadeType.ALL)
     private List<GalleryImageUrl> imageUrls;
 
     @Builder

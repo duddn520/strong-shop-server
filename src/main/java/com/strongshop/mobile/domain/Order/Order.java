@@ -25,7 +25,7 @@ public class Order extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -36,7 +36,7 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private State state;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     private List<Bidding> biddings = new ArrayList<>();
 
     @Builder

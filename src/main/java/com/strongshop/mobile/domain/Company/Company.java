@@ -32,10 +32,10 @@ public class Company implements UserDetails {
     private String businessNumber; // 사업자번호
     private String fcmToken;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
     private List<Bidding> biddings = new ArrayList<>();
 
-    @OneToOne(mappedBy = "company",orphanRemoval = true)
+    @OneToOne(mappedBy = "company",cascade = CascadeType.ALL)
     private CompanyInfo companyInfo;
 
     @Builder
