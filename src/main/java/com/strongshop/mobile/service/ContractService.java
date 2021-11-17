@@ -53,14 +53,6 @@ public class ContractService {
     }
 
     @Transactional
-    public InspectionImageUrl registerInspectionImageUrl(Contract contract, InspectionImageUrl imageUrl)
-    {
-        inspectionImageUrlRepository.save(imageUrl);
-        imageUrl.updateContract(contract);
-        return inspectionImageUrlRepository.save(imageUrl);
-    }
-
-    @Transactional
     public ConstructionImageUrl registerConstructionImageUrl(Contract contract, ConstructionImageUrl imageUrl)
     {
         constructionImageUrlRepository.save(imageUrl);

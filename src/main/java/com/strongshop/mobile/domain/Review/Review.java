@@ -48,11 +48,9 @@ public class Review extends BaseEntity {
 
     }
 
-    public void updateReview(ReviewRequestDto requestDto)
+    public void updateReviewImageUrls(List<ReviewImageUrl> imageUrls )
     {
-        this.companyId = requestDto.getCompany_id();
-        this.content = requestDto.getContent();
-        this.reviewImageUrls = requestDto.getReviewImageUrls();
+        this.reviewImageUrls = imageUrls;
     }
 
     public void updateReviewIdToUrls(List<ReviewImageUrl> imageUrls)

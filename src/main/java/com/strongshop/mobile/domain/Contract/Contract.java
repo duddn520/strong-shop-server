@@ -38,7 +38,7 @@ public class Contract {
     @OneToMany(mappedBy = "contract",cascade = CascadeType.ALL)
     private List<ConstructionImageUrl> constructionImageUrls = new ArrayList<>();
 
-    @OneToMany(mappedBy = "contract",cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "contract",cascade = CascadeType.ALL)
     private List<InspectionImageUrl> inspectionImageUrls = new ArrayList<>();
 
     @Builder
@@ -57,6 +57,11 @@ public class Contract {
     public void updateState(State state)
     {
         this.state = state;
+    }
+
+    public void updateInspectionImageUrls(List<InspectionImageUrl> imageUrls)
+    {
+        this.inspectionImageUrls = imageUrls;
     }
 
 }

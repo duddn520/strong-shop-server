@@ -28,19 +28,6 @@ public class ReviewService {
     }
 
     @Transactional
-    public void updateReviewEntity(Review review, ReviewRequestDto requestDto)
-    {
-        review.updateReview(requestDto);
-        List<ReviewImageUrl> imageUrls = requestDto.getReviewImageUrls();
-        review.updateReviewIdToUrls(imageUrls);
-        reviewRepository.save(review);
-        for(ReviewImageUrl i : imageUrls)
-        {
-            reviewImageUrlRepository.save(i);
-        }
-    }
-
-    @Transactional
     public List<Review> getAllReviewsByCompanyId(Long companyId){
         List<Review> reviews = reviewRepository.findAllByCompanyIdOrderByCreatedTimeDesc(companyId)
                 .orElseThrow(()-> new RuntimeException("리뷰가 존재하지 않습니다."));

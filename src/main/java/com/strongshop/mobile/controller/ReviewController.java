@@ -44,24 +44,26 @@ public class ReviewController {
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
+        Review review = Review.builder()
+                .user(user)
+                .rating(rating)
+                .companyId(companyId)
+                .content(content)
+                .build();
 
-        ReviewRequestDto requestDto = new ReviewRequestDto();
-        requestDto.setUser(user);
-        requestDto.setRating(rating);
-        requestDto.setCompany_id(companyId);
-        requestDto.setContent(content);
         List<ReviewImageUrl> imageUrls = new ArrayList<>();
-        List<String> urllist = new ArrayList<>();
         for(MultipartFile f : files)
         {
-            urllist.add(fileUploadService.uploadImage(f));
+            String url = fileUploadService.uploadImage(f);
+            ReviewImageUrl imageUrl = ReviewImageUrl.builder()
+                    .imageUrl(url)
+                    .review(review)
+                    .build();
+
+            imageUrls.add(imageUrl);
         }
-        Review review = new Review();
-        review.updateUser(user);
+        review.updateReviewImageUrls(imageUrls);
         reviewService.registerReview(review);
-        imageUrls = reviewImageUrlService.registerReviewImageUrl(urllist,review.getId());
-        requestDto.setReviewImageUrls(imageUrls);
-        reviewService.updateReviewEntity(review,requestDto);
         ReviewResponseDto responseDto = new ReviewResponseDto(review);
 
         return new ResponseEntity<>(ApiResponse.response(
