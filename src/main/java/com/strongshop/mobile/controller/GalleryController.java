@@ -57,6 +57,8 @@ public class GalleryController {
         imageUrls = galleryImageUrlService.registerGalleryImageUrl(urllist,gallery.getId());         //이미지 파일 url만 저장하는 DB에 저장.
         gallery.updateGalleryImageUrls(imageUrls);
         galleryService.registerGallery(gallery);
+
+        
         GalleryResponseDto responseDto = new GalleryResponseDto(gallery);       //DB 에 재등록.
 
         return new ResponseEntity<>(ApiResponse.response(
