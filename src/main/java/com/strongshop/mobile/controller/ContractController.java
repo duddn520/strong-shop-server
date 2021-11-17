@@ -344,6 +344,7 @@ public class ContractController {
     {
         Contract contract = contractService.getContractById(contractId);
         CompletedContract completedContract = CompletedContract.builder()
+                .userId(contract.getOrder().getUser().getId())
                 .companyName(contract.getBidding().getCompany().getName())
                 .details(contract.getDetail())
                 .shipmentLocation(contract.getShipmentLocation())
