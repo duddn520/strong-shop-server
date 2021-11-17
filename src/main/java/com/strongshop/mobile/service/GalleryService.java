@@ -28,17 +28,6 @@ public class GalleryService {
     }
 
     @Transactional
-    public void updateGalleryEntity(Gallery gallery, GalleryRequestDto requestDto){
-        gallery.updateGallery(requestDto);
-        List<GalleryImageUrl> imageUrls = requestDto.getGalleryImageUrls();
-        gallery.updateGalleryIdToUrls(imageUrls);
-        galleryRepository.save(gallery);
-        for(GalleryImageUrl i : imageUrls) {
-            galleryImageUrlRepository.save(i);
-        }
-    }
-
-    @Transactional
     public List<Gallery> getAllGalleriesByCompanyId(Long companyId){
         List<Gallery> galleries = galleryRepository.findAllByCompanyIdOrderByCreatedTimeAsc(companyId)
                 .orElseThrow(()->new RuntimeException("갤러리가 존재하지 않습니다."));

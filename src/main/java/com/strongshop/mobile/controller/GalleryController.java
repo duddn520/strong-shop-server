@@ -44,20 +44,19 @@ public class GalleryController {
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        GalleryRequestDto requestDto = new GalleryRequestDto();
+        Gallery gallery = Gallery.builder()
+                .content(content)
+                .companyId(company.getId())
+                .build();
 
-        requestDto.setCompany_id(company.getId());
-        requestDto.setContent(content);
         List<GalleryImageUrl> imageUrls = new ArrayList<>();
         List<String> urllist = new ArrayList<>();
         for(MultipartFile f : files){
             urllist.add(fileUploadService.uploadImage(f));              //이미지파일 S3에 업로드. url 반환.
         }
-        Gallery gallery = new Gallery();
-        galleryService.registerGallery(gallery);
         imageUrls = galleryImageUrlService.registerGalleryImageUrl(urllist,gallery.getId());         //이미지 파일 url만 저장하는 DB에 저장.
-        requestDto.setGalleryImageUrls(imageUrls);
-        galleryService.updateGalleryEntity(gallery,requestDto);
+        gallery.updateGalleryImageUrls(imageUrls);
+        galleryService.registerGallery(gallery);
         GalleryResponseDto responseDto = new GalleryResponseDto(gallery);       //DB 에 재등록.
 
         return new ResponseEntity<>(ApiResponse.response(
@@ -66,6 +65,34 @@ public class GalleryController {
                 responseDto), HttpStatus.CREATED);
 
     }
+//
+//    @PostMapping("/api/gallery")
+//    public ResponseEntity<ApiResponse<GalleryResponseDto>> registerGalleryContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content, HttpServletRequest request)
+//    {
+//        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+//        Company company = companyService.getCompanyByEmail(email);
+//        GalleryRequestDto requestDto = new GalleryRequestDto();
+//
+//        requestDto.setCompany_id(company.getId());
+//        requestDto.setContent(content);
+//        List<GalleryImageUrl> imageUrls = new ArrayList<>();
+//        List<String> urllist = new ArrayList<>();
+//        for(MultipartFile f : files){
+//            urllist.add(fileUploadService.uploadImage(f));              //이미지파일 S3에 업로드. url 반환.
+//        }
+//        Gallery gallery = new Gallery();
+//        galleryService.registerGallery(gallery);
+//        imageUrls = galleryImageUrlService.registerGalleryImageUrl(urllist,gallery.getId());         //이미지 파일 url만 저장하는 DB에 저장.
+//        requestDto.setGalleryImageUrls(imageUrls);
+//        galleryService.updateGalleryEntity(gallery,requestDto);
+//        GalleryResponseDto responseDto = new GalleryResponseDto(gallery);       //DB 에 재등록.
+//
+//        return new ResponseEntity<>(ApiResponse.response(
+//                HttpStatusCode.CREATED,
+//                HttpResponseMsg.POST_SUCCESS,
+//                responseDto), HttpStatus.CREATED);
+//
+//    }
 
     @GetMapping("/api/gallery")         //company입장에서 자신의 gallery조회
     @Transactional

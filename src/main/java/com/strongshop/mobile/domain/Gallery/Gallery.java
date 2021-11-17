@@ -34,11 +34,9 @@ public class Gallery extends BaseEntity {
         this.imageUrls = imageUrls;
     }
 
-    public void updateGallery(GalleryRequestDto requestDto)
+    public void updateGalleryImageUrls(List<GalleryImageUrl> imageUrls)
     {
-        this.companyId = requestDto.getCompany_id();
-        this.content = requestDto.getContent();
-        this.imageUrls = requestDto.getGalleryImageUrls();
+        this.imageUrls = imageUrls;
     }
 
     public void updateGalleryIdToUrls(List<GalleryImageUrl> imageUrls)
