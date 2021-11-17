@@ -24,7 +24,7 @@ public class GalleryService {
     @Transactional
     public Gallery registerGallery(Gallery gallery) {
 
-        return galleryRepository.saveAndFlush(gallery);
+        return galleryRepository.save(gallery);
     }
 
     @Transactional
