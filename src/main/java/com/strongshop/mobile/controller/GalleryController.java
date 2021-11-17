@@ -50,14 +50,19 @@ public class GalleryController {
                 .build();
 
         List<GalleryImageUrl> imageUrls = new ArrayList<>();
-        List<String> urllist = new ArrayList<>();
         for(MultipartFile f : files){
-            urllist.add(fileUploadService.uploadImage(f));              //이미지파일 S3에 업로드. url 반환.
+            String url = fileUploadService.uploadImage(f);              //이미지파일 S3에 업로드. url 반환.
+            GalleryImageUrl imageUrl = GalleryImageUrl.builder()
+                    .imageUrl(url)
+                    .gallery(gallery)
+                    .build();
+
+            imageUrls.add(imageUrl);
         }
-        imageUrls = galleryImageUrlService.registerGalleryImageUrl(urllist,gallery.getId());         //이미지 파일 url만 저장하는 DB에 저장.
+        //이미지 파일 url만 저장하는 DB에 저장.
         gallery.updateGalleryImageUrls(imageUrls);
         galleryService.registerGallery(gallery);
-        gallery.updateGalleryImageUrlsGalleryId(imageUrls);
+//        galleryService.updateGalleryImageUrlsGalleryId(imageUrls,gallery);
 
         GalleryResponseDto responseDto = new GalleryResponseDto(gallery);       //DB 에 재등록.
 

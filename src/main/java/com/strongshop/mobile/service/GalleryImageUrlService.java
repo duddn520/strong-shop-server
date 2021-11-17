@@ -16,10 +16,9 @@ import java.util.List;
 public class GalleryImageUrlService {
 
     @Transactional
-    public List<GalleryImageUrl> registerGalleryImageUrl(List<String> imageUrls, Long galleryId){
+    public List<GalleryImageUrl> registerGalleryImageUrl(List<String> imageUrls){
         GalleryImageUrlRequestDto requestDto = new GalleryImageUrlRequestDto();
         List<GalleryImageUrl> galleryImageUrls = new ArrayList<>();
-        requestDto.setGalleryId(galleryId);
         for(String i : imageUrls){
             requestDto.setImageUrl(i);
             GalleryImageUrl imgUrl = requestDto.toEntity();

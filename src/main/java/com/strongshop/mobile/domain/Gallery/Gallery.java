@@ -39,14 +39,6 @@ public class Gallery extends BaseEntity {
         this.imageUrls = imageUrls;
     }
 
-    public void updateGalleryImageUrlsGalleryId(List<GalleryImageUrl> imageUrls)
-    {
-        for(GalleryImageUrl img : imageUrls)
-        {
-            img.updateGalleryId(this);
-        }
-    }
-
     public void updateGalleryIdToUrls(List<GalleryImageUrl> imageUrls)
     {
         for(GalleryImageUrl img : imageUrls)
