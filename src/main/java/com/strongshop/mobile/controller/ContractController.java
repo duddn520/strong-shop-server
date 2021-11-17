@@ -266,19 +266,19 @@ public class ContractController {
     @Transactional
     public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> uploadConstructionImages(@RequestParam("files") List<MultipartFile> files, @PathVariable("contract_id") Long contractId)
     {
-        List<String> urls = new ArrayList<>();
+        List<ConstructionImageUrl> imageUrls = new ArrayList<>();
         Contract contract = contractService.getContractById(contractId);
 
         for(MultipartFile file : files)
         {
             String url = fileUploadService.uploadImage(file);
-            urls.add(url);
-            ConstructionImageUrl constructionImageUrl = ConstructionImageUrl.builder()
+            ConstructionImageUrl imageUrl = ConstructionImageUrl.builder()
                     .imageUrl(url)
+                    .contract(contract)
                     .build();
-            contractService.registerConstructionImageUrl(contract,constructionImageUrl);
+            imageUrls.add(imageUrl);
         }
-        contractService.registerContract(contract);
+        contract.updateConstructionImageUrls(imageUrls);
         ContractConstructionImageResponseDto responseDto = new ContractConstructionImageResponseDto(contract);
         try {
             firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 시공 사진 등록", "차량 시공 사진 등록됨.","212");

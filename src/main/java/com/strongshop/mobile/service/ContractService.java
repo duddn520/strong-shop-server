@@ -53,14 +53,6 @@ public class ContractService {
     }
 
     @Transactional
-    public ConstructionImageUrl registerConstructionImageUrl(Contract contract, ConstructionImageUrl imageUrl)
-    {
-        constructionImageUrlRepository.save(imageUrl);
-        imageUrl.updateContract(contract);
-        return constructionImageUrlRepository.save(imageUrl);
-    }
-
-    @Transactional
     public void deleteContract(Contract contract)
     {
         contractRepository.delete(contract);

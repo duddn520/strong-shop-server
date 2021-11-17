@@ -64,4 +64,9 @@ public class Contract {
         this.inspectionImageUrls = imageUrls;
     }
 
+    public void updateConstructionImageUrls(List<ConstructionImageUrl> imageUrls)
+    {
+        this.constructionImageUrls = imageUrls;
+    }
+
 }
