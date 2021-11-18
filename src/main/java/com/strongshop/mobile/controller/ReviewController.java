@@ -52,7 +52,7 @@ public class ReviewController {
         Review review = Review.builder()
                 .user(user)
                 .rating(rating)
-                .companyId(completedContract.getCompanyId())
+                .company(company)
                 .content(content)
                 .build();
 
@@ -68,7 +68,7 @@ public class ReviewController {
             imageUrls.add(imageUrl);
         }
         review.updateReviewImageUrls(imageUrls);
-        reviewService.registerReview(review);
+        company.updateReview(review);
 
         ReviewResponseDto responseDto = new ReviewResponseDto(review);
         try {
@@ -91,7 +91,7 @@ public class ReviewController {
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        List<Review> reviews = reviewService.getAllReviewsByCompanyId(company.getId());
+        List<Review> reviews = company.getReviews();
         List<ReviewResponseDto> responseDtos = new ArrayList<>();
         for(Review r : reviews)
         {
@@ -122,7 +122,8 @@ public class ReviewController {
     @Transactional
     public ResponseEntity<ApiResponse<List<ReviewResponseDto>>> getAllReviewImageUrls4User(@PathVariable("company_id") Long companyId, HttpServletRequest request)
     {
-        List<Review> reviews = reviewService.getAllReviewsByCompanyId(companyId);
+        Company company = companyService.getCompanyById(companyId);
+        List<Review> reviews = company.getReviews();
         List<ReviewResponseDto> responseDtos = new ArrayList<>();
         for(Review r : reviews)
         {
