@@ -99,44 +99,20 @@ public class ProductController {
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        requestDto.setCompanyId(company.getId());
+        Long productId = requestDto.getId();
 
-        switch (item){
-            case "blackbox":
-                requestDto.setItem(Item.BLACKBOX);
-                break;
-            case "tinting":
-                requestDto.setItem(Item.TINTING);
-                break;
-            case "ppf":
-                requestDto.setItem(Item.PPF);
-                break;
-            case "battery":
-                requestDto.setItem(Item.BATTERY);
-                break;
-            case"afterblow":
-                requestDto.setItem(Item.AFTERBLOW);
-                break;
-            case"deafening":
-                requestDto.setItem(Item.DEAFENING);
-                break;
-            case"wrapping":
-                requestDto.setItem(Item.WRAPPING);
-                break;
-            case"glasscoating":
-                requestDto.setItem(Item.GLASSCOATING);
-                break;
-            case"undercoating":
-                requestDto.setItem(Item.UNDERCOATING);
-                break;
-            case"etc":
-                requestDto.setItem(Item.ETC);
-                break;
-            default:
-                break;
-        }
-        ProductResponseDto responseDto = productService.updateProduct(requestDto);
+        Product product = productService.getProductById(productId);
 
+        Product newproduct = Product.builder()
+                .company(company)
+                .item(requestDto.getItem())
+                .additionalInfo(requestDto.getAdditionalInfo())
+                .name(requestDto.getName())
+                .build();
+
+        product.updateProduct(newproduct);
+
+        ProductResponseDto responseDto = new ProductResponseDto(product);
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.UPDATE_SUCCESS,

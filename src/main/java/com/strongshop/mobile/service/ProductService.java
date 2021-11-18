@@ -30,10 +30,11 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDto updateProduct(ProductRequestDto requestDto)
+    public ProductResponseDto updateProduct(ProductRequestDto requestDto,Company company)
     {
         Product product = productRepository.findById(requestDto.getId())
                 .orElseThrow(()-> new RuntimeException());
+
 
         return new ProductResponseDto(productRepository.save(product.updateProduct(requestDto.toEntity())));
 
@@ -70,6 +71,14 @@ public class ProductService {
 
         return responseDtos;
 
+    }
+
+    @Transactional
+    public Product getProductById(Long id)
+    {
+        Product product = productRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("해당 제품이 존재하지 않습니다."));
+        return product;
     }
 
     @Transactional
