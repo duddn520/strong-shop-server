@@ -3,6 +3,7 @@ package com.strongshop.mobile.domain.Company;
 import com.amazonaws.services.ec2.model.transform.ProductCodeStaxUnmarshaller;
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingHistory;
+import com.strongshop.mobile.domain.Gallery.Gallery;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Product.Product;
 import com.strongshop.mobile.domain.Review.Review;
@@ -36,6 +37,9 @@ public class Company implements UserDetails {
     private String fcmToken;
 
     @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+    private List<Gallery> galleries = new ArrayList<>();
+
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
     private List<Bidding> biddings = new ArrayList<>();
 
     @OneToOne(mappedBy = "company",cascade = CascadeType.ALL)
@@ -52,7 +56,7 @@ public class Company implements UserDetails {
 
 
     @Builder
-    public Company(Long id, String name, String email, String bossName, String phoneNumber, String businessNumber, String fcmToken, List<Bidding> biddings, CompanyInfo companyInfo, List<Review> reviews, List<Product> products, List<BiddingHistory> biddingHistories) {
+    public Company(Long id, String name, String email, String bossName, String phoneNumber, String businessNumber, String fcmToken,List<Gallery> galleries, List<Bidding> biddings, CompanyInfo companyInfo, List<Review> reviews, List<Product> products, List<BiddingHistory> biddingHistories) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -60,6 +64,7 @@ public class Company implements UserDetails {
         this.phoneNumber = phoneNumber;
         this.businessNumber = businessNumber;
         this.fcmToken = fcmToken;
+        this.galleries = galleries;
         this.biddings = biddings;
         this.companyInfo = companyInfo;
         this.reviews = reviews;
@@ -76,6 +81,11 @@ public class Company implements UserDetails {
         return this;
     }
 
+    public void updateGallery(Gallery gallery)
+    {
+        this.galleries.add(gallery);
+    }
+
     public void updateCompanyInfo(CompanyInfo companyInfo)
     {
         this.companyInfo = companyInfo;
@@ -90,6 +100,8 @@ public class Company implements UserDetails {
     {
         this.products.add(product);
     }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -46,7 +46,7 @@ public class GalleryController {
         Company company = companyService.getCompanyByEmail(email);
         Gallery gallery = Gallery.builder()
                 .content(content)
-                .companyId(company.getId())
+                .company(company)
                 .build();
 
         List<GalleryImageUrl> imageUrls = new ArrayList<>();
@@ -61,7 +61,7 @@ public class GalleryController {
         }
         //이미지 파일 url만 저장하는 DB에 저장.
         gallery.updateGalleryImageUrls(imageUrls);
-        galleryService.registerGallery(gallery);
+        company.updateGallery(gallery);
         GalleryResponseDto responseDto = new GalleryResponseDto(gallery);       //DB 에 재등록.
 
         return new ResponseEntity<>(ApiResponse.response(
@@ -71,13 +71,12 @@ public class GalleryController {
 
     }
 
-
     @GetMapping("/api/gallery")         //company입장에서 자신의 gallery조회
     @Transactional
     public ResponseEntity<ApiResponse<List<GalleryResponseDto>>> getAllGalleryImageUrls(HttpServletRequest request){
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        List<Gallery> galleries = galleryService.getAllGalleriesByCompanyId(company.getId());
+        List<Gallery> galleries = company.getGalleries();
         List<GalleryResponseDto> responseDtos = new ArrayList<>();
         for(Gallery g : galleries)
         {
@@ -95,7 +94,8 @@ public class GalleryController {
     @Transactional
     public ResponseEntity<ApiResponse<List<GalleryResponseDto>>> getAllGalleryImageUrls4User(@PathVariable("company_id") Long companyId)
     {
-        List<Gallery> galleries = galleryService.getAllGalleriesByCompanyId(companyId);
+        Company company = companyService.getCompanyById(companyId);
+        List<Gallery> galleries = company.getGalleries();
         List<GalleryResponseDto> responseDtos = new ArrayList<>();
         for(Gallery g : galleries)
         {

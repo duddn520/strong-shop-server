@@ -1,6 +1,7 @@
 package com.strongshop.mobile.domain.Gallery;
 
 import com.strongshop.mobile.domain.BaseEntity;
+import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
 import com.strongshop.mobile.dto.Gallery.GalleryRequestDto;
 import lombok.Builder;
@@ -19,17 +20,20 @@ public class Gallery extends BaseEntity {
     @GeneratedValue
     private Long id;
 
-    private Long companyId;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
     private String content;
 
     @OneToMany(mappedBy = "gallery",cascade = CascadeType.ALL)
     private List<GalleryImageUrl> imageUrls;
 
     @Builder
-    public Gallery(Long id, Long companyId, String content, List<GalleryImageUrl> imageUrls)
+    public Gallery(Long id,Company company, String content, List<GalleryImageUrl> imageUrls)
     {
         this.id = id;
-        this.companyId = companyId;
+        this.company = company;
         this.content = content;
         this.imageUrls = imageUrls;
     }
