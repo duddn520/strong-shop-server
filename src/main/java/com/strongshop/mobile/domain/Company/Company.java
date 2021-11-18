@@ -76,6 +76,11 @@ public class Company implements UserDetails {
         return this;
     }
 
+    public void updateCompanyInfo(CompanyInfo companyInfo)
+    {
+        this.companyInfo = companyInfo;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

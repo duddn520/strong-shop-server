@@ -33,13 +33,27 @@ public class CompanyInfoController {
     private final CompanyInfoRepository companyInfoRepository;
 
     @PostMapping("/api/companyinfo")
-    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo( @RequestBody CompanyInfoRequestDto requestDto, HttpServletRequest request)
+    public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo(@RequestBody CompanyInfoRequestDto requestDto, HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
 
-        requestDto.setCompany_id(company.getId());
-        CompanyInfoResponseDto responseDto = companyInfoService.registerCompanyInfo(requestDto);
+        CompanyInfo companyInfo = CompanyInfo.builder()
+                .company(company)
+                .address(requestDto.getAddress())
+                .contact(requestDto.getContact())
+                .backgroundImageUrl(requestDto.getBackgroundImageUrl())
+                .blogUrl(requestDto.getBlogUrl())
+                .detailAddress(requestDto.getDetailAddress())
+                .introduction(requestDto.getIntroduction())
+                .latitude(requestDto.getLatitude())
+                .longitude(requestDto.getLongitude())
+                .siteUrl(requestDto.getSiteUrl())
+                .snsUrl(requestDto.getSnsUrl())
+                .build();
+
+        company.updateCompanyInfo(companyInfo);
+        CompanyInfoResponseDto responseDto = new CompanyInfoResponseDto(companyInfo);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,
@@ -52,8 +66,23 @@ public class CompanyInfoController {
     {
         String email  = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        requestDto.setCompany_id(company.getId());
-        CompanyInfoResponseDto responseDto = companyInfoService.updateCompanyInfo(requestDto);
+
+        CompanyInfo companyInfo = CompanyInfo.builder()
+                .company(company)
+                .address(requestDto.getAddress())
+                .contact(requestDto.getContact())
+                .backgroundImageUrl(requestDto.getBackgroundImageUrl())
+                .blogUrl(requestDto.getBlogUrl())
+                .detailAddress(requestDto.getDetailAddress())
+                .introduction(requestDto.getIntroduction())
+                .latitude(requestDto.getLatitude())
+                .longitude(requestDto.getLongitude())
+                .siteUrl(requestDto.getSiteUrl())
+                .snsUrl(requestDto.getSnsUrl())
+                .build();
+
+        company.updateCompanyInfo(companyInfo);
+        CompanyInfoResponseDto responseDto = new CompanyInfoResponseDto(companyInfo);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
@@ -65,15 +94,13 @@ public class CompanyInfoController {
     public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> getCompanyInfo(HttpServletRequest request) {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        Long company_id = company.getId();
 
-        CompanyInfo companyInfo = companyInfoService.getCompanyInfo(company_id);
+        CompanyInfo companyInfo = company.getCompanyInfo();
         if(companyInfo.getId()==null)
         {
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.NO_CONTENT,
                     HttpResponseMsg.NO_CONTENT), HttpStatus.NO_CONTENT);
-
         }
         else {
             CompanyInfoResponseDto responseDto = new CompanyInfoResponseDto(companyInfo);
@@ -88,7 +115,8 @@ public class CompanyInfoController {
     @GetMapping("/api/companyinfo/{company_id}")            //유저가 요청하는 get요청, conmpnayId를 인자로 받는다.
     public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> getCompanyInfo4User(@PathVariable("company_id") Long companyId)
     {
-        CompanyInfo companyInfo = companyInfoService.getCompanyInfo(companyId);
+        Company company = companyService.getCompanyById(companyId);
+        CompanyInfo companyInfo = company.getCompanyInfo();
         if(companyInfo.getId()==null)
         {
             return new ResponseEntity<>(ApiResponse.response(
