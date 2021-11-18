@@ -36,22 +36,22 @@ public class Company implements UserDetails {
     private String businessNumber; // 사업자번호
     private String fcmToken;
 
-    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Gallery> galleries = new ArrayList<>();
 
-    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Bidding> biddings = new ArrayList<>();
 
-    @OneToOne(mappedBy = "company",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true)
     private CompanyInfo companyInfo;
 
-    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
 
-    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<BiddingHistory> biddingHistories = new ArrayList<>();
 
 
