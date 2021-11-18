@@ -18,15 +18,17 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Item item;
 
-    private Long companyId;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     @Builder
-    public Product(Long id, String name, String additionalInfo, Item item, Long companyId){
+    public Product(Long id, String name, String additionalInfo, Item item,Company company){
         this.id = id;
         this.name = name;
         this.additionalInfo = additionalInfo;
         this.item = item;
-        this.companyId = companyId;
+        this.company = company;
     }
 
     public Product updateProduct(Product product)
@@ -34,7 +36,7 @@ public class Product {
         this.name = product.getName();
         this.additionalInfo = product.getAdditionalInfo();
         this.item = product.getItem();
-        this.companyId = product.getCompanyId();
+        this.company = product.getCompany();
 
         return this;
     }

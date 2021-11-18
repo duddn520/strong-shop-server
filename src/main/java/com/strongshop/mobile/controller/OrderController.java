@@ -6,6 +6,7 @@ import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.dto.Order.OrderResponseDto;
+import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ public class OrderController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final CompanyService companyService;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @PostMapping(value = "/api/orders",produces = "application/json; charset=utf8")
     @Transactional
@@ -102,6 +105,12 @@ public class OrderController {
                 if (o.getCreatedTime().plusDays(2).isBefore(LocalDateTime.now()))
                 {
                     orderService.updateState2BiddingComplete(o);
+                    try {
+                        firebaseCloudMessageService.sendMessageTo(o.getUser().getFcmToken(), "입찰 요청 만료", "입찰 요청 만료", "001");
+                    }catch (IOException e)
+                    {
+                        System.out.println("e.getMessage() = " + e.getMessage());
+                    }
                 }
             }
             OrderResponseDto responseDto = new OrderResponseDto(o);

@@ -21,7 +21,9 @@ public class Review extends BaseEntity {
     @Id @GeneratedValue
     private Long id;
 
-    private Long companyId;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     @OneToMany(mappedBy = "review",cascade = CascadeType.ALL)
     private List<ReviewImageUrl> reviewImageUrls = new ArrayList<>();
@@ -35,10 +37,10 @@ public class Review extends BaseEntity {
 
 
     @Builder
-    public Review(Long id,Long companyId, String content, float rating, List<ReviewImageUrl> reviewImageUrls,String reply,User user)
+    public Review(Long id,Company company, String content, float rating, List<ReviewImageUrl> reviewImageUrls,String reply,User user)
     {
         this.id = id;
-        this.companyId= companyId;
+        this.company = company;
         this.content = content;
         this.rating = rating;
         this.reviewImageUrls = reviewImageUrls;

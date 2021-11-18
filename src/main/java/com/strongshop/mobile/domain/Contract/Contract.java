@@ -29,6 +29,7 @@ public class Contract {
     @JoinColumn(name = "bidding_id")
     private Bidding bidding;
 
+    @Column(length = 1024)
     private String detail;
     private String shipmentLocation;
 

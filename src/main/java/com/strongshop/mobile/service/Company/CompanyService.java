@@ -45,6 +45,14 @@ public class CompanyService {
         companyRepository.delete(company);
     }
 
+    @Transactional
+    public Company getCompanyById(Long companyId)
+    {
+        Company company =  companyRepository.findById(companyId)
+                .orElseThrow(()->new RuntimeException("해당 업체가 존재하지 않습니다."));
+
+        return company;
+    }
 
 
 }

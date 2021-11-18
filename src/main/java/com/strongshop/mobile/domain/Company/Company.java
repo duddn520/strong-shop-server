@@ -1,8 +1,11 @@
 package com.strongshop.mobile.domain.Company;
 
+import com.amazonaws.services.ec2.model.transform.ProductCodeStaxUnmarshaller;
 import com.strongshop.mobile.domain.Bidding.Bidding;
+import com.strongshop.mobile.domain.Bidding.BiddingHistory;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Product.Product;
+import com.strongshop.mobile.domain.Review.Review;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,8 +41,18 @@ public class Company implements UserDetails {
     @OneToOne(mappedBy = "company",cascade = CascadeType.ALL)
     private CompanyInfo companyInfo;
 
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+    private List<Product> products = new ArrayList<>();
+
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
+    private List<BiddingHistory> biddingHistories = new ArrayList<>();
+
+
     @Builder
-    public Company(Long id, String name, String email, String bossName,String phoneNumber, String businessNumber,String fcmToken, List<Bidding> biddings, CompanyInfo companyInfo) {
+    public Company(Long id, String name, String email, String bossName, String phoneNumber, String businessNumber, String fcmToken, List<Bidding> biddings, CompanyInfo companyInfo, List<Review> reviews, List<Product> products, List<BiddingHistory> biddingHistories) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -49,6 +62,9 @@ public class Company implements UserDetails {
         this.fcmToken = fcmToken;
         this.biddings = biddings;
         this.companyInfo = companyInfo;
+        this.reviews = reviews;
+        this.products = products;
+        this.biddingHistories = biddingHistories;
     }
 
     public Company updateCompany(Company company)

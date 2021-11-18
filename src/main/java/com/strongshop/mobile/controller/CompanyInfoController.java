@@ -37,6 +37,7 @@ public class CompanyInfoController {
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
+
         requestDto.setCompany_id(company.getId());
         CompanyInfoResponseDto responseDto = companyInfoService.registerCompanyInfo(requestDto);
 

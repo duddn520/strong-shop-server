@@ -17,6 +17,7 @@ public class CompanyInfo {
     @OneToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
     private String introduction;
     private String blogUrl;
     private String siteUrl;

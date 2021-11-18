@@ -1,6 +1,7 @@
 package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Contract.CompletedContract;
 import com.strongshop.mobile.domain.Gallery.Gallery;
 import com.strongshop.mobile.domain.Image.ReviewImageUrl;
 import com.strongshop.mobile.domain.Image.ReviewImageUrlRepository;
@@ -13,11 +14,8 @@ import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
+import com.strongshop.mobile.service.*;
 import com.strongshop.mobile.service.Company.CompanyService;
-import com.strongshop.mobile.service.FileUploadService;
-import com.strongshop.mobile.service.ReviewImageUrlService;
-import com.strongshop.mobile.service.ReviewService;
-import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,17 +38,21 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final UserService userService;
     private final FirebaseCloudMessageService firebaseCloudMessageService;
+    private final CompletedContractService completedContractService;
 
-    @PostMapping("/api/review/{company_id}")
-    public ResponseEntity<ApiResponse<ReviewResponseDto>> registerReviewContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content,@RequestParam("rating") float rating,@PathVariable("company_id") Long companyId ,HttpServletRequest request)
+    @PostMapping("/api/review/{completed_contract_id}")
+    public ResponseEntity<ApiResponse<ReviewResponseDto>> registerReviewContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content,@RequestParam("rating") float rating,@PathVariable("completed_contract_id") Long completedcontractId ,HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
-        Company company = companyService.getCompanyByEmail(email);
+        CompletedContract completedContract = completedContractService.getCompletedContractById(completedcontractId);
+        Long companyId = completedContract.getCompanyId();
+        Company company = companyService.getCompanyById(companyId);
+
         Review review = Review.builder()
                 .user(user)
                 .rating(rating)
-                .companyId(companyId)
+                .companyId(completedContract.getCompanyId())
                 .content(content)
                 .build();
 
@@ -67,6 +69,7 @@ public class ReviewController {
         }
         review.updateReviewImageUrls(imageUrls);
         reviewService.registerReview(review);
+
         ReviewResponseDto responseDto = new ReviewResponseDto(review);
         try {
             firebaseCloudMessageService.sendMessageTo(company.getFcmToken(), "새로운 리뷰가 있습니다.", "새로운 리뷰가 있습니다.","120");
