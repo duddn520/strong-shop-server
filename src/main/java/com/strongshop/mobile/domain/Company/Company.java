@@ -86,6 +86,11 @@ public class Company implements UserDetails {
         this.reviews.add(review);
     }
 
+    public void updateProduct(Product product)
+    {
+        this.products.add(product);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

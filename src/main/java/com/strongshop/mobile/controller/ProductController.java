@@ -3,6 +3,7 @@ package com.strongshop.mobile.controller;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.Product.Item;
+import com.strongshop.mobile.domain.Product.Product;
 import com.strongshop.mobile.dto.Product.ProductRequestDto;
 import com.strongshop.mobile.dto.Product.ProductResponseDto;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sound.sampled.Port;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +39,6 @@ public class ProductController {
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        requestDto.setCompanyId(company.getId());
 
         switch (item){
             case "blackbox":
@@ -74,7 +75,15 @@ public class ProductController {
                 break;
         }
 
-        ProductResponseDto responseDto = productService.registerProduct(requestDto);
+        Product product = Product.builder()
+                .company(company)
+                .item(requestDto.getItem())
+                .additionalInfo(requestDto.getAdditionalInfo())
+                .name(requestDto.getName())
+                .build();
+
+        company.updateProduct(product);
+        ProductResponseDto responseDto = new ProductResponseDto(product);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,
