@@ -15,6 +15,7 @@ import com.strongshop.mobile.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +34,7 @@ public class CompanyInfoController {
     private final CompanyInfoRepository companyInfoRepository;
 
     @PostMapping("/api/companyinfo")
+    @Transactional
     public ResponseEntity<ApiResponse<CompanyInfoResponseDto>> registerCompanyInfo(@RequestBody CompanyInfoRequestDto requestDto, HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));

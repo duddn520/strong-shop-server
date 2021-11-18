@@ -37,6 +37,7 @@ public class GalleryController {
 
 
     @PostMapping("/api/gallery")
+    @Transactional
     public ResponseEntity<ApiResponse<GalleryResponseDto>> registerGalleryContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content, HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));

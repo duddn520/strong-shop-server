@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,7 @@ public class ProductController {
 
     //제품 등록
     @PostMapping("/api/product/{item}")
+    @Transactional
     public ResponseEntity<ApiResponse<ProductResponseDto>> registerBlackbox(@RequestBody ProductRequestDto requestDto, @PathVariable("item") String item, HttpServletRequest request){
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
