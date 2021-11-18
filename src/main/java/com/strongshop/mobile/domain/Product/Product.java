@@ -35,7 +35,6 @@ public class Product {
     {
         this.name = product.getName();
         this.additionalInfo = product.getAdditionalInfo();
-        this.item = product.getItem();
         this.company = product.getCompany();
 
         return this;
