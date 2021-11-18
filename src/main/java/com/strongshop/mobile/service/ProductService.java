@@ -23,9 +23,8 @@ public class ProductService {
     private final CompanyRepository companyRepository;
 
     @Transactional
-    public ProductResponseDto registerProduct(ProductRequestDto requestDto)
+    public ProductResponseDto registerProduct(Product product)
     {
-        Product product = requestDto.toEntity();
         return new ProductResponseDto(productRepository.save(product));
     }
 

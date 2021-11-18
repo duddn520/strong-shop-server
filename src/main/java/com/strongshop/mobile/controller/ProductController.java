@@ -111,8 +111,7 @@ public class ProductController {
                 .build();
 
         product.updateProduct(newproduct);
-
-        ProductResponseDto responseDto = new ProductResponseDto(product);
+        ProductResponseDto responseDto = productService.registerProduct(product);
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.UPDATE_SUCCESS,
