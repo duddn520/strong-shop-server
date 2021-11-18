@@ -25,7 +25,7 @@ public class GalleryResponseDto {
 
     public GalleryResponseDto(Gallery gallery){
         this.id = gallery.getId();
-        this.company_id = gallery.getCompanyId();
+        this.company_id = gallery.getCompany().getId();
         this.content = gallery.getContent();
         this.createdTime = gallery.getCreatedTime();
         this.imageUrls = makeUrlResponseDtos(gallery.getImageUrls());

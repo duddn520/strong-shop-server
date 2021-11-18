@@ -24,7 +24,6 @@ public class ProductRequestDto {
                 .name(name)
                 .additionalInfo(additionalInfo)
                 .item(item)
-                .companyId(companyId)
                 .build();
     }
 

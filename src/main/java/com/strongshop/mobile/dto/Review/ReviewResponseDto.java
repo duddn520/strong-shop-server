@@ -31,7 +31,7 @@ public class ReviewResponseDto {
 
     public ReviewResponseDto(Review review){
         this.id = review.getId();
-        this.companyId = review.getCompanyId();
+        this.companyId = review.getCompany().getId();
         this.content = review.getContent();
         this.rating = review.getRating();
         this.createdTime = review.getCreatedTime();

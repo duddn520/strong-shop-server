@@ -3,7 +3,6 @@ package com.strongshop.mobile.domain.Gallery;
 import com.strongshop.mobile.domain.BaseEntity;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
-import com.strongshop.mobile.dto.Gallery.GalleryRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

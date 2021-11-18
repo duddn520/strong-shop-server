@@ -26,7 +26,6 @@ public class ReviewRequestDto {
 
     public Review toEntity(){
         return Review.builder()
-                .companyId(company_id)
                 .content(content)
                 .rating(rating)
                 .reviewImageUrls(reviewImageUrls)

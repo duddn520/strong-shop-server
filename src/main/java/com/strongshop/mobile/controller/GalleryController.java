@@ -3,13 +3,11 @@ package com.strongshop.mobile.controller;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Gallery.Gallery;
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
-import com.strongshop.mobile.dto.Gallery.GalleryRequestDto;
 import com.strongshop.mobile.dto.Gallery.GalleryResponseDto;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
-import com.strongshop.mobile.service.AWSS3DownloadService;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.FileUploadService;
 import com.strongshop.mobile.service.GalleryService;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

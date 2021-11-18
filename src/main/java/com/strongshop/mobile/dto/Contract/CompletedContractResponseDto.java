@@ -27,7 +27,7 @@ public class CompletedContractResponseDto {
     public CompletedContractResponseDto(CompletedContract completedContract)
     {
         this.id = completedContract.getId();
-        this.user_id = completedContract.getUserId();
+        this.user_id = completedContract.getUser().getId();
         this.company_id = completedContract.getCompanyId();
         this.company_name = completedContract.getCompanyName();
         this.company_thumbnail_image = completedContract.getCompanyThumbnailImage();
