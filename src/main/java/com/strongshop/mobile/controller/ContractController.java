@@ -46,6 +46,7 @@ public class ContractController {
     private final FirebaseCloudMessageService firebaseCloudMessageService;
     private final FileUploadService fileUploadService;
     private final CompletedContractService completedContractService;
+    private final UserService userService;
 
     //TODO orderId와 biddingId를 받아서 contract생성, order의 상태, contract상태 변경 필요. Bidding상태도 변경.(POST)
     @PostMapping("/api/contract")
@@ -337,26 +338,28 @@ public class ContractController {
 
     @PutMapping("api/contract/7/{contract_id}")
     @Transactional
-    public ResponseEntity<ApiResponse<CompletedContractResponseDto>> finishContract(@PathVariable("contract_id") Long contractId)
+    public ResponseEntity<ApiResponse<CompletedContractResponseDto>> finishContract(@PathVariable("contract_id") Long contractId, HttpServletRequest request)
     {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        User user = userService.getUserByEmail(email);
         Contract contract = contractService.getContractById(contractId);
+
+        Order order = contract.getOrder();
+        Bidding bidding = contract.getBidding();
         CompletedContract completedContract = CompletedContract.builder()
-                .userId(contract.getOrder().getUser().getId())
-                .companyName(contract.getBidding().getCompany().getName())
+                .user(order.getUser())
+                .companyId(bidding.getCompany().getId())
+                .companyName(bidding.getCompany().getName())
+                .companyThumbnailImage(bidding.getCompany().getCompanyInfo().getBackgroundImageUrl())
                 .details(contract.getDetail())
                 .shipmentLocation(contract.getShipmentLocation())
                 .reviewStatus(ReviewStatus.NOT_WRITTEN)
                 .build();
-
-        Order order = contract.getOrder();
-        Bidding bidding = contract.getBidding();
-        User user = order.getUser();
-        completedContractService.registerCompletedContract(completedContract);
+        user.getCompletedContracts().add(completedContract);
         contractService.deleteContract(contract);
         orderService.deleteOrder(order);
         biddingService.deleteBidding(bidding);
 
-        System.out.println("user.getOrders() = " + user.getOrders());
 
         CompletedContractResponseDto responseDto = new CompletedContractResponseDto(completedContract);
 
