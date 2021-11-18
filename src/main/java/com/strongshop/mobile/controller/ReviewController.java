@@ -41,6 +41,7 @@ public class ReviewController {
     private final CompletedContractService completedContractService;
 
     @PostMapping("/api/review/{completed_contract_id}")
+    @Transactional
     public ResponseEntity<ApiResponse<ReviewResponseDto>> registerReviewContent(@RequestParam("files") List<MultipartFile> files, @RequestParam("content")String content,@RequestParam("rating") float rating,@PathVariable("completed_contract_id") Long completedcontractId ,HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
