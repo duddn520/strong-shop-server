@@ -1,6 +1,7 @@
 package com.strongshop.mobile.controller;
 
 
+import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
@@ -70,6 +71,7 @@ public class OrderController {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         List<OrderResponseDto> responseDtos = new ArrayList<>();
+        List<Bidding> biddings = company.getBiddings();
 
         for (String region : regions) {
             List<Order> orders = orderService.getOrdersStateIsBiddingAndSearchedByRegion(region);
@@ -78,8 +80,19 @@ public class OrderController {
                 if (order.getCreatedTime().plusDays(2).isBefore(LocalDateTime.now()))
                     orderService.updateState2BiddingComplete(order);
                 else {
-                    OrderResponseDto responseDto = new OrderResponseDto(order);
-                    responseDtos.add(responseDto);
+                    boolean flag = true;
+                    for(Bidding b : biddings)
+                    {
+                        if(order.getBiddings().contains(b))             //company의 비딩중 해당 오더가 존재하면, flag -> false
+                        {
+                            flag=false;
+                        }
+                    }
+                    if(flag)
+                    {
+                        OrderResponseDto responseDto = new OrderResponseDto(order);
+                        responseDtos.add(responseDto);
+                    }
                 }
             }
         }
