@@ -189,11 +189,10 @@ public class CompanyController {
     }
 
     @DeleteMapping("/api/company")
-    public ResponseEntity<ApiResponse> withdrawCompany()
+    public ResponseEntity<ApiResponse> withdrawCompany(HttpServletRequest request)
     {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
-        Company company = companyRepository.findByEmail(email).orElseThrow(()->new RuntimeException());
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        Company company = companyService.getCompanyByEmail(email);
         companyService.deleteCompany(company);
 
         return new ResponseEntity<>(ApiResponse.response(
