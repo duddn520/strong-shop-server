@@ -26,5 +26,4 @@ public class CarService {
         Car car = requestDto.toEntity();
         return new CarResponseDto(carRepository.save(car));
     }
-
 }

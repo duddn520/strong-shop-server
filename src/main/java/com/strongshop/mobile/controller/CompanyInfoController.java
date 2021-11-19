@@ -144,6 +144,12 @@ public class CompanyInfoController {
 
         CompanyInfo companyInfo = company.getCompanyInfo();
 
+        if(companyInfo.getBackgroundImageUrl()!=null)
+        {
+            String pasturl = companyInfo.getBackgroundImageUrl();
+            fileUploadService.removeFile(pasturl);
+        }
+
         String url = fileUploadService.uploadImage(file);
 
         companyInfo.updateBackgroundImageUrl(url);

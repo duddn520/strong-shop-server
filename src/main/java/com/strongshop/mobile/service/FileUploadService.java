@@ -1,6 +1,8 @@
 package com.strongshop.mobile.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.strongshop.mobile.S3.S3Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import java.util.UUID;
 public class FileUploadService {
 
     private final UploadService uploadService;
+    private final AmazonS3 amazonS3;
+    private final S3Component component;
 
     public String uploadImage(MultipartFile file){
         String filename = createFileName(file.getOriginalFilename());
@@ -44,5 +48,10 @@ public class FileUploadService {
         {
             throw new IllegalArgumentException(String.format("잘못된 형식의 file (%s)",filename));
         }
+    }
+
+    public void removeFile(String filename)
+    {
+        amazonS3.deleteObject(component.getBucket(),filename);
     }
 }
