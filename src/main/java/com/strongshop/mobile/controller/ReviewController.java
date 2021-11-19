@@ -48,7 +48,6 @@ public class ReviewController {
         User user = userService.getUserByEmail(email);
         CompletedContract completedContract = completedContractService.getCompletedContractById(completedcontractId);
         Company company = completedContract.getCompany();
-        //////////////////////
         Review review = Review.builder()
                 .user(user)
                 .rating(rating)
@@ -68,7 +67,7 @@ public class ReviewController {
             imageUrls.add(imageUrl);
         }
         review.updateReviewImageUrls(imageUrls);
-        company.updateReview(review);
+        company.getReviews().add(review);
 
         ReviewResponseDto responseDto = new ReviewResponseDto(review);
         try {

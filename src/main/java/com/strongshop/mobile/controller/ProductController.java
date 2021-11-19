@@ -84,7 +84,7 @@ public class ProductController {
                 .name(requestDto.getName())
                 .build();
 
-        company.updateProduct(product);
+        company.getProducts().add(product);
         ProductResponseDto responseDto = new ProductResponseDto(product);
 
         return new ResponseEntity<>(ApiResponse.response(

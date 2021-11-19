@@ -29,10 +29,8 @@ import java.util.List;
 public class GalleryController {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final GalleryImageUrlService galleryImageUrlService;
     private final CompanyService companyService;
     private final FileUploadService fileUploadService;
-    private final GalleryService galleryService;
 
 
 
@@ -59,7 +57,7 @@ public class GalleryController {
         }
         //이미지 파일 url만 저장하는 DB에 저장.
         gallery.updateGalleryImageUrls(imageUrls);
-        company.updateGallery(gallery);
+        company.getGalleries().add(gallery);
         GalleryResponseDto responseDto = new GalleryResponseDto(gallery);       //DB 에 재등록.
 
         return new ResponseEntity<>(ApiResponse.response(

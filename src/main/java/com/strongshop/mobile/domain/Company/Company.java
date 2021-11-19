@@ -55,7 +55,7 @@ public class Company implements UserDetails {
     @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<BiddingHistory> biddingHistories = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "company",cascade = CascadeType.ALL)
     private List<CompletedContract> completedContracts = new ArrayList<>();
 
 
@@ -87,24 +87,9 @@ public class Company implements UserDetails {
         return this;
     }
 
-    public void updateGallery(Gallery gallery)
-    {
-        this.galleries.add(gallery);
-    }
-
     public void updateCompanyInfo(CompanyInfo companyInfo)
     {
         this.companyInfo = companyInfo;
-    }
-
-    public void updateReview(Review review)
-    {
-        this.reviews.add(review);
-    }
-
-    public void updateProduct(Product product)
-    {
-        this.products.add(product);
     }
 
     public void updateBiddingHistory(BiddingHistory biddingHistory) {this.biddingHistories.add(biddingHistory);}

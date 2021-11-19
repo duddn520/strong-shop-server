@@ -74,7 +74,7 @@ public class ContractController {
                         .biddingStatus(BiddingStatus.FAILED)
                         .build();
 
-                company.updateBiddingHistory(biddingHistory);
+                company.getBiddingHistories().add(biddingHistory);
             }
         }
 
@@ -86,7 +86,7 @@ public class ContractController {
                 .biddingStatus(BiddingStatus.SUCCESS)
                 .build();
 
-        succompany.updateBiddingHistory(successhistory);
+        succompany.getBiddingHistories().add(successhistory);
 
         Contract contract = Contract.builder()
                 .detail(bidding.getDetail())
@@ -367,6 +367,7 @@ public class ContractController {
 
         Order order = contract.getOrder();
         Bidding bidding = contract.getBidding();
+        Company company = bidding.getCompany();
         CompletedContract completedContract = CompletedContract.builder()
                 .user(order.getUser())
                 .company(bidding.getCompany())
@@ -375,8 +376,8 @@ public class ContractController {
                 .reviewStatus(ReviewStatus.NOT_WRITTEN)
                 .build();
         user.getCompletedContracts().add(completedContract);
+        company.getCompletedContracts().add(completedContract);
 
-        System.out.println("user.getCompletedContracts() = " + user.getCompletedContracts());
         contractService.deleteContract(contract);
         orderService.deleteOrder(order);
         biddingService.deleteBidding(bidding);
