@@ -2,10 +2,7 @@ package com.strongshop.mobile.dto.Contract;
 
 import com.strongshop.mobile.domain.Contract.Contract;
 import com.strongshop.mobile.domain.Image.ConstructionImageUrl;
-import com.strongshop.mobile.domain.Image.ConstructionImageUrlRepository;
-import com.strongshop.mobile.domain.Image.InspectionImageUrl;
 import com.strongshop.mobile.dto.Image.ConstructionImageUrlResponseDto;
-import com.strongshop.mobile.dto.Image.InspectionImageUrlResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
