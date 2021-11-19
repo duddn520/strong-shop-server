@@ -375,6 +375,8 @@ public class ContractController {
                 .reviewStatus(ReviewStatus.NOT_WRITTEN)
                 .build();
         user.getCompletedContracts().add(completedContract);
+
+        System.out.println("user.getCompletedContracts() = " + user.getCompletedContracts());
         contractService.deleteContract(contract);
         orderService.deleteOrder(order);
         biddingService.deleteBidding(bidding);
