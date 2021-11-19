@@ -378,6 +378,8 @@ public class ContractController {
         user.getCompletedContracts().add(completedContract);
         company.getCompletedContracts().add(completedContract);
 
+        completedContractService.registerCompletedContract(completedContract);
+
         contractService.deleteContract(contract);
         orderService.deleteOrder(order);
         biddingService.deleteBidding(bidding);
