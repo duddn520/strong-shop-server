@@ -187,7 +187,6 @@ public class ContractController {
     public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> uploadInspectionImages(@RequestParam("files") List<MultipartFile> files,@PathVariable("contract_id") Long contractId)
     {
         Contract contract = contractService.getContractById(contractId);
-        List<InspectionImageUrl> imageUrls = new ArrayList<>();
         for(MultipartFile file : files)
         {
             String url = fileUploadService.uploadImage(file);
@@ -195,9 +194,8 @@ public class ContractController {
                     .imageUrl(url)
                     .contract(contract)
                     .build();
-            imageUrls.add(imageUrl);
+            contract.getInspectionImageUrls().add(imageUrl);
         }
-        contract.updateInspectionImageUrls(imageUrls);
         ContractInspectionImageResponseDto responseDto = new ContractInspectionImageResponseDto(contract);
         try {
             firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 검수 사진 등록", "차량 검수 사진 등록됨.","210");
@@ -286,7 +284,6 @@ public class ContractController {
     @Transactional
     public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> uploadConstructionImages(@RequestParam("files") List<MultipartFile> files, @PathVariable("contract_id") Long contractId)
     {
-        List<ConstructionImageUrl> imageUrls = new ArrayList<>();
         Contract contract = contractService.getContractById(contractId);
 
         for(MultipartFile file : files)
@@ -296,9 +293,8 @@ public class ContractController {
                     .imageUrl(url)
                     .contract(contract)
                     .build();
-            imageUrls.add(imageUrl);
+            contract.getConstructionImageUrls().add(imageUrl);
         }
-        contract.updateConstructionImageUrls(imageUrls);
         ContractConstructionImageResponseDto responseDto = new ContractConstructionImageResponseDto(contract);
         try {
             firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 시공 사진 등록", "차량 시공 사진 등록됨.","212");
