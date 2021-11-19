@@ -28,9 +28,9 @@ public class CompletedContractResponseDto {
     {
         this.id = completedContract.getId();
         this.user_id = completedContract.getUser().getId();
-        this.company_id = completedContract.getCompanyId();
-        this.company_name = completedContract.getCompanyName();
-        this.company_thumbnail_image = completedContract.getCompanyThumbnailImage();
+        this.company_id = completedContract.getCompany().getId();
+        this.company_name = completedContract.getCompany().getName();
+        this.company_thumbnail_image = completedContract.getCompany().getCompanyInfo().getBackgroundImageUrl();
         this.details = completedContract.getDetails();
         this.shipment_location = completedContract.getShipmentLocation();
         this.reviewStatus = completedContract.getReviewStatus();
