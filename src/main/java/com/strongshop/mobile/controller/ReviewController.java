@@ -47,9 +47,8 @@ public class ReviewController {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
         CompletedContract completedContract = completedContractService.getCompletedContractById(completedcontractId);
-        Long companyId = completedContract.getCompanyId();
-        Company company = companyService.getCompanyById(companyId);
-
+        Company company = completedContract.getCompany();
+        //////////////////////
         Review review = Review.builder()
                 .user(user)
                 .rating(rating)

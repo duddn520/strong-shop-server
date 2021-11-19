@@ -3,6 +3,7 @@ package com.strongshop.mobile.domain.Company;
 import com.amazonaws.services.ec2.model.transform.ProductCodeStaxUnmarshaller;
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingHistory;
+import com.strongshop.mobile.domain.Contract.CompletedContract;
 import com.strongshop.mobile.domain.Gallery.Gallery;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Product.Product;
@@ -54,9 +55,13 @@ public class Company implements UserDetails {
     @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<BiddingHistory> biddingHistories = new ArrayList<>();
 
+    @OneToMany
+    private List<CompletedContract> completedContracts = new ArrayList<>();
+
 
     @Builder
-    public Company(Long id, String name, String email, String bossName, String phoneNumber, String businessNumber, String fcmToken,List<Gallery> galleries, List<Bidding> biddings, CompanyInfo companyInfo, List<Review> reviews, List<Product> products, List<BiddingHistory> biddingHistories) {
+    public Company(Long id, String name, String email, String bossName, String phoneNumber, String businessNumber, String fcmToken
+            ,List<Gallery> galleries, List<Bidding> biddings, CompanyInfo companyInfo, List<Review> reviews, List<Product> products, List<BiddingHistory> biddingHistories,List<CompletedContract> completedContracts) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -70,6 +75,7 @@ public class Company implements UserDetails {
         this.reviews = reviews;
         this.products = products;
         this.biddingHistories = biddingHistories;
+        this.completedContracts = completedContracts;
     }
 
     public Company updateCompany(Company company)
@@ -100,6 +106,8 @@ public class Company implements UserDetails {
     {
         this.products.add(product);
     }
+
+    public void updateBiddingHistory(BiddingHistory biddingHistory) {this.biddingHistories.add(biddingHistory);}
 
 
     @Override

@@ -1,6 +1,7 @@
 package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
+import com.strongshop.mobile.domain.Bidding.BiddingHistory;
 import com.strongshop.mobile.domain.Bidding.BiddingStatus;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Contract.CompletedContract;
@@ -53,19 +54,39 @@ public class ContractController {
     @Transactional
     public ResponseEntity<ApiResponse<ContractResponseDto>> registerContract(@RequestBody ContractRequestDto requestDto)
     {
+
         Order order = orderService.getOrderByOrderId(requestDto.getOrder_id());
         Bidding bidding = biddingService.getBiddingByBiddingId(requestDto.getBidding_id());
-
+        Company succompany = bidding.getCompany();
         order.updateState(State.DESIGNATING_SHIPMENT_LOCATION);
         List<Bidding> biddings = order.getBiddings();
+
         for(Bidding b : biddings)
         {
-            if(b.getId()!=requestDto.getBidding_id())
-                b.updateStatus(BiddingStatus.FAILED);           //선택 비딩 제외 모두 fail 설정
+            Company company = b.getCompany();
+
+            if(b.getId()!=requestDto.getBidding_id()) {
+                b.updateStatus(BiddingStatus.FAILED);//선택 비딩 제외 모두 fail 설정
+                BiddingHistory biddingHistory = BiddingHistory.builder()
+                        .company(company)
+                        .details(b.getDetail())
+                        .createdTime(order.getCreatedTime())
+                        .biddingStatus(BiddingStatus.FAILED)
+                        .build();
+
+                company.updateBiddingHistory(biddingHistory);
+            }
         }
 
         bidding.updateStatus(BiddingStatus.SUCCESS);
+        BiddingHistory successhistory = BiddingHistory.builder()
+                .company(succompany)
+                .details(bidding.getDetail())
+                .createdTime(order.getCreatedTime())
+                .biddingStatus(BiddingStatus.SUCCESS)
+                .build();
 
+        succompany.updateBiddingHistory(successhistory);
 
         Contract contract = Contract.builder()
                 .detail(bidding.getDetail())
@@ -348,9 +369,7 @@ public class ContractController {
         Bidding bidding = contract.getBidding();
         CompletedContract completedContract = CompletedContract.builder()
                 .user(order.getUser())
-                .companyId(bidding.getCompany().getId())
-                .companyName(bidding.getCompany().getName())
-                .companyThumbnailImage(bidding.getCompany().getCompanyInfo().getBackgroundImageUrl())
+                .company(bidding.getCompany())
                 .details(contract.getDetail())
                 .shipmentLocation(contract.getShipmentLocation())
                 .reviewStatus(ReviewStatus.NOT_WRITTEN)

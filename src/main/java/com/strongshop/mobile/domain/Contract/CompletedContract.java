@@ -1,6 +1,7 @@
 package com.strongshop.mobile.domain.Contract;
 
 import com.strongshop.mobile.domain.BaseEntity;
+import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.User.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,9 +20,10 @@ public class CompletedContract extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private Long companyId;
-    private String companyName;
-    private String companyThumbnailImage;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     @Column(length = 1024)
     private String details;             //bidding
@@ -31,13 +33,11 @@ public class CompletedContract extends BaseEntity {
     private ReviewStatus reviewStatus;
 
     @Builder
-    public CompletedContract(Long id,User user, Long companyId, String companyName,String companyThumbnailImage, String details, String shipmentLocation, ReviewStatus reviewStatus)
+    public CompletedContract(Long id,User user, Company company, String details, String shipmentLocation, ReviewStatus reviewStatus)
     {
         this.id = id;
         this.user = user;
-        this.companyId = companyId;
-        this.companyName = companyName;
-        this.companyThumbnailImage = companyThumbnailImage;
+        this.company = company;
         this.details = details;
         this.shipmentLocation = shipmentLocation;
         this.reviewStatus = reviewStatus;

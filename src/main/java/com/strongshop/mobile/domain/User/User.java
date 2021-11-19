@@ -65,6 +65,11 @@ public class User implements UserDetails{
         return this;
     }
 
+    public void updateFcmToken(String token)
+    {
+        this.fcmToken = token;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
