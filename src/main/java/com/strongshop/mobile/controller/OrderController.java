@@ -1,6 +1,7 @@
 package com.strongshop.mobile.controller;
 
 
+import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
@@ -69,6 +70,7 @@ public class OrderController {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
         List<OrderResponseDto> responseDtos = new ArrayList<>();
+        List<Bidding> biddings = company.getBiddings();
 
         for (String region : regions) {
             List<Order> orders = orderService.getOrdersStateIsBiddingAndSearchedByRegion(region);
@@ -77,8 +79,13 @@ public class OrderController {
                 if (order.getCreatedTime().plusDays(2).isBefore(LocalDateTime.now()))
                     orderService.updateState2BiddingComplete(order);
                 else {
-                    OrderResponseDto responseDto = new OrderResponseDto(order);
-                    responseDtos.add(responseDto);
+                    for(Bidding b : biddings){
+                        if(!b.getOrder().getId().equals(order.getId()))
+                        {
+                            OrderResponseDto responseDto = new OrderResponseDto(order);
+                            responseDtos.add(responseDto);
+                        }
+                    }
                 }
             }
         }
@@ -94,7 +101,7 @@ public class OrderController {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
 
-        List<Order> orders = orderService.getOrdersByUser(user);
+        List<Order> orders = user.getOrders();
 
         List<OrderResponseDto> responseDtos = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
+import com.strongshop.mobile.domain.Bidding.BiddingStatus;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.dto.Bidding.BiddingRequestDto;
@@ -88,8 +89,10 @@ public class BiddingController {
 
         for(Bidding b : biddings)
         {
-            BiddingResponseDto responseDto = new BiddingResponseDto(b);
-            responseDtos.add(responseDto);
+            if(b.getStatus().equals(BiddingStatus.ONGOING)) {
+                BiddingResponseDto responseDto = new BiddingResponseDto(b);
+                responseDtos.add(responseDto);
+            }
         }
 
         return new ResponseEntity<>(ApiResponse.response(
