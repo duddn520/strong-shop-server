@@ -66,6 +66,7 @@ public class OrderController {
     }
 
     @GetMapping("/api/orders")          //업체용. TODO 내가 이미 입찰했으면 목록에서 제외하도록 해야함.
+    @Transactional
     public ResponseEntity<ApiResponse<List<OrderResponseDto>>> getOrdersNowBidding(@RequestParam List<String> regions, HttpServletRequest request) {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
@@ -96,6 +97,7 @@ public class OrderController {
     }
 
     @GetMapping("/api/orders/user")     //유저가 조회
+    @Transactional
     public ResponseEntity<ApiResponse<List<OrderResponseDto>>> getMyOrders4User(HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
