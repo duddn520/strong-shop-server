@@ -245,7 +245,7 @@ public class CompanyController {
             } else {
                 CompanyResponseDto responseDto = new CompanyResponseDto(companyRepository.save(findcompany));
 
-                String token = jwtTokenProvider.createToken(finduser.getEmail(), Role.COMPANY);
+                String token = jwtTokenProvider.createToken(findcompany.getEmail(), Role.COMPANY);
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Auth", token);
