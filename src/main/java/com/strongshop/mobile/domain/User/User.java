@@ -38,8 +38,11 @@ public class User implements UserDetails{
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<CompletedContract> completedContracts = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private LoginMethod loginMethod;
+
     @Builder
-    public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, LocalDate birth, List<Order> orders, String fcmToken, List<CompletedContract> completedContracts) {
+    public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, LocalDate birth, List<Order> orders, String fcmToken, List<CompletedContract> completedContracts, LoginMethod loginMethod) {
         this.id = id;
         this.realName = realName;
         this.email = email;
@@ -52,8 +55,7 @@ public class User implements UserDetails{
         this.orders =orders;
         this.fcmToken = fcmToken;
         this.completedContracts = completedContracts;
-
-
+        this.loginMethod = loginMethod;
     }
 
     public User updateUser(UserRequestDto requestDto) {

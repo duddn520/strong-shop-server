@@ -3,6 +3,7 @@ package com.strongshop.mobile.controller;
 import com.google.gson.*;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
+import com.strongshop.mobile.domain.User.LoginMethod;
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
@@ -109,11 +110,11 @@ public class UserController {
             }
             if (finduser.getEmail()== null) {
                 UserRequestDto requestDto = new UserRequestDto();
-                requestDto.setId((Long) userInfo.get("id"));
                 requestDto.setNickname((String) userInfo.get("nickname"));
                 requestDto.setEmail((String) userInfo.get("email"));
                 requestDto.setThumbnailImage((String) userInfo.get("thumbnail_image_url"));
                 requestDto.setProfileImage((String) userInfo.get("profile_image_url"));
+                requestDto.setLoginMethod(LoginMethod.KAKAO);
 
                 return new ResponseEntity<>(ApiResponse.response(       //존재하지 않는 회원, 헤더에 아무것도 없이 리턴되며, 추가 로그인 요청 필요.
                         HttpStatusCode.CREATED,
@@ -176,7 +177,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/api/user/login/naver")
+    @GetMapping("/api/login/user/naver")
     public ResponseEntity<ApiResponse<UserResponseDto>> userLoginNaver(HttpServletRequest request) {
         String accessToken = request.getHeader("Authorization");
         String header = "Bearer " + accessToken;
@@ -207,15 +208,15 @@ public class UserController {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            JsonObject response = element.getAsJsonObject().get("response").getAsJsonObject();
-            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
-            JsonObject profile = kakao_account.getAsJsonObject().get("profile").getAsJsonObject();
+            System.out.println("result = " + result);
 
-            Long id = response.getAsJsonObject().get("id").getAsLong();
+            JsonObject response = element.getAsJsonObject().get("response").getAsJsonObject();
+
+            String id = response.getAsJsonObject().get("id").getAsString();
             String nickname = response.getAsJsonObject().get("nickname").getAsString();
-            String email = response.getAsJsonObject().get("email").getAsString();
-            String thumbnail_image_url = profile.getAsJsonObject().get("profile_image").getAsString();
-            String profile_image_url = profile.getAsJsonObject().get("profile_image").getAsString();
+            String email = response.getAsJsonObject().get("email").getAsString() + "/";
+            String thumbnail_image_url = response.getAsJsonObject().get("profile_image").getAsString();
+            String profile_image_url = response.getAsJsonObject().get("profile_image").getAsString();
 
             userInfo.put("id", id);
             userInfo.put("nickname", nickname);
@@ -230,11 +231,11 @@ public class UserController {
             }
             if (finduser.getEmail()== null) {
                 UserRequestDto requestDto = new UserRequestDto();
-                requestDto.setId((Long) userInfo.get("id"));
                 requestDto.setNickname((String) userInfo.get("nickname"));
                 requestDto.setEmail((String) userInfo.get("email"));
                 requestDto.setThumbnailImage((String) userInfo.get("thumbnail_image_url"));
                 requestDto.setProfileImage((String) userInfo.get("profile_image_url"));
+                requestDto.setLoginMethod(LoginMethod.NAVER);
 
                 return new ResponseEntity<>(ApiResponse.response(       //존재하지 않는 회원, 헤더에 아무것도 없이 리턴되며, 추가 로그인 요청 필요.
                         HttpStatusCode.CREATED,
@@ -257,6 +258,31 @@ public class UserController {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @PostMapping("/api/login/user/naver")
+    public ResponseEntity<ApiResponse<UserResponseDto>> completeUserLoginNaver(@RequestBody UserRequestDto requestDto)
+    {
+
+        if(requestDto.getEmail()!=null && requestDto.getPhoneNumber()!= null)       //필수항목 중 가장 중요한 두개 검사.
+        {
+            User user = requestDto.toEntity();
+            UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
+
+            String token = jwtTokenProvider.createToken(user.getEmail(), Role.USER);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Auth",token);
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.OK,
+                    HttpResponseMsg.POST_SUCCESS,
+                    responseDto),headers,HttpStatus.OK);
+        }
+        else
+        {
+            throw new RuntimeException();
+        }
     }
 
 

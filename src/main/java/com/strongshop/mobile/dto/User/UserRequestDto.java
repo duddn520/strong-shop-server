@@ -1,5 +1,6 @@
 package com.strongshop.mobile.dto.User;
 
+import com.strongshop.mobile.domain.User.LoginMethod;
 import com.strongshop.mobile.domain.User.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,10 +25,11 @@ public class UserRequestDto {
     private String gender;  //카카오
     private LocalDate birth;
     private String fcmToken;
+    private LoginMethod loginMethod;
 
     @Builder
     public UserRequestDto(Long id,String realname,String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender
-                          , LocalDate birth, String fcmToken) {
+                          , LocalDate birth, String fcmToken, LoginMethod loginMethod) {
         this.id = id;
         this.realname = realname;
         this.email = email;
@@ -38,6 +40,7 @@ public class UserRequestDto {
         this.gender = gender;
         this.birth = birth;
         this.fcmToken = fcmToken;
+        this.loginMethod = loginMethod;
     }
 
     public User toEntity(){
@@ -52,6 +55,7 @@ public class UserRequestDto {
                 .gender(gender)
                 .birth(birth)
                 .fcmToken(fcmToken)
+                .loginMethod(loginMethod)
                 .build();
     }
 
