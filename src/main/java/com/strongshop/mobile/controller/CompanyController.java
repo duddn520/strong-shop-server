@@ -5,11 +5,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
+import com.strongshop.mobile.domain.User.LoginMethod;
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.dto.Company.CompanyRequestDto;
 import com.strongshop.mobile.dto.Company.CompanyResponseDto;
+import com.strongshop.mobile.dto.User.UserRequestDto;
+import com.strongshop.mobile.dto.User.UserResponseDto;
 import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
@@ -31,6 +34,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -172,6 +176,103 @@ public class CompanyController {
         {
             Company company = requestDto.toEntity();
             CompanyResponseDto responseDto= new CompanyResponseDto(companyRepository.save(company));
+            String token = jwtTokenProvider.createToken(company.getEmail(), Role.COMPANY);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Auth",token);
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.OK,
+                    HttpResponseMsg.POST_SUCCESS,
+                    responseDto),headers,HttpStatus.OK);
+        }
+        else
+        {
+            throw new RuntimeException();
+        }
+    }
+
+    @GetMapping("/api/login/company/naver")
+    public ResponseEntity<ApiResponse<CompanyResponseDto>> companyLoginNaver(HttpServletRequest request) {
+        String accessToken = request.getHeader("Authorization");
+        String header = "Bearer " + accessToken;
+
+        String apiURL = "https://openapi.naver.com/v1/nid/me";
+
+        Map<String, String> requestHeaders = new HashMap<>();
+        Map<String, Object> userInfo = new HashMap<>();
+        requestHeaders.put("Authorization", header);
+
+        try {
+            URL url = new URL(apiURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            //    요청에 필요한 Header에 포함될 내용
+            conn.setRequestProperty("Authorization", accessToken);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+            String line = "";
+            String result = "";
+
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(result);
+
+            System.out.println("result = " + result);
+
+            JsonObject response = element.getAsJsonObject().get("response").getAsJsonObject();
+
+            String email = response.getAsJsonObject().get("email").getAsString() + "/";
+
+            userInfo.put("email", email);
+
+            User finduser = userRepository.findByEmail(email).orElseGet(() -> new User());
+            Company findcompany = companyRepository.findByEmail(email).orElseGet(() -> new Company());
+            if (finduser.getEmail()!=null && finduser.getEmail().equals(email)) {
+                throw new RuntimeException("이미 유저로 등록된 계정입니다.");        //유저로 이미 등록된 이메일이면 거부.
+            }
+            if (findcompany.getEmail()== null) {
+                CompanyRequestDto requestDto = new CompanyRequestDto();
+                requestDto.setEmail((String) userInfo.get("email"));
+                requestDto.setLoginMethod(LoginMethod.NAVER);
+
+                return new ResponseEntity<>(ApiResponse.response(       //존재하지 않는 회원, 헤더에 아무것도 없이 리턴되며, 추가 로그인 요청 필요.
+                        HttpStatusCode.CREATED,
+                        HttpResponseMsg.GET_SUCCESS,
+                        new CompanyResponseDto(requestDto.toEntity())), HttpStatus.OK);
+            } else {
+                CompanyResponseDto responseDto = new CompanyResponseDto(companyRepository.save(findcompany));
+
+                String token = jwtTokenProvider.createToken(finduser.getEmail(), Role.COMPANY);
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Auth", token);
+
+                return new ResponseEntity<>(ApiResponse.response(           //이미 존재하는 회원, 헤더에 jwt 발급 후, 회원정보까지 리턴.
+                        HttpStatusCode.OK,
+                        HttpResponseMsg.POST_SUCCESS,
+                        responseDto), headers, HttpStatus.OK);
+            }
+        } catch(IOException e){
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @PostMapping("/api/login/company/naver")
+    public ResponseEntity<ApiResponse<CompanyResponseDto>> completeCompanyLoginNaver(@RequestBody CompanyRequestDto requestDto)
+    {
+
+        if(requestDto.getEmail()!=null && requestDto.getBusinessNumber()!= null)       //필수항목 중 가장 중요한 두개 검사.
+        {
+            Company company = requestDto.toEntity();
+            CompanyResponseDto responseDto = new CompanyResponseDto(companyRepository.save(company));
+
             String token = jwtTokenProvider.createToken(company.getEmail(), Role.COMPANY);
 
             HttpHeaders headers = new HttpHeaders();

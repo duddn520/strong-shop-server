@@ -1,5 +1,6 @@
 package com.strongshop.mobile.dto.User;
 
+import com.strongshop.mobile.domain.User.LoginMethod;
 import com.strongshop.mobile.domain.User.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class UserResponseDto {
     private String thumbnailImage;  //카카오
     private String gender;  //카카오
     private LocalDate birth;
+    private LoginMethod loginMethod;
 
 
 
@@ -34,5 +36,6 @@ public class UserResponseDto {
         this.thumbnailImage = user.getThumbnailImage();
         this.gender = user.getGender();
         this.birth = user.getBirth();
+        this.loginMethod = user.getLoginMethod();
     }
 }
