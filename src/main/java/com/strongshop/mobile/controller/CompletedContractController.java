@@ -1,6 +1,5 @@
 package com.strongshop.mobile.controller;
 
-import com.google.protobuf.Api;
 import com.strongshop.mobile.domain.Contract.CompletedContract;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.dto.Contract.CompletedContractResponseDto;

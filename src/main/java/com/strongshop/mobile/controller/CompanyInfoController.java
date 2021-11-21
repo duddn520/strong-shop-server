@@ -27,7 +27,6 @@ import java.util.Map;
 @RestController
 public class CompanyInfoController {
 
-    private final CompanyInfoService companyInfoService;
     private final CompanyService companyService;
     private final JwtTokenProvider jwtTokenProvider;
     private final FileUploadService fileUploadService;
@@ -44,7 +43,6 @@ public class CompanyInfoController {
                 .company(company)
                 .address(requestDto.getAddress())
                 .contact(requestDto.getContact())
-                .backgroundImageUrl(requestDto.getBackgroundImageUrl())
                 .blogUrl(requestDto.getBlogUrl())
                 .detailAddress(requestDto.getDetailAddress())
                 .introduction(requestDto.getIntroduction())

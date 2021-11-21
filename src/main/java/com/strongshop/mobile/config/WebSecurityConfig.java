@@ -1,5 +1,6 @@
 package com.strongshop.mobile.config;
 
+import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtAuthenticationFilter;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
