@@ -18,7 +18,9 @@ public class CompanyInfo {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @Column(length = 2500)
     private String introduction;
+
     private String blogUrl;
     private String siteUrl;
     private String snsUrl;
