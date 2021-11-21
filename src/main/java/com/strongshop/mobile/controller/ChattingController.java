@@ -1,12 +1,14 @@
 package com.strongshop.mobile.controller;
 
 import com.google.protobuf.Api;
+import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
+import com.strongshop.mobile.service.Company.CompanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,14 +26,14 @@ public class ChattingController {
 
     private final FirebaseCloudMessageService firebaseCloudMessageService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CompanyService companyService;
 
     @Async
-    public void chatAlarm(Role role) {
+    public void chatAlarm(Role role,Company company) {
 
         if (role.equals(Role.COMPANY)) {
             try {
-                firebaseCloudMessageService.sendMessageTo("eVag6EG3sEFJpTbBaiwhO9:APA91bFTJhVTugHqwPZ9oyBbMSN6d0TAO_u293zB0Ge4MIJoZkCya72YTrGbKrTYaa2EEW3kTavVTq9apAYNWHLl-cYXUfc90K6IXlr8cmCUjbcHyfMT8fiKyiAfYXbacWuv4qTb7lkX"
-                        , "title", "message", "1010101");
+                firebaseCloudMessageService.sendMessageTo(company.getFcmToken(), "title", "message", "1010101");
             } catch (IOException e) {
                 System.out.println("e.get = " + e.getMessage());
             }
@@ -42,9 +44,12 @@ public class ChattingController {
     @PutMapping("/api/chat")
     public ResponseEntity<ApiResponse> Alarm(HttpServletRequest request)
     {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        Company company = companyService.getCompanyByEmail(email);
+
         Role role = Role.valueOf((String) jwtTokenProvider.getRole(jwtTokenProvider.getToken(request)));
 
-        chatAlarm(role);
+        chatAlarm(role,company);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
