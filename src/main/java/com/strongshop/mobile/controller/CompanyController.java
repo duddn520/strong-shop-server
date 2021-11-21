@@ -11,9 +11,6 @@ import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.dto.Company.CompanyRequestDto;
 import com.strongshop.mobile.dto.Company.CompanyResponseDto;
-import com.strongshop.mobile.dto.User.UserRequestDto;
-import com.strongshop.mobile.dto.User.UserResponseDto;
-import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
@@ -134,8 +131,8 @@ public class CompanyController {
 
             if(findcompany.getEmail()==null) {
                 CompanyRequestDto requestDto = new CompanyRequestDto();
-                requestDto.setId((Long) companyInfo.get("id"));
                 requestDto.setEmail((String) companyInfo.get("email"));
+                requestDto.setLoginMethod(LoginMethod.KAKAO);
 
                 return new ResponseEntity<>(ApiResponse.response(       //존재하지 않는 업체, 헤더에 아무것도 없이 리턴되며, 추가 회원가입 요청 필요.
                         HttpStatusCode.CREATED,
