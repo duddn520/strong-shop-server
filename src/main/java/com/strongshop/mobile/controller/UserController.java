@@ -14,6 +14,7 @@ import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
+import okhttp3.Response;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -173,6 +174,91 @@ public class UserController {
                 HttpStatusCode.OK,
                 HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
     }
+
+
+    @GetMapping("/api/user/login/naver")
+    public ResponseEntity<ApiResponse<UserResponseDto>> userLoginNaver(HttpServletRequest request) {
+        String accessToken = request.getHeader("Authorization");
+        String header = "Bearer " + accessToken;
+
+        String apiURL = "https://openapi.naver.com/v1/nid/me";
+
+        Map<String, String> requestHeaders = new HashMap<>();
+        Map<String, Object> userInfo = new HashMap<>();
+        requestHeaders.put("Authorization", header);
+
+        try {
+            URL url = new URL(apiURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            //    요청에 필요한 Header에 포함될 내용
+            conn.setRequestProperty("Authorization", accessToken);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+            String line = "";
+            String result = "";
+
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(result);
+
+            JsonObject response = element.getAsJsonObject().get("response").getAsJsonObject();
+            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
+            JsonObject profile = kakao_account.getAsJsonObject().get("profile").getAsJsonObject();
+
+            Long id = response.getAsJsonObject().get("id").getAsLong();
+            String nickname = response.getAsJsonObject().get("nickname").getAsString();
+            String email = response.getAsJsonObject().get("email").getAsString();
+            String thumbnail_image_url = profile.getAsJsonObject().get("profile_image").getAsString();
+            String profile_image_url = profile.getAsJsonObject().get("profile_image").getAsString();
+
+            userInfo.put("id", id);
+            userInfo.put("nickname", nickname);
+            userInfo.put("email", email);
+            userInfo.put("thumbnail_image_url", thumbnail_image_url);
+            userInfo.put("profile_image_url", profile_image_url);
+
+            User finduser = userRepository.findByEmail(email).orElseGet(() -> new User());
+            Company findcompany = companyRepository.findByEmail(email).orElseGet(() -> new Company());
+            if (findcompany.getEmail()!=null && findcompany.getEmail().equals(email)) {
+                throw new RuntimeException("이미 업체로 등록된 계정입니다.");        //업체로 이미 등록된 이메일이면 거부.
+            }
+            if (finduser.getEmail()== null) {
+                UserRequestDto requestDto = new UserRequestDto();
+                requestDto.setId((Long) userInfo.get("id"));
+                requestDto.setNickname((String) userInfo.get("nickname"));
+                requestDto.setEmail((String) userInfo.get("email"));
+                requestDto.setThumbnailImage((String) userInfo.get("thumbnail_image_url"));
+                requestDto.setProfileImage((String) userInfo.get("profile_image_url"));
+
+                return new ResponseEntity<>(ApiResponse.response(       //존재하지 않는 회원, 헤더에 아무것도 없이 리턴되며, 추가 로그인 요청 필요.
+                        HttpStatusCode.CREATED,
+                        HttpResponseMsg.GET_SUCCESS,
+                        new UserResponseDto(requestDto.toEntity())), HttpStatus.OK);
+            } else {
+                UserResponseDto responseDto = new UserResponseDto(userRepository.save(finduser));
+
+                String token = jwtTokenProvider.createToken(finduser.getEmail(), Role.USER);
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Auth", token);
+
+                return new ResponseEntity<>(ApiResponse.response(           //이미 존재하는 회원, 헤더에 jwt 발급 후, 회원정보까지 리턴.
+                        HttpStatusCode.OK,
+                        HttpResponseMsg.POST_SUCCESS,
+                        responseDto), headers, HttpStatus.OK);
+            }
+        } catch(IOException e){
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
     @PostMapping("/api/user/fcm")
     public ResponseEntity<ApiResponse> changeFcm(@RequestBody String token, HttpServletRequest request)

@@ -14,13 +14,15 @@ spring:
               - profile_image
               - account_email
           naver:
-            client-id: <your id>
-            client-secret: <your secret>
-            redirect-uri:  <your url>/login/oauth2/code/naver
+            client-id: s8f8vTXD3RmumyHONbsG
+            client-secret: ZrD2iZk_ep
+            redirect-uri:  http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope:
               - name
               - email
+              - profile_image
+              - id
           google:
             client-id: <your id>
             client-secret: your secret>
