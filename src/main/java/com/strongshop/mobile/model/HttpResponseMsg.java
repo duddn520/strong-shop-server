@@ -20,5 +20,8 @@ public class HttpResponseMsg {
     public static final String INTERNAL_SERVER_ERROR = "서버 내부 에러";
     public static final String DB_ERROR = "데이터베이스 에러";
 
+    public static final String SEND_SUCCESS = "전송 성공";
+    public static final String SEND_FAILED = "전송 실패";
+
     public static final String UPDATE_SUCCESS = "업데이트 성공";
 }
