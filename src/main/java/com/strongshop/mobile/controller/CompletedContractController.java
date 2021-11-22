@@ -23,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompletedContractController {
 
-    private final CompletedContractService completedContractService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
 
