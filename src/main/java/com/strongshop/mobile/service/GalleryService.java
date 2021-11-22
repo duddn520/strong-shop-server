@@ -28,4 +28,18 @@ public class GalleryService {
                 .orElseThrow(()->new RuntimeException("갤러리가 존재하지 않습니다."));
         return galleries;
     }
+
+    @Transactional
+    public Gallery getGalleryById(Long galleryId)
+    {
+        Gallery gallery = galleryRepository.findById(galleryId)
+                .orElseThrow(()->new RuntimeException("해당 갤러리가 존재하지 않습니다."));
+        return gallery;
+    }
+
+    @Transactional
+    public void deleteGallery(Gallery gallery)
+    {
+        galleryRepository.delete(gallery);
+    }
 }

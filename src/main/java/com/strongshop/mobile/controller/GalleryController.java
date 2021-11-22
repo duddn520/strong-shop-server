@@ -31,6 +31,7 @@ public class GalleryController {
     private final JwtTokenProvider jwtTokenProvider;
     private final CompanyService companyService;
     private final FileUploadService fileUploadService;
+    private final GalleryService galleryService;
 
 
 
@@ -103,5 +104,18 @@ public class GalleryController {
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS,
                 responseDtos), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/api/gallery/{gallery_id}")
+    @Transactional
+    public ResponseEntity<ApiResponse> removeGallery(@PathVariable("gallery_id") Long galleryId)
+    {
+        Gallery gallery = galleryService.getGalleryById(galleryId);
+
+        galleryService.deleteGallery(gallery);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.DELETE_SUCCESS), HttpStatus.OK);
     }
 }
