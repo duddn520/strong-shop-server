@@ -45,4 +45,5 @@ public class CompletedContractController {
                 HttpResponseMsg.GET_SUCCESS,
                 responseDtos), HttpStatus.OK);
     }
+
 }

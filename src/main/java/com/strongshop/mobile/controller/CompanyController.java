@@ -5,6 +5,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
+import com.strongshop.mobile.domain.Gallery.Gallery;
+import com.strongshop.mobile.domain.Image.GalleryImageUrl;
+import com.strongshop.mobile.domain.Image.ReviewImageUrl;
+import com.strongshop.mobile.domain.Review.Review;
 import com.strongshop.mobile.domain.User.LoginMethod;
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.User;
@@ -16,7 +20,9 @@ import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyService;
+import com.strongshop.mobile.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.agent.builder.AgentBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +37,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -41,6 +48,7 @@ public class CompanyController {
     private final JwtTokenProvider jwtTokenProvider;
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
+    private final FileUploadService fileUploadService;
 
 
     @PostMapping("/api/company")
@@ -291,7 +299,36 @@ public class CompanyController {
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
+
+        List<Gallery> galleries = company.getGalleries();                       //컴퍼니 회원탈퇴시 서버에 저장된 관련 사진 모두를 삭제한다.
+        for(Gallery g : galleries)
+        {
+            List<GalleryImageUrl> imageUrls = g.getImageUrls();
+
+            for(GalleryImageUrl img : imageUrls)
+            {
+                fileUploadService.removeFile(img.getFilename());
+            }
+        }
+
+        if(company.getCompanyInfo().getBackgroundImageUrl()!=null)
+            fileUploadService.removeFile(company.getCompanyInfo().getBackgroundFilename());
+
+        List<Review> reviews = company.getReviews();
+        for(Review r : reviews)
+        {
+            List<ReviewImageUrl> imageUrls = r.getReviewImageUrls();
+
+            for(ReviewImageUrl img : imageUrls)
+            {
+                fileUploadService.removeFile(img.getFilename());
+            }
+        }
+
         companyService.deleteCompany(company);
+
+
+
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,

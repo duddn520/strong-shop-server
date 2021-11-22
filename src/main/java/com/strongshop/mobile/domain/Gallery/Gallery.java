@@ -23,6 +23,7 @@ public class Gallery extends BaseEntity {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @Column(length = 512)
     private String content;
 
     @OneToMany(mappedBy = "gallery",cascade = CascadeType.ALL)

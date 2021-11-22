@@ -60,14 +60,5 @@ public class Contract {
         this.state = state;
     }
 
-    public void updateInspectionImageUrls(List<InspectionImageUrl> imageUrls)
-    {
-        this.inspectionImageUrls = imageUrls;
-    }
-
-    public void updateConstructionImageUrls(List<ConstructionImageUrl> imageUrls)
-    {
-        this.constructionImageUrls = imageUrls;
-    }
 
 }
