@@ -75,6 +75,14 @@ public class ContractController {
                         .build();
 
                 company.getBiddingHistories().add(biddingHistory);
+
+                try {
+                    firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "낙찰 실패", "낙찰 실패", "111");
+                }
+                catch (IOException e)
+                {
+                    System.out.println("e.getMessage() = " + e.getMessage());
+                }
             }
         }
 
