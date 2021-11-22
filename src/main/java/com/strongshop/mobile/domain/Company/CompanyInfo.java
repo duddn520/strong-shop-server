@@ -28,13 +28,14 @@ public class CompanyInfo {
     private String address;
     private String detailAddress;
     private String backgroundImageUrl;
+    private String backgroundFilename;
     private String latitude;
     private String longitude;
 
 
 
     @Builder
-    public CompanyInfo (Long id, Company company, String introduction, String blogUrl, String siteUrl, String snsUrl, String contact, String address, String detailAddress, String backgroundImageUrl, String latitude, String longitude)
+    public CompanyInfo (Long id, Company company, String introduction, String blogUrl, String siteUrl, String snsUrl, String contact, String address, String detailAddress, String backgroundImageUrl,String backgroundFilename, String latitude, String longitude)
     {
         this.id = id;
         this.company = company;
@@ -46,6 +47,7 @@ public class CompanyInfo {
         this.address = address;
         this.detailAddress = detailAddress;
         this.backgroundImageUrl = backgroundImageUrl;
+        this.backgroundFilename = backgroundFilename;
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -70,9 +72,10 @@ public class CompanyInfo {
     }
 
 
-    public CompanyInfo updateBackgroundImageUrl(String url)
+    public CompanyInfo updateBackgroundImageUrl(String url,String filename)
     {
         this.backgroundImageUrl = url;
+        this.backgroundFilename = filename;
         return this;
     }
 

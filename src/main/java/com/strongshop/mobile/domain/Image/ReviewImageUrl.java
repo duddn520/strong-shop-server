@@ -16,6 +16,7 @@ public class ReviewImageUrl {
     @GeneratedValue
     private Long id;
     private String imageUrl;
+    private String filename;
 
     @ManyToOne
     @JoinColumn(name = "review_id")
@@ -23,10 +24,12 @@ public class ReviewImageUrl {
 
 
     @Builder
-    public ReviewImageUrl(Long id, String imageUrl, Review review) {
+    public ReviewImageUrl(Long id, String imageUrl,String filename, Review review) {
         this.id = id;
         this.imageUrl = imageUrl;
+        this.filename = filename;
         this.review = review;
+
     }
 
     public void updateReviewId(Review review){

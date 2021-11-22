@@ -197,9 +197,11 @@ public class ContractController {
         Contract contract = contractService.getContractById(contractId);
         for(MultipartFile file : files)
         {
-            String url = fileUploadService.uploadImage(file);
+            String filename = fileUploadService.uploadImage(file);
+            String url = fileUploadService.getFileUrl(filename);
             InspectionImageUrl imageUrl = InspectionImageUrl.builder()
                     .imageUrl(url)
+                    .filename(filename)
                     .contract(contract)
                     .build();
             contract.getInspectionImageUrls().add(imageUrl);
@@ -296,9 +298,11 @@ public class ContractController {
 
         for(MultipartFile file : files)
         {
-            String url = fileUploadService.uploadImage(file);
+            String filename = fileUploadService.uploadImage(file);
+            String url = fileUploadService.getFileUrl(filename);
             ConstructionImageUrl imageUrl = ConstructionImageUrl.builder()
                     .imageUrl(url)
+                    .filename(filename)
                     .contract(contract)
                     .build();
             contract.getConstructionImageUrls().add(imageUrl);

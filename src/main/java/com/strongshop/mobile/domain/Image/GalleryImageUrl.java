@@ -4,8 +4,10 @@ import com.strongshop.mobile.domain.Gallery.Gallery;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.bytebuddy.agent.builder.AgentBuilder;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -15,16 +17,17 @@ public class GalleryImageUrl {
     @Id @GeneratedValue
     private Long id;
     private String imageUrl;
-
+    private String filename;
     @ManyToOne
     @JoinColumn(name = "gallery_id")
     private Gallery gallery;
 
     @Builder
-    public GalleryImageUrl(Long id, String imageUrl, Gallery gallery)
+    public GalleryImageUrl(Long id, String imageUrl,String filename, Gallery gallery)
     {
         this.id = id;
         this.imageUrl = imageUrl;
+        this.filename = filename;
         this.gallery = gallery;
     }
 

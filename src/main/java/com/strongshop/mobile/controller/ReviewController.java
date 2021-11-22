@@ -58,9 +58,11 @@ public class ReviewController {
         List<ReviewImageUrl> imageUrls = new ArrayList<>();
         for(MultipartFile f : files)
         {
-            String url = fileUploadService.uploadImage(f);
+            String filename = fileUploadService.uploadImage(f);
+            String url = fileUploadService.getFileUrl(filename);
             ReviewImageUrl imageUrl = ReviewImageUrl.builder()
                     .imageUrl(url)
+                    .filename(filename)
                     .review(review)
                     .build();
 

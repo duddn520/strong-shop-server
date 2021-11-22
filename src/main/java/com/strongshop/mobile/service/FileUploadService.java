@@ -32,7 +32,7 @@ public class FileUploadService {
         catch (IOException e) {
             throw new IllegalArgumentException(String.format("file 변환 에러. (%s)", file.getOriginalFilename()));
         }
-        return uploadService.getFileUrl(filename);
+        return filename;
     }
 
     private String createFileName(String originalFileName)
@@ -54,4 +54,7 @@ public class FileUploadService {
     {
         amazonS3.deleteObject(component.getBucket(),filename);
     }
+
+    public String getFileUrl(String filename){ return uploadService.getFileUrl(filename);}
+
 }

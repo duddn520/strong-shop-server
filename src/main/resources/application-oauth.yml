@@ -23,12 +23,6 @@ spring:
               - email
               - profile_image
               - id
-          google:
-            client-id: <your id>
-            client-secret: your secret>
-            scope:
-              - profile
-              - email
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize

@@ -30,7 +30,7 @@ public class ChattingController {
     private final ContractService contractService;
 
     @PutMapping("/api/chat/{contract_id}")
-    public ResponseEntity<ApiResponse> Alarm(@PathVariable("contract_id") Long contractId,@RequestParam("content") String content ,HttpServletRequest request)
+    public ResponseEntity<ApiResponse> chatAlarm(@PathVariable("contract_id") Long contractId,@RequestParam("content") String content ,HttpServletRequest request)
     {
         Role role = Role.valueOf((String) jwtTokenProvider.getRole(jwtTokenProvider.getToken(request)));
         Contract contract = contractService.getContractById(contractId);

@@ -17,6 +17,7 @@ public class JwtCompanyUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         Company company = companyRepository.findByEmail(username)
                 .orElseThrow(()->new RuntimeException("해당 업체가 존재하지 않습니다."));
         return company;

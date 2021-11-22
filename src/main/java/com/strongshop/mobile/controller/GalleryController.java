@@ -48,9 +48,11 @@ public class GalleryController {
 
         List<GalleryImageUrl> imageUrls = new ArrayList<>();
         for(MultipartFile f : files){
-            String url = fileUploadService.uploadImage(f);              //이미지파일 S3에 업로드. url 반환.
+            String filename = fileUploadService.uploadImage(f);              //이미지파일 S3에 업로드. url 반환.
+            String url = fileUploadService.getFileUrl(filename);
             GalleryImageUrl imageUrl = GalleryImageUrl.builder()
                     .imageUrl(url)
+                    .filename(filename)
                     .gallery(gallery)
                     .build();
 

@@ -143,13 +143,14 @@ public class CompanyInfoController {
 
         if(companyInfo.getBackgroundImageUrl()!=null)
         {
-            String pasturl = companyInfo.getBackgroundImageUrl();
-            fileUploadService.removeFile(pasturl);
+            String pastfilename = companyInfo.getBackgroundFilename();
+            fileUploadService.removeFile(pastfilename);
         }
 
-        String url = fileUploadService.uploadImage(file);
+        String filename = fileUploadService.uploadImage(file);
+        String url = fileUploadService.getFileUrl(filename);
 
-        companyInfo.updateBackgroundImageUrl(url);
+        companyInfo.updateBackgroundImageUrl(url, filename);
 
         Map<String,Object> map = new HashMap<>();
         map.put("url",url);
