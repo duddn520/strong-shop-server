@@ -113,6 +113,12 @@ public class GalleryController {
     public ResponseEntity<ApiResponse> removeGallery(@PathVariable("gallery_id") Long galleryId)
     {
         Gallery gallery = galleryService.getGalleryById(galleryId);
+        List<GalleryImageUrl> urls = gallery.getImageUrls();
+
+        for(GalleryImageUrl url : urls)
+        {
+            fileUploadService.removeFile(url.getFilename());
+        }
 
         galleryService.deleteGallery(gallery);
 

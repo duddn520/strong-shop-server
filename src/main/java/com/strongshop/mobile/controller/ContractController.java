@@ -388,6 +388,19 @@ public class ContractController {
 
         completedContractService.registerCompletedContract(completedContract);
 
+        List<InspectionImageUrl> inspectionImageUrls = contract.getInspectionImageUrls();
+        List<ConstructionImageUrl> constructionImageUrls = contract.getConstructionImageUrls();
+
+        for(InspectionImageUrl i : inspectionImageUrls)
+        {
+            fileUploadService.removeFile(i.getFilename());
+        }
+
+        for(ConstructionImageUrl c : constructionImageUrls)
+        {
+            fileUploadService.removeFile(c.getFilename());
+        }
+
         contractService.deleteContract(contract);
         orderService.deleteOrder(order);
         biddingService.deleteBidding(bidding);
