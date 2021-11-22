@@ -101,4 +101,17 @@ public class BiddingController {
                 responseDtos), HttpStatus.OK);
     }
 
+    @DeleteMapping("/api/bidding/{bidding_id}")
+    @Transactional
+    public ResponseEntity<ApiResponse> removeBidding(@PathVariable("bidding_id") Long biddingId)
+    {
+        Bidding bidding = biddingService.getBiddingByBiddingId(biddingId);
+        biddingService.deleteBidding(bidding);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.DELETE_SUCCESS), HttpStatus.OK);
+
+    }
+
 }
