@@ -137,5 +137,19 @@ public class OrderController {
                 responseDtos), HttpStatus.OK);
     }
 
+    @DeleteMapping("/api/orders/{order_id}")
+    @Transactional
+    public ResponseEntity<ApiResponse> removeOrder(@PathVariable("order_id") Long orderId)
+    {
+        Order order = orderService.getOrderByOrderId(orderId);
+
+        order.getUser().getOrders().remove(order);
+        orderService.deleteOrder(order);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.DELETE_SUCCESS), HttpStatus.OK);
+    }
+
 
 }
