@@ -4,6 +4,7 @@ import com.strongshop.mobile.domain.BaseEntity;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Image.ReviewImageUrl;
 import com.strongshop.mobile.domain.User.User;
+import com.strongshop.mobile.dto.Review.ReviewRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,10 +55,18 @@ public class Review extends BaseEntity {
         this.reviewImageUrls = imageUrls;
     }
 
+    public void updateReviewIdToUrls(List<ReviewImageUrl> imageUrls)
+    {
+        for(ReviewImageUrl img : imageUrls){
+            img.updateReviewId(this);
+        }
+    }
+
     public void updateReply(String reply)
     {
         this.reply = reply;
     }
 
+    public void updateUser(User user) { this.user = user;}
 
 }

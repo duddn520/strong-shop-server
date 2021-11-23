@@ -3,9 +3,12 @@ package com.strongshop.mobile.domain.Bidding;
 import com.strongshop.mobile.domain.BaseEntity;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
+import jdk.jshell.Snippet;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.aspectj.weaver.ast.Or;
+import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
 
