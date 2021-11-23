@@ -38,19 +38,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .httpBasic().disable()
-
-                .csrf().ignoringAntMatchers("/h2-console/**").disable()
-
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰기반 인증이므로 세션을 사용하지 않는다.
-
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/login/**").permitAll()
                 .antMatchers("/token/**").permitAll()
-                .antMatchers("/h2-console/**").permitAll()
-//                .antMatchers("/uauth/**").authenticated()
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
 
 
         http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,firebaseCloudMessageService),UsernamePasswordAuthenticationFilter.class);
