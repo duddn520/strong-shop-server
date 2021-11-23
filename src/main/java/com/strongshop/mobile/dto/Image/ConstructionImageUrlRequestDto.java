@@ -1,7 +1,6 @@
 package com.strongshop.mobile.dto.Image;
 
 import com.strongshop.mobile.domain.Image.ConstructionImageUrl;
-import com.strongshop.mobile.domain.Image.GalleryImageUrl;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

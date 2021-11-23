@@ -6,7 +6,6 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
 import com.strongshop.mobile.S3.S3Component;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.entity.ContentType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

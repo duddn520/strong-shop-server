@@ -1,6 +1,5 @@
 package com.strongshop.mobile.dto.Review;
 
-import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Image.ReviewImageUrl;
 import com.strongshop.mobile.domain.Review.Review;
 import com.strongshop.mobile.domain.User.User;

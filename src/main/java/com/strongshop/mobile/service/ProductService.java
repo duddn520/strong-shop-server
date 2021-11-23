@@ -29,33 +29,6 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDto updateProduct(ProductRequestDto requestDto,Company company)
-    {
-        Product product = productRepository.findById(requestDto.getId())
-                .orElseThrow(()-> new RuntimeException());
-
-
-        return new ProductResponseDto(productRepository.save(product.updateProduct(requestDto.toEntity())));
-
-    }
-
-    @Transactional
-    public List<ProductResponseDto> getAllProductsByCompany(Long companyId)
-    {
-        List<Product> products = productRepository.findAllByCompanyId(companyId)
-                .orElseThrow(()-> new RuntimeException());
-
-        List<ProductResponseDto> responseDtos = new ArrayList<>();
-        for(Product p : products)
-        {
-            ProductResponseDto res = new ProductResponseDto(p);
-            responseDtos.add(res);
-        }
-
-        return responseDtos;
-    }
-
-    @Transactional
     public List<ProductResponseDto> getSpecificItemsByCompany(Long companyId, Item item)
     {
         List<Product> products = productRepository.findAllByItemAndCompanyId(item,companyId)

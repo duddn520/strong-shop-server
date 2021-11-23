@@ -1,6 +1,5 @@
 package com.strongshop.mobile.service;
 
-import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;

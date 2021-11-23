@@ -2,8 +2,6 @@ package com.strongshop.mobile.dto.Bidding;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingStatus;
-import com.strongshop.mobile.domain.Company.Company;
-import com.strongshop.mobile.domain.Order.Order;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

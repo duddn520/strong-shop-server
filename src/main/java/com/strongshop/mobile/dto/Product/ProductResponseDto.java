@@ -1,6 +1,5 @@
 package com.strongshop.mobile.dto.Product;
 
-import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Product.Item;
 import com.strongshop.mobile.domain.Product.Product;
 import lombok.Getter;

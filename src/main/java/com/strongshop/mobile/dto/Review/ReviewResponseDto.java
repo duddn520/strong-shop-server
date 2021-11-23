@@ -2,9 +2,6 @@ package com.strongshop.mobile.dto.Review;
 
 import com.strongshop.mobile.domain.Review.Review;
 import com.strongshop.mobile.domain.Image.ReviewImageUrl;
-import com.strongshop.mobile.domain.User.User;
-import com.strongshop.mobile.dto.Image.GalleryImageUrlResponseDto;
-import com.strongshop.mobile.dto.Image.ReviewImageUrlRequestDto;
 import com.strongshop.mobile.dto.Image.ReviewImageUrlResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -45,15 +45,6 @@ public class OrderService {
     }
 
     @Transactional
-    public List<Order> getOrdersByUser(User user)
-    {
-        List<Order> orders = orderRepository.findAllByUser(user)
-                .orElseGet(()->new ArrayList<>());
-
-        return orders;
-    }
-
-    @Transactional
     public void updateState2BiddingComplete(Order order)
     {
         order.updateState(State.BIDDING_COMPLETE);

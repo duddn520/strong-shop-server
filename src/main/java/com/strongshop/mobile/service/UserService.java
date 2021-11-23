@@ -6,8 +6,6 @@ import com.strongshop.mobile.dto.User.UserRequestDto;
 import com.strongshop.mobile.dto.User.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,17 +22,6 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new RuntimeException());
         return user;
-    }
-
-    @Transactional
-    public UserResponseDto registerUser(UserRequestDto requestDto)
-    {
-        User user = userRepository.findByEmail(requestDto.getEmail())           //email로 고객 조회, 최초가입자는 카카오에서 받아온 정보로 회원가입, 기존 가입자는
-                .orElseGet(()-> new User());
-
-        User saveuser = user.updateUser(requestDto);
-
-        return new UserResponseDto(userRepository.save(saveuser));
     }
 
     @Transactional

@@ -1,11 +1,8 @@
 package com.strongshop.mobile.jwt;
 
 import com.strongshop.mobile.domain.Company.Company;
-import com.strongshop.mobile.domain.Company.CompanyInfoRepository;
-import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.User;
-import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.JwtCompanyUserDetailService;
 import com.strongshop.mobile.service.JwtUserUserDetailService;
@@ -18,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
