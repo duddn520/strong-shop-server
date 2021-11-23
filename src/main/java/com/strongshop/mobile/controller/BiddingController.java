@@ -42,22 +42,31 @@ public class BiddingController {
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
-        BiddingResponseDto responseDto = biddingService.registerBidding(requestDto,company);
-
-        Order order = orderService.getOrderByOrderId(requestDto.getOrder_id());
 
         try {
-            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(),"새로운 입찰이 있습니다.","새로운 입찰이 있습니다.","200");
-        }
-        catch (IOException e)
-        {
-            System.out.println("e.getMessage() = " + e.getMessage());
-        }
+            Bidding bidding = biddingService.registerBidding(requestDto,company);
 
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.CREATED,
-                HttpResponseMsg.POST_SUCCESS,
-                responseDto), HttpStatus.CREATED);
+            Order order = orderService.getOrderByOrderId(requestDto.getOrder_id());
+
+            try {
+                firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(),"새로운 입찰이 있습니다.","새로운 입찰이 있습니다.","200");
+            }
+            catch (IOException e)
+            {
+                System.out.println("e.getMessage() = " + e.getMessage());
+            }
+            BiddingResponseDto responseDto = new BiddingResponseDto(bidding);
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.CREATED,
+                    HttpResponseMsg.POST_SUCCESS,
+                    responseDto), HttpStatus.CREATED);
+        }catch (RuntimeException e)
+        {
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);            //입찰 넣는 도중 취소되거나 낙찰된 경우. 거부된 response 전송.
+        }
 
     }
 

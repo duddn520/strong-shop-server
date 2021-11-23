@@ -26,7 +26,7 @@ public class BiddingService {
 
 
     @Transactional
-    public BiddingResponseDto registerBidding(BiddingRequestDto requestDto, Company company){
+    public Bidding registerBidding(BiddingRequestDto requestDto, Company company){
         Bidding bidding = Bidding.builder()
                 .detail(requestDto.getDetail())
                 .company(company)
@@ -36,7 +36,7 @@ public class BiddingService {
                 .orElseThrow(()-> new RuntimeException("해당 주문이 존재하지 않습니다."));
         if (order.getState().equals(State.BIDDING)) {
             bidding.updateBiddingAndOrderAndCompany(order, company);
-            return new BiddingResponseDto(biddingRepository.save(bidding));
+            return biddingRepository.save(bidding);
         }
         else
             throw new RuntimeException("입찰 진행중인 주문에 한해서만 입찰 가능합니다.");
