@@ -4,6 +4,7 @@ import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingStatus;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
+import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.dto.Bidding.BiddingRequestDto;
 import com.strongshop.mobile.dto.Bidding.BiddingResponseDto;
 import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
@@ -43,16 +44,22 @@ public class BiddingController {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         Company company = companyService.getCompanyByEmail(email);
 
-        try {
-            Bidding bidding = biddingService.registerBidding(requestDto,company);
+        Order order = orderService.getOrderByOrderId(requestDto.getOrder_id());
 
-            Order order = orderService.getOrderByOrderId(requestDto.getOrder_id());
+        if(!order.getState().equals(State.BIDDING))
+        {
+            return new ResponseEntity<>(ApiResponse.response(       //입찰 넣는 도중 취소되거나 낙찰된 경우. 거부된 response 전송.
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
+        }
+        else {
+
+            Bidding bidding = biddingService.registerBidding(requestDto,order, company);
+
 
             try {
-                firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(),"새로운 입찰이 있습니다.","새로운 입찰이 있습니다.","200");
-            }
-            catch (IOException e)
-            {
+                firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "새로운 입찰이 있습니다.", "새로운 입찰이 있습니다.", "200");
+            } catch (IOException e) {
                 System.out.println("e.getMessage() = " + e.getMessage());
             }
             BiddingResponseDto responseDto = new BiddingResponseDto(bidding);
@@ -61,13 +68,7 @@ public class BiddingController {
                     HttpStatusCode.CREATED,
                     HttpResponseMsg.POST_SUCCESS,
                     responseDto), HttpStatus.CREATED);
-        }catch (RuntimeException e)
-        {
-            return new ResponseEntity<>(ApiResponse.response(
-                    HttpStatusCode.FORBIDDEN,
-                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);            //입찰 넣는 도중 취소되거나 낙찰된 경우. 거부된 response 전송.
         }
-
     }
 
     @GetMapping("/api/bidding/{order_id}")

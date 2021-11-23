@@ -21,25 +21,20 @@ import java.util.List;
 public class BiddingService {
 
     private final BiddingRepository biddingRepository;
-    private final OrderRepository orderRepository;
     private final OrderService orderService;
 
 
     @Transactional
-    public Bidding registerBidding(BiddingRequestDto requestDto, Company company){
+    public Bidding registerBidding(BiddingRequestDto requestDto, Order order, Company company){
         Bidding bidding = Bidding.builder()
                 .detail(requestDto.getDetail())
                 .company(company)
+                .order(order)
                 .status(BiddingStatus.ONGOING)
                 .build();
-        Order order = orderRepository.findById(requestDto.getOrder_id())
-                .orElseThrow(()-> new RuntimeException("해당 주문이 존재하지 않습니다."));
-        if (order.getState().equals(State.BIDDING)) {
-            bidding.updateBiddingAndOrderAndCompany(order, company);
-            return biddingRepository.save(bidding);
-        }
-        else
-            throw new RuntimeException("입찰 진행중인 주문에 한해서만 입찰 가능합니다.");
+
+        bidding.updateCompanyBidding(company);
+        return biddingRepository.save(bidding);
     }
 
     @Transactional

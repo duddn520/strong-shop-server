@@ -44,11 +44,8 @@ public class Bidding extends BaseEntity {
         this.status = status;
     }
 
-    public void updateBiddingAndOrderAndCompany(Order order,Company company)        //bidding register시 필수 실행.
+    public void updateCompanyBidding(Company company)        //bidding register시 필수 실행.
     {
-        this.order = order;
-        this.company = company;
-        order.getBiddings().add(this);
         company.getBiddings().add(this);
     }
 
