@@ -22,7 +22,6 @@ import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.agent.builder.AgentBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

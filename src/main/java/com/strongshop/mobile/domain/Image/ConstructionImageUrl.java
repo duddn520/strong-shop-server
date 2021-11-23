@@ -31,12 +31,4 @@ public class ConstructionImageUrl {
         this.contract = contract;
 
     }
-
-    public void updateContract(Contract contract)
-    {
-        this.contract = contract;
-        contract.getConstructionImageUrls().add(this);
-    }
-
-
 }

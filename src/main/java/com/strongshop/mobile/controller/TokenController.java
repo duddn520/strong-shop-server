@@ -2,16 +2,9 @@ package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
-import com.strongshop.mobile.model.ApiResponse;
-import com.strongshop.mobile.model.HttpResponseMsg;
-import com.strongshop.mobile.model.HttpStatusCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

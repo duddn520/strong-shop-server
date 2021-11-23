@@ -11,7 +11,6 @@ import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.FileUploadService;
 import com.strongshop.mobile.service.GalleryService;
-import com.strongshop.mobile.service.GalleryImageUrlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

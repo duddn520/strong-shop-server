@@ -1,24 +1,19 @@
 package com.strongshop.mobile.domain.Company;
 
-import com.amazonaws.services.ec2.model.transform.ProductCodeStaxUnmarshaller;
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingHistory;
 import com.strongshop.mobile.domain.Contract.CompletedContract;
 import com.strongshop.mobile.domain.Gallery.Gallery;
-import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Product.Product;
 import com.strongshop.mobile.domain.Review.Review;
 import com.strongshop.mobile.domain.User.LoginMethod;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.event.service.spi.EventListenerGroup;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.nio.charset.CoderMalfunctionError;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
