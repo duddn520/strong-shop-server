@@ -60,6 +60,7 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserResponseDto>> userLoginKakao(HttpServletRequest request)
     {
         String accessToken = request.getHeader("Authorization");
+        String fcmToken = request.getHeader("FCM");
 
         HashMap<String, Object> userInfo = new HashMap<>();
         String reqURL = "https://kapi.kakao.com/v2/user/me";
@@ -106,7 +107,9 @@ public class UserController {
             User finduser = userRepository.findByEmail(email).orElseGet(() -> new User());
             Company findcompany = companyRepository.findByEmail(email).orElseGet(() -> new Company());
             if (findcompany.getEmail()!=null && findcompany.getEmail().equals(email)) {
-                throw new RuntimeException("이미 업체로 등록된 계정입니다.");        //업체로 이미 등록된 이메일이면 거부.
+                return new ResponseEntity<>(ApiResponse.response(
+                        HttpStatusCode.FORBIDDEN,
+                        HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
             }
             if (finduser.getEmail()== null) {
                 UserRequestDto requestDto = new UserRequestDto();

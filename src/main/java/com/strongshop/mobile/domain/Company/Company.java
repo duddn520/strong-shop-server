@@ -97,8 +97,7 @@ public class Company implements UserDetails {
         this.companyInfo = companyInfo;
     }
 
-    public void updateBiddingHistory(BiddingHistory biddingHistory) {this.biddingHistories.add(biddingHistory);}
-
+    public void updateFcmToken(String fcmToken){this.fcmToken = fcmToken;}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

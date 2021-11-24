@@ -52,26 +52,6 @@ public class CompanyInfo {
         this.longitude = longitude;
     }
 
-    public void updateCompany(Company company)
-    {
-        this.company = company;
-    }
-
-    public void updateCompanyInfo(CompanyInfo companyInfo)
-    {
-        this.introduction = companyInfo.getIntroduction();
-        this.blogUrl = companyInfo.getBlogUrl();
-        this.snsUrl = companyInfo.getSnsUrl();
-        this.siteUrl = companyInfo.getSiteUrl();
-        this.contact = companyInfo.getContact();
-        this.address = companyInfo.getAddress();
-        this.detailAddress = companyInfo.getDetailAddress();
-        this.backgroundImageUrl = companyInfo.getBackgroundImageUrl();
-        this.latitude = companyInfo.getLatitude();
-        this.longitude = companyInfo.getLongitude();
-    }
-
-
     public CompanyInfo updateBackgroundImageUrl(String url,String filename)
     {
         this.backgroundImageUrl = url;

@@ -83,7 +83,9 @@ public class ContractController {
                 }
                 catch (IOException e)
                 {
-                    System.out.println("e.getMessage() = " + e.getMessage());
+                    return new ResponseEntity<>(ApiResponse.response(
+                            HttpStatusCode.FORBIDDEN,
+                            HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
                 }
             }
         }
@@ -113,7 +115,9 @@ public class ContractController {
         }
         catch (IOException e)
         {
-            System.out.println("e.getMessage() = " + e.getMessage());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,
@@ -181,7 +185,9 @@ public class ContractController {
         }
         catch (IOException e)
         {
-            System.out.println("e.getMessage() = " + e.getMessage());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
         }
 
 
@@ -214,7 +220,9 @@ public class ContractController {
         }
         catch (IOException e)
         {
-            System.out.println("e.getMessage() = " + e.getMessage());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<>(ApiResponse.response(
@@ -257,7 +265,9 @@ public class ContractController {
         }
         catch (IOException e)
         {
-            System.out.println("e.getMessage() = " + e.getMessage());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<>(ApiResponse.response(
@@ -281,7 +291,9 @@ public class ContractController {
         }
         catch (IOException e)
         {
-            System.out.println("e.getMessage() = " + e.getMessage());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<>(ApiResponse.response(
@@ -315,7 +327,9 @@ public class ContractController {
         }
         catch (IOException e)
         {
-            System.out.println("e.getMessage() = " + e.getMessage());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<>(ApiResponse.response(
@@ -358,7 +372,9 @@ public class ContractController {
         }
         catch (IOException e)
         {
-            System.out.println("e.getMessage() = " + e.getMessage());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<>(ApiResponse.response(

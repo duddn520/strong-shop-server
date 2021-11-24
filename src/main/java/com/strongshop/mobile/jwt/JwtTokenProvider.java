@@ -51,9 +51,10 @@ public class JwtTokenProvider {
     }
 
     //JWT토큰생성
-    public String createToken(String email, Role roles) {
+    public String createToken(String email, Role roles,String fcmToken) {
         Claims claims = Jwts.claims().setSubject(email);
         claims.put("roles", roles);
+        claims.put("fcmtoken",fcmToken);
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims)
@@ -90,6 +91,10 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("roles");
     }
 
+    public String getFcmToken(String token){
+        return (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("fcmtoken");
+    }
+
     // HTTP요청헤더에서 token추출
     public String getToken(HttpServletRequest request) {
         return request.getHeader("Auth");
@@ -99,7 +104,28 @@ public class JwtTokenProvider {
     public boolean verifyToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return !claims.getBody().getExpiration().before(new Date());
+
+            boolean exp = !claims.getBody().getExpiration().before(new Date());
+            boolean fcm = true;
+
+            Role role = Role.valueOf((String) getRole(token));
+            if(Role.USER.equals(role)) {
+                User user = userService.getUserByEmail(claims.getBody().getSubject());
+                if (user.getFcmToken().equals(claims.getBody().get("fcmtoken")))             //유저 fcm과 비교.
+                    fcm = true;
+                else
+                    fcm = false;
+            }else
+            {
+                Company company = companyService.getCompanyByEmail(claims.getBody().getSubject());
+                if(company.getFcmToken().equals(claims.getBody().get("fcmtoken")))
+                    fcm=true;
+                else
+                    fcm=false;                                          //company fcm과 비교.
+            }
+
+            return fcm&&exp;
+
         } catch (Exception e) {
             return false;
         }

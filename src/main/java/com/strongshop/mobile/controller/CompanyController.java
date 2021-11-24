@@ -93,6 +93,7 @@ public class CompanyController {
     public ResponseEntity<ApiResponse<CompanyResponseDto>> companyLoginKakao(HttpServletRequest request)
     {
         String accessToken = request.getHeader("Authorization");
+        String fcmToken = request.getHeader("FCM");
 
         HashMap<String, Object> companyInfo = new HashMap<>();
         String reqURL = "https://kapi.kakao.com/v2/user/me";
@@ -132,10 +133,10 @@ public class CompanyController {
             Company findcompany = companyRepository.findByEmail(email).orElseGet(()->new Company());
             User finduser = userRepository.findByEmail(email).orElseGet(()->new User());
             if(finduser.getEmail()!=null&&finduser.getEmail().equals(email)){
-                throw new RuntimeException("이미 유저로 등록된 계정입니다.");        //유저로 이미 존재하는 이메일이면 가입 거부.
+                return new ResponseEntity<>(ApiResponse.response(
+                        HttpStatusCode.FORBIDDEN,
+                        HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
             }
-
-            System.out.println("findcompany.getEmail() = " + findcompany.getEmail());
 
             if(findcompany.getEmail()==null) {
                 CompanyRequestDto requestDto = new CompanyRequestDto();
@@ -149,9 +150,11 @@ public class CompanyController {
             }
             else
             {
+                findcompany.updateFcmToken(fcmToken);
+
                 CompanyResponseDto responseDto = new CompanyResponseDto(companyRepository.save(findcompany));
 
-                String token = jwtTokenProvider.createToken(findcompany.getEmail(), Role.COMPANY);
+                String token = jwtTokenProvider.createToken(findcompany.getEmail(), Role.COMPANY, fcmToken);
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Auth",token);
@@ -167,7 +170,7 @@ public class CompanyController {
     }
 
     @PostMapping("/api/login/company/kakao")
-    public ResponseEntity<ApiResponse<CompanyResponseDto>> completeCompanyLoginKakao(@RequestBody CompanyRequestDto requestDto)
+    public ResponseEntity<ApiResponse<CompanyResponseDto>> completeCompanyLoginKakao(@RequestBody CompanyRequestDto requestDto,HttpServletRequest request)
     {
         if(companyRepository.findByBusinessNumber(requestDto.getBusinessNumber()).isPresent())
         {
@@ -181,7 +184,7 @@ public class CompanyController {
         {
             Company company = requestDto.toEntity();
             CompanyResponseDto responseDto= new CompanyResponseDto(companyRepository.save(company));
-            String token = jwtTokenProvider.createToken(company.getEmail(), Role.COMPANY);
+            String token = jwtTokenProvider.createToken(company.getEmail(), Role.COMPANY,requestDto.getFcmToken());
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Auth",token);
@@ -200,6 +203,7 @@ public class CompanyController {
     @GetMapping("/api/login/company/naver")
     public ResponseEntity<ApiResponse<CompanyResponseDto>> companyLoginNaver(HttpServletRequest request) {
         String accessToken = request.getHeader("Authorization");
+        String fcmToken = request.getHeader("FCM");
         String header = "Bearer " + accessToken;
 
         String apiURL = "https://openapi.naver.com/v1/nid/me";
@@ -239,7 +243,9 @@ public class CompanyController {
             User finduser = userRepository.findByEmail(email).orElseGet(() -> new User());
             Company findcompany = companyRepository.findByEmail(email).orElseGet(() -> new Company());
             if (finduser.getEmail()!=null && finduser.getEmail().equals(email)) {
-                throw new RuntimeException("이미 유저로 등록된 계정입니다.");        //유저로 이미 등록된 이메일이면 거부.
+                return new ResponseEntity<>(ApiResponse.response(
+                        HttpStatusCode.FORBIDDEN,
+                        HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);       //유저로 이미 등록된 이메일이면 거부.
             }
             if (findcompany.getEmail()== null) {
                 CompanyRequestDto requestDto = new CompanyRequestDto();
@@ -251,9 +257,10 @@ public class CompanyController {
                         HttpResponseMsg.GET_SUCCESS,
                         new CompanyResponseDto(requestDto.toEntity())), HttpStatus.OK);
             } else {
+                findcompany.updateFcmToken(fcmToken);
                 CompanyResponseDto responseDto = new CompanyResponseDto(companyRepository.save(findcompany));
 
-                String token = jwtTokenProvider.createToken(findcompany.getEmail(), Role.COMPANY);
+                String token = jwtTokenProvider.createToken(findcompany.getEmail(), Role.COMPANY,fcmToken);
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Auth", token);
@@ -278,7 +285,7 @@ public class CompanyController {
             Company company = requestDto.toEntity();
             CompanyResponseDto responseDto = new CompanyResponseDto(companyRepository.save(company));
 
-            String token = jwtTokenProvider.createToken(company.getEmail(), Role.COMPANY);
+            String token = jwtTokenProvider.createToken(company.getEmail(), Role.COMPANY,requestDto.getFcmToken());
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Auth",token);
@@ -310,7 +317,6 @@ public class CompanyController {
                 fileUploadService.removeFile(img.getFilename());
             }
         }
-
         if(company.getCompanyInfo().getBackgroundImageUrl()!=null)
             fileUploadService.removeFile(company.getCompanyInfo().getBackgroundFilename());
 
@@ -324,12 +330,7 @@ public class CompanyController {
                 fileUploadService.removeFile(img.getFilename());
             }
         }
-
         companyService.deleteCompany(company);
-
-
-
-
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);

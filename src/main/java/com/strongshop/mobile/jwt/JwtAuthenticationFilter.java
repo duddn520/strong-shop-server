@@ -30,21 +30,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         if (token != null && jwtTokenProvider.verifyToken(token)) {     //토큰 유효성 검증 및 auth객체 생성 후 SecurityContextHolder에 등록.
             Role role =  Role.valueOf((String)jwtTokenProvider.getRole(token));
-            System.out.println("role = " + role);
             Authentication auth = jwtTokenProvider.getAuthentication(token,role);
             SecurityContextHolder.getContext().setAuthentication(auth);
-        }
-        else if(token!=null)
-        {
-            String fcmToken = jwtTokenProvider.getFcmTokenByJwtToken(token);
-
-            try {
-                firebaseCloudMessageService.sendMessageTo(fcmToken,"토큰 만료","토큰 만료","000");
-            }
-            catch(IOException e)
-            {
-                System.out.println("e.getMessage() = " + e.getMessage());
-            }
         }
 
 

@@ -5,6 +5,7 @@ import com.strongshop.mobile.domain.Order.OrderRepository;
 import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.dto.Order.OrderResponseDto;
+import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @Transactional
     public OrderResponseDto saveOrder(Order order)

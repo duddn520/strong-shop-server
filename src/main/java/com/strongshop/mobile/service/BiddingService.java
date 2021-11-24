@@ -5,10 +5,7 @@ import com.strongshop.mobile.domain.Bidding.BiddingRepository;
 import com.strongshop.mobile.domain.Bidding.BiddingStatus;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
-import com.strongshop.mobile.domain.Order.OrderRepository;
-import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.dto.Bidding.BiddingRequestDto;
-import com.strongshop.mobile.dto.Bidding.BiddingResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

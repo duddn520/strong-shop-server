@@ -77,7 +77,9 @@ public class ReviewController {
         }
         catch (IOException e)
         {
-            System.out.println("e.getMessage() = " + e.getMessage());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.INTERNAL_SERVER_ERROR,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<>(ApiResponse.response(
