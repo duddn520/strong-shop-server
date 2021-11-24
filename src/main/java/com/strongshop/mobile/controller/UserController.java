@@ -124,9 +124,10 @@ public class UserController {
                         HttpResponseMsg.GET_SUCCESS,
                         new UserResponseDto(requestDto.toEntity())), HttpStatus.OK);
             } else {
+                finduser.updateFcmToken(fcmToken);
                 UserResponseDto responseDto = new UserResponseDto(userRepository.save(finduser));
 
-                String token = jwtTokenProvider.createToken(finduser.getEmail(), Role.USER);
+                String token = jwtTokenProvider.createToken(finduser.getEmail(), Role.USER,fcmToken);
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Auth", token);
@@ -150,7 +151,7 @@ public class UserController {
             User user = requestDto.toEntity();
             UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
 
-            String token = jwtTokenProvider.createToken(user.getEmail(), Role.USER);
+            String token = jwtTokenProvider.createToken(user.getEmail(), Role.USER,requestDto.getFcmToken());
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Auth",token);
@@ -183,6 +184,7 @@ public class UserController {
     @GetMapping("/api/login/user/naver")
     public ResponseEntity<ApiResponse<UserResponseDto>> userLoginNaver(HttpServletRequest request) {
         String accessToken = request.getHeader("Authorization");
+        String fcmToken = request.getHeader("FCM");
         String header = "Bearer " + accessToken;
 
         String apiURL = "https://openapi.naver.com/v1/nid/me";
@@ -245,9 +247,10 @@ public class UserController {
                         HttpResponseMsg.GET_SUCCESS,
                         new UserResponseDto(requestDto.toEntity())), HttpStatus.OK);
             } else {
+                finduser.updateFcmToken(fcmToken);
                 UserResponseDto responseDto = new UserResponseDto(userRepository.save(finduser));
 
-                String token = jwtTokenProvider.createToken(finduser.getEmail(), Role.USER);
+                String token = jwtTokenProvider.createToken(finduser.getEmail(), Role.USER,fcmToken);
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Auth", token);
@@ -272,7 +275,7 @@ public class UserController {
             User user = requestDto.toEntity();
             UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
 
-            String token = jwtTokenProvider.createToken(user.getEmail(), Role.USER);
+            String token = jwtTokenProvider.createToken(user.getEmail(), Role.USER,requestDto.getFcmToken());
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Auth",token);

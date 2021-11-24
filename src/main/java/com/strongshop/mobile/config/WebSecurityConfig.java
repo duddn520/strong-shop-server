@@ -49,8 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/login/**").permitAll()
                 .antMatchers("/token/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-//                .antMatchers("/uauth/**").authenticated()
-                .anyRequest().permitAll();
+                .anyRequest().authenticated();
 
 
         http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,firebaseCloudMessageService),UsernamePasswordAuthenticationFilter.class);
