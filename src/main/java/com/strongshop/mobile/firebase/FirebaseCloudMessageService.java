@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,7 @@ public class FirebaseCloudMessageService {
     private String makeMessage(String targetToken, String title, String body,String index) throws JsonProcessingException{
         Map<String,Object> map = new HashMap<>();
         map.put("index",index);
+        map.put("time", LocalDateTime.now());
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
