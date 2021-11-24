@@ -43,5 +43,9 @@ public class CompletedContract extends BaseEntity {
         this.reviewStatus = reviewStatus;
     }
 
+    public void updateReviewStatus()
+    {
+        this.reviewStatus = ReviewStatus.WRITTEN;
+    }
 
 }

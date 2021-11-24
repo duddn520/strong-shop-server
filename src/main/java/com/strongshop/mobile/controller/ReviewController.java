@@ -71,6 +71,8 @@ public class ReviewController {
         review.updateReviewImageUrls(imageUrls);
         company.getReviews().add(review);
 
+        completedContract.updateReviewStatus();
+
         ReviewResponseDto responseDto = new ReviewResponseDto(review);
         try {
             firebaseCloudMessageService.sendMessageTo(company.getFcmToken(), "새로운 리뷰가 있습니다.", "새로운 리뷰가 있습니다.","120");
