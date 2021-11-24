@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ public class CompletedContractController {
     private final UserService userService;
 
     @GetMapping("/api/completedcontract")
+    @Transactional
     public ResponseEntity<ApiResponse<List<CompletedContractResponseDto>>> getAllContractHistories(HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
