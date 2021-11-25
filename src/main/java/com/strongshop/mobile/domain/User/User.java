@@ -22,6 +22,10 @@ public class User implements UserDetails{
 
     @Id @GeneratedValue
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     private String realName;    //사용자
     private String email;   //카카오
     private String nickname;  //사용자
@@ -44,6 +48,7 @@ public class User implements UserDetails{
     @Builder
     public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, LocalDate birth, List<Order> orders, String fcmToken, List<CompletedContract> completedContracts, LoginMethod loginMethod) {
         this.id = id;
+        this.role = Role.USER;
         this.realName = realName;
         this.email = email;
         this.nickname = nickname;

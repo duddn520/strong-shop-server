@@ -9,6 +9,7 @@ import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Product.Product;
 import com.strongshop.mobile.domain.Review.Review;
 import com.strongshop.mobile.domain.User.LoginMethod;
+import com.strongshop.mobile.domain.User.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,9 @@ public class Company implements UserDetails {
 
     @Id @GeneratedValue
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     private String name; // 회사명
     private String email;
@@ -67,6 +71,7 @@ public class Company implements UserDetails {
     public Company(Long id, String name, String email, String bossName, String phoneNumber, String businessNumber, String fcmToken
             ,List<Gallery> galleries, List<Bidding> biddings, CompanyInfo companyInfo, List<Review> reviews, List<Product> products, List<BiddingHistory> biddingHistories,List<CompletedContract> completedContracts, LoginMethod loginMethod) {
         this.id = id;
+        this.role = Role.COMPANY;
         this.name = name;
         this.email = email;
         this.bossName = bossName;
