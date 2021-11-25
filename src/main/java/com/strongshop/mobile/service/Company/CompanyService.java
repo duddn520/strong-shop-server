@@ -53,6 +53,11 @@ public class CompanyService {
 
         return company;
     }
+    @Transactional
+    public void removeFcmToken(Company company)
+    {
+        company.removeFcmToken();
 
-
+        companyRepository.save(company);
+    }
 }

@@ -99,6 +99,8 @@ public class Company implements UserDetails {
 
     public void updateFcmToken(String fcmToken){this.fcmToken = fcmToken;}
 
+    public void removeFcmToken(){this.fcmToken = null;}
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

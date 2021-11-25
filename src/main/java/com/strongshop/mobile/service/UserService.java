@@ -30,4 +30,6 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    public void removeFcmToken(User user) {user.removeFcmToken();
+    }
 }

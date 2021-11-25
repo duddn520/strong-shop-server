@@ -20,10 +20,7 @@ import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -308,6 +305,18 @@ public class UserController {
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS,
                 map),HttpStatus.OK);
+    }
+
+    @PutMapping("/api/logout/user")
+    public ResponseEntity<ApiResponse> companyLogout(HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        User user = userService.getUserByEmail(email);
+        userService.removeFcmToken(user);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
     }
 }
 

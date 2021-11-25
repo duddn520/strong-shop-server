@@ -106,4 +106,7 @@ public class User implements UserDetails{
     public boolean isEnabled() {
         return false;
     }
+
+    public void removeFcmToken() {this.fcmToken = null;
+    }
 }

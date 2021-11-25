@@ -3,6 +3,7 @@ package com.strongshop.mobile.controller;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.protobuf.Api;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.Gallery.Gallery;
@@ -331,6 +332,19 @@ public class CompanyController {
             }
         }
         companyService.deleteCompany(company);
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
+    }
+
+    @PutMapping("/api/logout/company")
+    public ResponseEntity<ApiResponse> companyLogout(HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        Company company = companyService.getCompanyByEmail(email);
+
+        companyService.removeFcmToken(company);
+
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
