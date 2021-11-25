@@ -5,17 +5,23 @@ import com.strongshop.mobile.jwt.JwtAuthenticationFilter;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.authentication.AuthenticationManagerBeanDefinitionParser;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
+@Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -31,6 +37,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/h2-console/**");
     }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+        auth
+                .inMemoryAuthentication()
+                .withUser("user").password(passwordEncoder().encode("user123")).roles("USER")
+
+                .and()
+                .withUser("company").password(passwordEncoder().encode("company123")).roles("COMPANY");
+    }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -49,11 +66,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/login/**").permitAll()
                 .antMatchers("/token/**").permitAll()
+                .antMatchers("/api/contract/**").hasAnyRole("COMPANY","USER")
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated();
 
 
         http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,firebaseCloudMessageService),UsernamePasswordAuthenticationFilter.class);
 
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
