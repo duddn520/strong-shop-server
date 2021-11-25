@@ -39,7 +39,7 @@ public class ChattingController {
         {
             String fcm = contract.getBidding().getCompany().getFcmToken();
             try {
-                firebaseCloudMessageService.sendMessageTo(fcm,"새로운 채팅",content,"002");
+                firebaseCloudMessageService.sendMessageTo(fcm,contract.getBidding().getCompany().getName(),content,"002");
             }catch (IOException e)
             {
                 return new ResponseEntity<>(ApiResponse.response(
@@ -50,7 +50,7 @@ public class ChattingController {
         else {
             String fcm = contract.getOrder().getUser().getFcmToken();
             try {
-                firebaseCloudMessageService.sendMessageTo(fcm,"새로운 채팅",content,"002");
+                firebaseCloudMessageService.sendMessageTo(fcm,contract.getOrder().getUser().getNickname(),content,"002");
             }catch (IOException e)
             {
                 return new ResponseEntity<>(ApiResponse.response(
