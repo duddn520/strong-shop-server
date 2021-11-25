@@ -66,7 +66,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/login/**").permitAll()
                 .antMatchers("/token/**").permitAll()
-                .antMatchers("/api/contract/**").hasAnyRole("COMPANY","USER")
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated();
 
