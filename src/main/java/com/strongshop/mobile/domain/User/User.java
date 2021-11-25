@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -45,6 +46,10 @@ public class User implements UserDetails{
     @Enumerated(EnumType.STRING)
     private LoginMethod loginMethod;
 
+    @Transient
+    private Collection<SimpleGrantedAuthority> authorities;
+
+
     @Builder
     public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, LocalDate birth, List<Order> orders, String fcmToken, List<CompletedContract> completedContracts, LoginMethod loginMethod) {
         this.id = id;
@@ -79,7 +84,7 @@ public class User implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.authorities;
     }
 
     @Override

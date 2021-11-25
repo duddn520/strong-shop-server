@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.event.service.spi.EventListenerGroup;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -66,6 +67,10 @@ public class Company implements UserDetails {
     @Enumerated(EnumType.STRING)
     private LoginMethod loginMethod;
 
+    @Transient
+    private Collection<SimpleGrantedAuthority> authorities;
+
+
 
     @Builder
     public Company(Long id, String name, String email, String bossName, String phoneNumber, String businessNumber, String fcmToken
@@ -108,7 +113,7 @@ public class Company implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.authorities;
     }
 
     @Override
