@@ -246,20 +246,6 @@ public class ContractController {
                 responseDto), HttpStatus.OK);
     }
 
-    @GetMapping("/api/contract/4/{contract_id}/c")
-    @Transactional
-    public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> getInspectionImageUrls4Company(@PathVariable("contract_id") Long contractId)
-    {
-        Contract contract = contractService.getContractById(contractId);
-
-        ContractInspectionImageResponseDto responseDto = new ContractInspectionImageResponseDto(contract);
-
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.OK,
-                HttpResponseMsg.GET_SUCCESS,
-                responseDto), HttpStatus.OK);
-    }
-
     @PutMapping("/api/contract/4")           // state 4->5   **알림필요
     public ResponseEntity<ApiResponse> finishCarExamination(@RequestBody ContractRequestDto requestDto )
     {
