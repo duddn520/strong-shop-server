@@ -291,7 +291,6 @@ public class UserController {
         }
     }
 
-
     @PostMapping("/api/user/fcm")
     public ResponseEntity<ApiResponse> changeFcm(@RequestBody String token, HttpServletRequest request)
     {
@@ -303,6 +302,25 @@ public class UserController {
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.POST_SUCCESS),HttpStatus.OK);
+    }
+
+    @GetMapping("/api/user")
+    public ResponseEntity<ApiResponse<Map<String,Object>>> getUserInfo(HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        User user = userService.getUserByEmail(email);
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("thumbnail",user.getThumbnailImage());
+        map.put("nickname",user.getNickname());
+        map.put("phonenumber",user.getPhoneNumber());
+        map.put("loginmethod",user.getLoginMethod());
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                map),HttpStatus.OK);
     }
 }
 
