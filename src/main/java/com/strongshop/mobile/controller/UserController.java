@@ -43,19 +43,6 @@ public class UserController {
     private final CompanyRepository companyRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @GetMapping("/api/user")
-    public ResponseEntity<ApiResponse<UserResponseDto>> findUser()
-    {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
-        User user = userRepository.findByEmail(email).orElseThrow(()->new RuntimeException());
-
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.OK,
-                HttpResponseMsg.GET_SUCCESS,
-                new UserResponseDto(user)),HttpStatus.FOUND);
-    }
-
     @GetMapping("/api/login/user/kakao")
     public ResponseEntity<ApiResponse<UserResponseDto>> userLoginKakao(HttpServletRequest request)
     {
