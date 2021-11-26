@@ -78,8 +78,6 @@ public class FirebaseCloudMessageService {
 
         Response response = client.newCall(request)
                 .execute();
-
-        System.out.println(response.body().string());
     }
 
 
