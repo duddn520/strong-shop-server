@@ -77,10 +77,9 @@ public class ContractController {
                         .build();
 
                 company.getBiddingHistories().add(biddingHistory);
-                biddingService.deleteBidding(b);
 
                 try {
-                    firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "낙찰 실패", "낙찰 실패", "111");
+                    firebaseCloudMessageService.sendMessageTo(b.getCompany().getFcmToken(), "낙찰 실패", "낙찰 실패", "111");
                 }
                 catch (IOException e)
                 {
@@ -88,6 +87,7 @@ public class ContractController {
                             HttpStatusCode.FORBIDDEN,
                             HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
                 }
+                biddingService.deleteBidding(b);
             }
         }
 
