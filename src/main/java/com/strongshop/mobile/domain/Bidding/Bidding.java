@@ -20,7 +20,7 @@ public class Bidding extends BaseEntity {
     @Column(length = 1024)
     private String detail;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_id")
     private Order order;
 

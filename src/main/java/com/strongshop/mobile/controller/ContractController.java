@@ -77,6 +77,7 @@ public class ContractController {
                         .build();
 
                 company.getBiddingHistories().add(biddingHistory);
+                biddingService.deleteBidding(b);
 
                 try {
                     firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "낙찰 실패", "낙찰 실패", "111");
