@@ -29,8 +29,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Transient;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -303,6 +305,7 @@ public class CompanyController {
     }
 
     @DeleteMapping("/api/company")
+    @Transactional
     public ResponseEntity<ApiResponse> withdrawCompany(HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
@@ -349,4 +352,5 @@ public class CompanyController {
                 HttpStatusCode.OK,
                 HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
     }
+
 }
