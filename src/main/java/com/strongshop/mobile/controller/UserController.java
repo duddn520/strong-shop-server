@@ -159,20 +159,6 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/api/user")
-    public ResponseEntity<ApiResponse> withdrawUser()
-    {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
-        User user = userRepository.findByEmail(email).orElseThrow(()->new RuntimeException());
-        userService.deleteUser(user);
-
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.OK,
-                HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
-    }
-
-
     @GetMapping("/api/login/user/naver")
     public ResponseEntity<ApiResponse<UserResponseDto>> userLoginNaver(HttpServletRequest request) {
         String accessToken = request.getHeader("Authorization");
