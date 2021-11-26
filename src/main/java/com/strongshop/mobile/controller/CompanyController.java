@@ -247,8 +247,8 @@ public class CompanyController {
             Company findcompany = companyRepository.findByEmail(email).orElseGet(() -> new Company());
             if (finduser.getEmail()!=null && finduser.getEmail().equals(email)) {
                 return new ResponseEntity<>(ApiResponse.response(
-                        HttpStatusCode.FORBIDDEN,
-                        HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);       //유저로 이미 등록된 이메일이면 거부.
+                        HttpStatusCode.NOT_ACCEPTABLE,
+                        HttpResponseMsg.SEND_FAILED), HttpStatus.NOT_ACCEPTABLE);   //유저로 이미 등록된 이메일이면 거부.
             }
             if (findcompany.getEmail()== null) {
                 CompanyRequestDto requestDto = new CompanyRequestDto();

@@ -92,8 +92,8 @@ public class UserController {
             Company findcompany = companyRepository.findByEmail(email).orElseGet(() -> new Company());
             if (findcompany.getEmail()!=null && findcompany.getEmail().equals(email)) {
                 return new ResponseEntity<>(ApiResponse.response(
-                        HttpStatusCode.FORBIDDEN,
-                        HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
+                        HttpStatusCode.NOT_ACCEPTABLE,
+                        HttpResponseMsg.SEND_FAILED), HttpStatus.NOT_ACCEPTABLE);
             }
             if (finduser.getEmail()== null) {
                 UserRequestDto requestDto = new UserRequestDto();
