@@ -312,6 +312,7 @@ public class UserController {
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
+
         userService.removeFcmToken(user);
 
         return new ResponseEntity<>(ApiResponse.response(

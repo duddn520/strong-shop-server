@@ -30,6 +30,10 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public void removeFcmToken(User user) {user.removeFcmToken();
+    @Transactional
+    public void removeFcmToken(User user) {
+        user.removeFcmToken();
+
+        userRepository.save(user);
     }
 }
