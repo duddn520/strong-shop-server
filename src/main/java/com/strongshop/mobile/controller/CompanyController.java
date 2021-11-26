@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.google.protobuf.Api;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
+import com.strongshop.mobile.domain.Contract.Contract;
 import com.strongshop.mobile.domain.Gallery.Gallery;
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
 import com.strongshop.mobile.domain.Image.ReviewImageUrl;
@@ -21,6 +22,7 @@ import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyService;
+import com.strongshop.mobile.service.ContractService;
 import com.strongshop.mobile.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import net.bytebuddy.agent.builder.AgentBuilder;
@@ -52,6 +54,7 @@ public class CompanyController {
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
+    private final ContractService contractService;
 
 
     @PostMapping("/api/company")
@@ -334,17 +337,23 @@ public class CompanyController {
                 fileUploadService.removeFile(img.getFilename());
             }
         }
-        try {
+
+        List<Contract> contracts = contractService.getContractsByCompanyId(company.getId());
+
+        if(contracts.isEmpty()) {
             companyService.deleteCompany(company);
-        }catch (Exception e)
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.OK,
+                    HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
+        }
+        else
         {
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.NOT_ACCEPTABLE,
-                    HttpResponseMsg.DELETE_FAIL),HttpStatus.NOT_ACCEPTABLE);
+                    HttpResponseMsg.DELETE_FAIL), HttpStatus.NOT_ACCEPTABLE);
         }
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.OK,
-                HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
+
     }
 
     @PutMapping("/api/logout/company")

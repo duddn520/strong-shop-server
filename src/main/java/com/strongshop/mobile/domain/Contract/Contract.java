@@ -21,6 +21,9 @@ public class Contract {
     @Id @GeneratedValue
     private Long id;
 
+    private Long companyId;
+    private Long userId;
+
     @OneToOne
     @JoinColumn(name = "order_id")
     private Order order;
@@ -46,6 +49,8 @@ public class Contract {
     public Contract (Long id, Order order, Bidding bidding,String shipmentLocation, String detail, State state, List<ConstructionImageUrl> constructionImageUrls, List<InspectionImageUrl> inspectionImageUrls)
     {
         this.id = id;
+        this.companyId = bidding.getCompany().getId();
+        this.userId = order.getUser().getId();
         this.order = order;
         this.bidding = bidding;
         this.shipmentLocation = shipmentLocation;

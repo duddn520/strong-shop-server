@@ -3,6 +3,7 @@ package com.strongshop.mobile.controller;
 import com.google.gson.*;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
+import com.strongshop.mobile.domain.Contract.Contract;
 import com.strongshop.mobile.domain.Image.ReviewImageUrl;
 import com.strongshop.mobile.domain.Review.Review;
 import com.strongshop.mobile.domain.User.LoginMethod;
@@ -15,6 +16,7 @@ import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
+import com.strongshop.mobile.service.ContractService;
 import com.strongshop.mobile.service.FileUploadService;
 import com.strongshop.mobile.service.ReviewService;
 import com.strongshop.mobile.service.UserService;
@@ -33,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +50,7 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
     private final ReviewService reviewService;
     private final FileUploadService fileUploadService;
+    private final ContractService contractService;
 
     @GetMapping("/api/login/user/kakao")
     public ResponseEntity<ApiResponse<UserResponseDto>> userLoginKakao(HttpServletRequest request)
@@ -318,20 +322,21 @@ public class UserController {
             }
 
         }
-        try
-        {
+        List<Contract> contracts = contractService.getContractsByUserId(user.getId());
+
+        if(contracts.isEmpty()) {
             userService.deleteUser(user);
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.OK,
+                    HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
         }
-        catch (Exception e)
+        else
         {
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.NOT_ACCEPTABLE,
-                    HttpResponseMsg.DELETE_FAIL),HttpStatus.NOT_ACCEPTABLE);        //contract 중인경우, 탈퇴불가능.
+                    HttpResponseMsg.DELETE_FAIL), HttpStatus.NOT_ACCEPTABLE);
         }
-
-        return new ResponseEntity<>(ApiResponse.response(
-                HttpStatusCode.OK,
-                HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
     }
 
     @PutMapping("/api/logout/user")
