@@ -1,7 +1,5 @@
 package com.strongshop.mobile.controller;
 
-import com.google.protobuf.Api;
-import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Contract.Contract;
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.firebase.FirebaseCloudMessageService;

@@ -3,7 +3,6 @@ package com.strongshop.mobile.service;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Order.OrderRepository;
 import com.strongshop.mobile.domain.State;
-import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.dto.Order.OrderResponseDto;
 import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import lombok.RequiredArgsConstructor;

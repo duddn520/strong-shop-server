@@ -2,14 +2,10 @@ package com.strongshop.mobile.service;
 
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
-import com.strongshop.mobile.dto.User.UserRequestDto;
-import com.strongshop.mobile.dto.User.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.SQLIntegrityConstraintViolationException;
 
 @Slf4j
 @RequiredArgsConstructor

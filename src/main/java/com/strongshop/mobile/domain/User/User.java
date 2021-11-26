@@ -74,15 +74,6 @@ public class User implements UserDetails{
         this.loginMethod = loginMethod;
     }
 
-    public User updateUser(UserRequestDto requestDto) {
-        this.id = requestDto.getId();
-        this.nickname = requestDto.getNickname();
-        this.email = requestDto.getEmail();
-        this.profileImage = requestDto.getProfileImage();
-        this.thumbnailImage = requestDto.getThumbnailImage();
-        return this;
-    }
-
     public void updateFcmToken(String token)
     {
         this.fcmToken = token;

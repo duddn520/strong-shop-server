@@ -1,7 +1,6 @@
 package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Company.Company;
-import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.Product.Item;
 import com.strongshop.mobile.domain.Product.Product;
 import com.strongshop.mobile.dto.Product.ProductRequestDto;
@@ -15,13 +14,10 @@ import com.strongshop.mobile.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.sound.sampled.Port;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

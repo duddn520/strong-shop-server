@@ -3,12 +3,9 @@ package com.strongshop.mobile.service;
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Contract.Contract;
 import com.strongshop.mobile.domain.Contract.ContractRepository;
-import com.strongshop.mobile.domain.Image.ConstructionImageUrlRepository;
-import com.strongshop.mobile.domain.Image.InspectionImageUrlRepository;
 import com.strongshop.mobile.domain.Order.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;

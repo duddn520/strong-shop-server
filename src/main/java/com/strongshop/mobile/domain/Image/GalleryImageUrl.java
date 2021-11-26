@@ -4,10 +4,8 @@ import com.strongshop.mobile.domain.Gallery.Gallery;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.bytebuddy.agent.builder.AgentBuilder;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
