@@ -334,7 +334,14 @@ public class CompanyController {
                 fileUploadService.removeFile(img.getFilename());
             }
         }
-        companyService.deleteCompany(company);
+        try {
+            companyService.deleteCompany(company);
+        }catch (Exception e)
+        {
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.NOT_ACCEPTABLE,
+                    HttpResponseMsg.DELETE_FAIL),HttpStatus.NOT_ACCEPTABLE);
+        }
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);

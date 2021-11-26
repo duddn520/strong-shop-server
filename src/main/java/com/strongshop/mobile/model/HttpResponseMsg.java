@@ -16,6 +16,7 @@ public class HttpResponseMsg {
     public static final String DELETE_USER = "회원 탈퇴 성공";
 
     public static final String DELETE_SUCCESS = "삭제 성공";
+    public static final String DELETE_FAIL = "삭제 실패";
     public static final String FILE_NOT_FOUND = "존재하지 않는 파일";
     public static final String INTERNAL_SERVER_ERROR = "서버 내부 에러";
     public static final String DB_ERROR = "데이터베이스 에러";

@@ -70,6 +70,7 @@ public class ReviewController {
         }
         review.updateReviewImageUrls(imageUrls);
         company.getReviews().add(review);
+        user.getReviews().add(review);
 
         completedContract.updateReviewStatus();
 

@@ -32,7 +32,8 @@ public class Review extends BaseEntity {
     private float rating;
     private String reply;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
 

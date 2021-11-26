@@ -3,6 +3,8 @@ package com.strongshop.mobile.controller;
 import com.google.gson.*;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
+import com.strongshop.mobile.domain.Image.ReviewImageUrl;
+import com.strongshop.mobile.domain.Review.Review;
 import com.strongshop.mobile.domain.User.LoginMethod;
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.User;
@@ -13,6 +15,8 @@ import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
+import com.strongshop.mobile.service.FileUploadService;
+import com.strongshop.mobile.service.ReviewService;
 import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
 import okhttp3.Response;
@@ -20,6 +24,7 @@ import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +34,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -39,6 +45,8 @@ public class UserController {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ReviewService reviewService;
+    private final FileUploadService fileUploadService;
 
     @GetMapping("/api/login/user/kakao")
     public ResponseEntity<ApiResponse<UserResponseDto>> userLoginKakao(HttpServletRequest request)
@@ -305,6 +313,39 @@ public class UserController {
                 HttpStatusCode.OK,
                 HttpResponseMsg.GET_SUCCESS,
                 map),HttpStatus.OK);
+    }
+
+    @DeleteMapping("/api/user")
+    @Transactional
+    public ResponseEntity<ApiResponse> withdrawUser(HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        User user = userService.getUserByEmail(email);
+
+        List<Review> reviews = reviewService.findAllReviewsByUser(user);
+        for (Review r : reviews)
+        {
+            List<ReviewImageUrl> imageUrls = r.getReviewImageUrls();
+            for(ReviewImageUrl img : imageUrls)
+            {
+                fileUploadService.removeFile(img.getFilename());
+            }
+
+        }
+        try
+        {
+            userService.deleteUser(user);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.NOT_ACCEPTABLE,
+                    HttpResponseMsg.DELETE_FAIL),HttpStatus.NOT_ACCEPTABLE);        //contract 중인경우, 탈퇴불가능.
+        }
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
     }
 
     @PutMapping("/api/logout/user")
