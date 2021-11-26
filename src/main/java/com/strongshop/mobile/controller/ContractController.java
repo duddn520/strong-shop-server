@@ -87,7 +87,6 @@ public class ContractController {
                             HttpStatusCode.FORBIDDEN,
                             HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
                 }
-                biddingService.deleteBidding(b);
             }
         }
 
