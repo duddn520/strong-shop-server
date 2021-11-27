@@ -133,6 +133,9 @@ public class OrderController {
             List<Bidding> biddings = o.getBiddings();
             if(biddings!=null) {
                 responseDto.setBidcount(biddings.size());
+            }else
+            {
+                responseDto.setBidcount(0);
             }
             responseDtos.add(responseDto);
         }
