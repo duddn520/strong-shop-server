@@ -58,7 +58,7 @@ public class BiddingController {
 
 
             try {
-                firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "새로운 입찰이 있습니다.", "새로운 입찰이 있습니다.", "200",order.getId());
+                firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "새로운 입찰이 있습니다.", "새로운 입찰이 있습니다.", "200");
             } catch (IOException e) {
                 return new ResponseEntity<>(ApiResponse.response(
                         HttpStatusCode.INTERNAL_SERVER_ERROR,

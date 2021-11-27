@@ -17,6 +17,7 @@ public class OrderResponseDto {
     private String details;
     private String region;
     private State state;
+    private int bidcount;
     private LocalDateTime created_time;
 
     public OrderResponseDto(Order order)
@@ -26,6 +27,7 @@ public class OrderResponseDto {
         this.details = order.getDetail();
         this.region = order.getRegion();
         this.state = order.getState();
+        this.bidcount = order.getBiddings().size();
         this.created_time = order.getCreatedTime();
     }
 }
