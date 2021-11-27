@@ -27,7 +27,12 @@ public class OrderResponseDto {
         this.details = order.getDetail();
         this.region = order.getRegion();
         this.state = order.getState();
-        this.bidcount = order.getBiddings().size();
+        if(order.getBiddings().isEmpty())
+        {
+            this.bidcount = 0;
+        }
+        else
+            this.bidcount = order.getBiddings().size();
         this.created_time = order.getCreatedTime();
     }
 }
