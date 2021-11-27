@@ -63,8 +63,8 @@ public class FirebaseCloudMessageService {
     }
 
     @Async
-    public void sendMessageTo(String targetToken, String title, String body, String index,String username) throws IOException {
-        String message = makeMessage(targetToken, title, body, index,username);
+    public void sendMessageTo(String targetToken, String title, String body, String index,String name) throws IOException {
+        String message = makeMessage(targetToken, title, body, index,name);
 
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
@@ -104,11 +104,11 @@ public class FirebaseCloudMessageService {
         return objectMapper.writeValueAsString(fcmMessage);
     }
 
-    private String makeMessage(String targetToken, String title, String body,String index,String username) throws JsonProcessingException{
+    private String makeMessage(String targetToken, String title, String body,String index,String name) throws JsonProcessingException{
         Map<String,Object> map = new HashMap<>();
         map.put("index",index);
         map.put("time", LocalDateTime.now());
-        map.put("user",username);
+        map.put("name",name);
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
