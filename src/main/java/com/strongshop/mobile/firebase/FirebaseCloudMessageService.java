@@ -61,10 +61,54 @@ public class FirebaseCloudMessageService {
 
             System.out.println(response.body().string());
     }
+
+    @Async
+    public void sendMessageTo(String targetToken, String title, String body, String index,String username) throws IOException {
+        String message = makeMessage(targetToken, title, body, index,username);
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
+
+        Request request = new Request.Builder()
+                .url(API_URL)
+                .post(requestBody)
+                .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+                .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
+                .build();
+
+        Response response = client.newCall(request)
+                .execute();
+
+        System.out.println(response.body().string());
+    }
+
     private String makeMessage(String targetToken, String title, String body,String index) throws JsonProcessingException{
         Map<String,Object> map = new HashMap<>();
         map.put("index",index);
         map.put("time", LocalDateTime.now());
+        FcmMessage fcmMessage = FcmMessage.builder()
+                .message(FcmMessage.Message.builder()
+                        .token(targetToken)
+                        .data(map)
+                        .notification(FcmMessage.Notification.builder()
+                                .title(title)
+                                .body(body)
+                                .image(null)
+                                .build()
+                        )
+                        .build()
+                )
+                .validate_only(false)
+                .build();
+
+        return objectMapper.writeValueAsString(fcmMessage);
+    }
+
+    private String makeMessage(String targetToken, String title, String body,String index,String username) throws JsonProcessingException{
+        Map<String,Object> map = new HashMap<>();
+        map.put("index",index);
+        map.put("time", LocalDateTime.now());
+        map.put("user",username);
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)

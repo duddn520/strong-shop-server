@@ -111,7 +111,7 @@ public class ContractController {
         ContractResponseDto responseDto = new ContractResponseDto(contractService.registerContract(contract));
 
         try {
-            firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "낙찰", "낙찰","110");
+            firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "낙찰", "낙찰","110",order.getUser().getNickname());
         }
         catch (IOException e)
         {
@@ -181,7 +181,7 @@ public class ContractController {
         orderService.saveOrder(order);
 
         try {
-            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "출고지 설정 완료", "출고지 설정 완료.","112");
+            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "출고지 설정 완료", "출고지 설정 완료.","112",order.getUser().getNickname());
         }
         catch (IOException e)
         {
@@ -287,7 +287,7 @@ public class ContractController {
         orderService.saveOrder(order);
 
         try {
-            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "차량 인수 결정 완료", "차량 인수 결정 완료.","113");
+            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "차량 인수 결정 완료", "차량 인수 결정 완료.","113",order.getUser().getNickname());
         }
         catch (IOException e)
         {
@@ -425,6 +425,16 @@ public class ContractController {
 
 
         CompletedContractResponseDto responseDto = new CompletedContractResponseDto(completedContract);
+
+        try {
+            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "출고 완료", "출고 완료","214",order.getUser().getNickname());
+        }
+        catch (IOException e)
+        {
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
+        }
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
