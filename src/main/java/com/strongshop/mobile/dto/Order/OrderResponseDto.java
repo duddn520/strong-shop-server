@@ -1,11 +1,15 @@
 package com.strongshop.mobile.dto.Order;
 
+import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
 import lombok.Getter;
 import lombok.Setter;
+import net.bytebuddy.agent.builder.AgentBuilder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -17,6 +21,7 @@ public class OrderResponseDto {
     private String details;
     private String region;
     private State state;
+    private List<Bidding> biddings = new ArrayList<>();
     private int bidcount;
     private LocalDateTime created_time;
 
@@ -27,7 +32,8 @@ public class OrderResponseDto {
         this.details = order.getDetail();
         this.region = order.getRegion();
         this.state = order.getState();
-        if(order.getBiddings().isEmpty())
+        this.biddings = order.getBiddings();
+        if(biddings.isEmpty())
         {
             this.bidcount = 0;
         }
