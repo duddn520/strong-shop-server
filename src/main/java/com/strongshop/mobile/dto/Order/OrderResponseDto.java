@@ -21,7 +21,6 @@ public class OrderResponseDto {
     private String details;
     private String region;
     private State state;
-    private List<Bidding> biddings = new ArrayList<>();
     private int bidcount;
     private LocalDateTime created_time;
 
@@ -32,13 +31,6 @@ public class OrderResponseDto {
         this.details = order.getDetail();
         this.region = order.getRegion();
         this.state = order.getState();
-        this.biddings = order.getBiddings();
-        if(biddings.isEmpty())
-        {
-            this.bidcount = 0;
-        }
-        else
-            this.bidcount = order.getBiddings().size();
         this.created_time = order.getCreatedTime();
     }
 }

@@ -58,6 +58,7 @@ public class OrderController {
         order.updateOrder(user);
 
         OrderResponseDto responseDto = orderService.saveOrder(order);
+        responseDto.setBidcount(0);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.CREATED,
@@ -129,6 +130,10 @@ public class OrderController {
                 }
             }
             OrderResponseDto responseDto = new OrderResponseDto(o);
+            List<Bidding> biddings = o.getBiddings();
+            if(biddings!=null) {
+                responseDto.setBidcount(biddings.size());
+            }
             responseDtos.add(responseDto);
         }
         return new ResponseEntity<>(ApiResponse.response(
