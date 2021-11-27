@@ -111,7 +111,7 @@ public class ContractController {
         ContractResponseDto responseDto = new ContractResponseDto(contractService.registerContract(contract));
 
         try {
-            firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "낙찰", "당신의 입찰을 낙찰","110",order.getUser().getNickname());
+            firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "낙찰", "낙찰","110",order.getUser().getNickname());
         }
         catch (IOException e)
         {
@@ -181,7 +181,7 @@ public class ContractController {
         orderService.saveOrder(order);
 
         try {
-            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "출고지 설정 완료", "출고지 설정을 완료","112",order.getUser().getNickname());
+            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "출고지 설정 완료", "출고지 설정 완료","112",order.getUser().getNickname());
         }
         catch (IOException e)
         {
@@ -217,7 +217,7 @@ public class ContractController {
         }
         ContractInspectionImageResponseDto responseDto = new ContractInspectionImageResponseDto(contract);
         try {
-            firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 검수 사진 등록", "차량 검수 사진을 등록","210",company.getName());
+            firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 검수 사진 등록", "차량 검수 사진 등록","210",company.getName());
         }
         catch (IOException e)
         {
@@ -263,7 +263,7 @@ public class ContractController {
         contractService.registerContract(contract);
 
         try {
-            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "차량 검수 완료", "차량 검수를 완료","211",company.getName());
+            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "차량 검수 완료", "차량 검수 완료","211",company.getName());
         }
         catch (IOException e)
         {
@@ -289,7 +289,7 @@ public class ContractController {
         orderService.saveOrder(order);
 
         try {
-            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "차량 인수 결정 완료", "차량 인수 결정을 완료","113",order.getUser().getNickname());
+            firebaseCloudMessageService.sendMessageTo(contract.getBidding().getCompany().getFcmToken(), "차량 인수 결정 완료", "차량 인수 결정 완료","113",order.getUser().getNickname());
         }
         catch (IOException e)
         {
@@ -326,7 +326,7 @@ public class ContractController {
         }
         ContractConstructionImageResponseDto responseDto = new ContractConstructionImageResponseDto(contract);
         try {
-            firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 시공 사진 등록", "차량 시공 사진을 등록","212",company.getName());
+            firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 시공 사진 등록", "차량 시공 사진 등록","212",company.getName());
         }
         catch (IOException e)
         {
@@ -372,7 +372,7 @@ public class ContractController {
         contractService.registerContract(contract);
 
         try {
-            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "시공 완료", "시공을 완료","213",company.getName());
+            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "시공 완료", "시공 완료","213",company.getName());
         }
         catch (IOException e)
         {
@@ -424,7 +424,7 @@ public class ContractController {
         }
 
         try {
-            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "출고 완료", "차량 출고를 완료","114",order.getUser().getNickname());
+            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "출고 완료", "차량 출고 완료","114",order.getUser().getNickname());
         }
         catch (IOException e)
         {
