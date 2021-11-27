@@ -419,13 +419,6 @@ public class ContractController {
             fileUploadService.removeFile(c.getFilename());
         }
 
-        contractService.deleteContract(contract);
-        orderService.deleteOrder(order);
-        biddingService.deleteBidding(bidding);
-
-
-        CompletedContractResponseDto responseDto = new CompletedContractResponseDto(completedContract);
-
         try {
             firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "출고 완료", "차량 출고를 완료","114",order.getUser().getNickname());
         }
@@ -435,6 +428,12 @@ public class ContractController {
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
         }
+
+        contractService.deleteContract(contract);
+        orderService.deleteOrder(order);
+        biddingService.deleteBidding(bidding);
+
+        CompletedContractResponseDto responseDto = new CompletedContractResponseDto(completedContract);
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
