@@ -198,7 +198,7 @@ public class ContractController {
 
     }
 
-    @PostMapping("/api/contract/4/{contract_id}")                 //차량검수사진 업로드.
+    @PostMapping(value = "/api/contract/4/{contract_id}",headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
     @Transactional
     public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> uploadInspectionImages(@RequestParam("files") List<MultipartFile> files,@PathVariable("contract_id") Long contractId)
     {
@@ -306,13 +306,12 @@ public class ContractController {
 
     //TODO:시공중 사진 등록, 사진 등록시 알림 보내기(212)
 
-    @PostMapping("/api/contract/6/{contract_id}")                 //차량검수사진 업로드.
+    @PostMapping(value = "/api/contract/6/{contract_id}" ,headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
     @Transactional
     public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> uploadConstructionImages(@RequestParam("files") List<MultipartFile> files, @PathVariable("contract_id") Long contractId)
     {
         Contract contract = contractService.getContractById(contractId);
         Company company = companyService.getCompanyById(contract.getCompanyId());
-
         for(MultipartFile file : files)
         {
             String filename = fileUploadService.uploadImage(file);
