@@ -99,7 +99,7 @@ public class CompanyController {
         String fcmToken = request.getHeader("FCM");
 
         HashMap<String, Object> companyInfo = new HashMap<>();
-        String reqURL = "https://kapi.kakao.com/v2/user/me";
+        String reqURL = "http://kapi.kakao.com/v2/user/me";
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -209,7 +209,7 @@ public class CompanyController {
         String fcmToken = request.getHeader("FCM");
         String header = "Bearer " + accessToken;
 
-        String apiURL = "https://openapi.naver.com/v1/nid/me";
+        String apiURL = "http://openapi.naver.com/v1/nid/me";
 
         Map<String, String> requestHeaders = new HashMap<>();
         Map<String, Object> userInfo = new HashMap<>();
