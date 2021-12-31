@@ -423,7 +423,7 @@ public class ContractController {
         }
 
         try {
-            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "출고 완료", "차량 출고 완료","114",order.getUser().getNickname());
+            firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "출고 완료", "차량 출고 완료","114",order.getUser().getNickname());
         }
         catch (IOException e)
         {
