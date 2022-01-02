@@ -1,8 +1,11 @@
 package com.strongshop.mobile.firebase;
+import com.sun.jdi.ObjectCollectedException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import okhttp3.Headers;
 
+import javax.mail.Header;
 import java.util.Map;
 
 @Builder
@@ -18,9 +21,9 @@ public class FcmMessage {
     public static class Message{
         private Notification notification;
         private Map<String,Object> data;
+        private Android android;
+        private Apns apns;
         private String token;
-        private String priority;
-        private boolean content_available;
     }
 
     @Builder
@@ -31,5 +34,22 @@ public class FcmMessage {
         private String body;
         private String image;
         private String sound;
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    public static class Android{
+        private Notification notification;
+        private String priority;
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    public static class Apns{
+        private Map<String,Object> headers;
+        private boolean content_available;
+
     }
 }

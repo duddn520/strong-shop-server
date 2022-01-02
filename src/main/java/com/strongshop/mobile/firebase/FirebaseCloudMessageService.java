@@ -84,8 +84,10 @@ public class FirebaseCloudMessageService {
 
     private String makeMessage(String targetToken, String title, String body,String index) throws JsonProcessingException{
         Map<String,Object> map = new HashMap<>();
+        Map<String,Object> apnHeader = new HashMap<>();
         map.put("index",index);
         map.put("time", LocalDateTime.now());
+        apnHeader.put("apns_priority","5");
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
@@ -97,8 +99,15 @@ public class FirebaseCloudMessageService {
                                 .sound("default")
                                 .build()
                         )
-                        .content_available(true)
-                        .priority("high")
+                        .android(FcmMessage.Android.builder()
+                                .notification(FcmMessage.Notification.builder()
+                                        .sound("default")
+                                        .build())
+                                .priority("high")
+                                .build())
+                        .apns(FcmMessage.Apns.builder()
+                                .headers(apnHeader)
+                                .content_available(true).build())
                         .build()
                 )
                 .validate_only(false)
@@ -109,9 +118,11 @@ public class FirebaseCloudMessageService {
 
     private String makeMessage(String targetToken, String title, String body,String index,String name) throws JsonProcessingException{
         Map<String,Object> map = new HashMap<>();
+        Map<String,Object> apnHeader = new HashMap<>();
         map.put("index",index);
         map.put("time", LocalDateTime.now());
         map.put("name",name);
+        apnHeader.put("apns_priority","5");
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
@@ -120,8 +131,18 @@ public class FirebaseCloudMessageService {
                                 .title(title)
                                 .body(body)
                                 .image(null)
+                                .sound("default")
                                 .build()
                         )
+                        .android(FcmMessage.Android.builder()
+                                .notification(FcmMessage.Notification.builder()
+                                        .sound("default")
+                                        .build())
+                                .priority("high")
+                                .build())
+                        .apns(FcmMessage.Apns.builder()
+                                .headers(apnHeader)
+                                .content_available(true).build())
                         .build()
                 )
                 .validate_only(false)
