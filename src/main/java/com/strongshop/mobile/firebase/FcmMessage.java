@@ -10,8 +10,6 @@ import java.util.Map;
 public class FcmMessage {
     private boolean validate_only;
     private Message message;
-    private Android android;
-    private Apns apns;
 
     @Builder
     @AllArgsConstructor
