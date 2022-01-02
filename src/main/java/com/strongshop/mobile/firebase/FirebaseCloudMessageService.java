@@ -45,7 +45,6 @@ public class FirebaseCloudMessageService {
     @Async
     public void sendMessageTo(String targetToken, String title, String body, String index) throws IOException {
             String message = makeMessage(targetToken, title, body, index);
-        System.out.println("message = " + message);
 
             OkHttpClient client = new OkHttpClient();
             RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
@@ -94,7 +93,10 @@ public class FirebaseCloudMessageService {
         andNotification.put("click_action","TOP_STORY_ACTIVITY");
         apnHeader.put("apns_priority","5");
         aps.put("sound","default");
+        aps.put("content-available",1);
+
         apnPayload.put("aps",aps);
+
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
@@ -131,6 +133,7 @@ public class FirebaseCloudMessageService {
         andNotification.put("click_action","TOP_STORY_ACTIVITY");
         apnHeader.put("apns_priority","5");
         aps.put("sound","default");
+        aps.put("content-available",1);
         apnPayload.put("aps",aps);
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
