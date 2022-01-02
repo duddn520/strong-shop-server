@@ -1,11 +1,7 @@
 package com.strongshop.mobile.firebase;
-import com.sun.jdi.ObjectCollectedException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import okhttp3.Headers;
-
-import javax.mail.Header;
 import java.util.Map;
 
 @Builder
@@ -14,6 +10,8 @@ import java.util.Map;
 public class FcmMessage {
     private boolean validate_only;
     private Message message;
+    private Android android;
+    private Apns apns;
 
     @Builder
     @AllArgsConstructor
@@ -21,8 +19,6 @@ public class FcmMessage {
     public static class Message{
         private Notification notification;
         private Map<String,Object> data;
-        private Android android;
-        private Apns apns;
         private String token;
     }
 
