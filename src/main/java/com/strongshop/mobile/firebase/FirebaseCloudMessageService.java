@@ -86,9 +86,15 @@ public class FirebaseCloudMessageService {
     private String makeMessage(String targetToken, String title, String body,String index) throws JsonProcessingException{
         Map<String,Object> map = new HashMap<>();
         Map<String,Object> apnHeader = new HashMap<>();
+        Map<String,Object> apnPayload = new HashMap<>();
+        Map<String,Object> andNotification = new HashMap<>();
+        Map<String,Object> aps = new HashMap<>();
         map.put("index",index);
         map.put("time", LocalDateTime.now());
+        andNotification.put("click_action","TOP_STORY_ACTIVITY");
         apnHeader.put("apns_priority","5");
+        aps.put("sound","default");
+        apnPayload.put("aps",aps);
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
@@ -97,18 +103,18 @@ public class FirebaseCloudMessageService {
                                 .title(title)
                                 .body(body)
                                 .image(null)
-                                .sound("default")
+                                .build())
+                        .android(FcmMessage.Android.builder()
+                                .notification(andNotification)
+                                .build())
+                        .apns(FcmMessage.Apns.builder()
+                                .headers(apnHeader)
+                                .payload(apnPayload)
                                 .build())
                         .build())
-                .android(FcmMessage.Android.builder()
-                        .notification(FcmMessage.Notification.builder()
-                                .sound("default").build())
-                        .priority("high")
-                        .build())
-                .apns(FcmMessage.Apns.builder()
-                        .content_available(true).build())
                 .validate_only(false)
                 .build();
+
 
         return objectMapper.writeValueAsString(fcmMessage);
     }
@@ -116,10 +122,16 @@ public class FirebaseCloudMessageService {
     private String makeMessage(String targetToken, String title, String body,String index,String name) throws JsonProcessingException{
         Map<String,Object> map = new HashMap<>();
         Map<String,Object> apnHeader = new HashMap<>();
+        Map<String,Object> apnPayload = new HashMap<>();
+        Map<String,Object> andNotification = new HashMap<>();
+        Map<String,Object> aps = new HashMap<>();
         map.put("index",index);
         map.put("time", LocalDateTime.now());
         map.put("name",name);
+        andNotification.put("click_action","TOP_STORY_ACTIVITY");
         apnHeader.put("apns_priority","5");
+        aps.put("sound","default");
+        apnPayload.put("aps",aps);
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
@@ -128,16 +140,15 @@ public class FirebaseCloudMessageService {
                                 .title(title)
                                 .body(body)
                                 .image(null)
-                                .sound("default")
+                                .build())
+                        .android(FcmMessage.Android.builder()
+                                .notification(andNotification)
+                                .build())
+                        .apns(FcmMessage.Apns.builder()
+                                .headers(apnHeader)
+                                .payload(apnPayload)
                                 .build())
                         .build())
-                .android(FcmMessage.Android.builder()
-                        .notification(FcmMessage.Notification.builder()
-                                .sound("default").build())
-                        .priority("high")
-                        .build())
-                .apns(FcmMessage.Apns.builder()
-                        .content_available(true).build())
                 .validate_only(false)
                 .build();
 

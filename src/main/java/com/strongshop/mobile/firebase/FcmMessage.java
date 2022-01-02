@@ -17,9 +17,11 @@ public class FcmMessage {
     @AllArgsConstructor
     @Getter
     public static class Message{
+        private String token;
         private Notification notification;
         private Map<String,Object> data;
-        private String token;
+        private Android android;
+        private Apns apns;
     }
 
     @Builder
@@ -29,14 +31,13 @@ public class FcmMessage {
         private String title;
         private String body;
         private String image;
-        private String sound;
     }
 
     @Builder
     @AllArgsConstructor
     @Getter
     public static class Android{
-        private Notification notification;
+        private Map<String, Object> notification;
         private String priority;
     }
 
@@ -45,7 +46,6 @@ public class FcmMessage {
     @Getter
     public static class Apns{
         private Map<String,Object> headers;
-        private boolean content_available;
-
+        private Map<String,Object> payload;
     }
 }
