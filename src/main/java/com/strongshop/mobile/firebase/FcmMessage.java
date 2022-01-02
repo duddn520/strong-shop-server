@@ -19,6 +19,8 @@ public class FcmMessage {
         private Notification notification;
         private Map<String,Object> data;
         private String token;
+        private String priority;
+        private boolean content_available;
     }
 
     @Builder
@@ -28,5 +30,6 @@ public class FcmMessage {
         private String title;
         private String body;
         private String image;
+        private String sound;
     }
 }
