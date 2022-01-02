@@ -45,6 +45,7 @@ public class FirebaseCloudMessageService {
     @Async
     public void sendMessageTo(String targetToken, String title, String body, String index) throws IOException {
             String message = makeMessage(targetToken, title, body, index);
+        System.out.println("message = " + message);
 
             OkHttpClient client = new OkHttpClient();
             RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
