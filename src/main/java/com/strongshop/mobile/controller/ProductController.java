@@ -12,6 +12,7 @@ import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class ProductController {
 
     private final JwtTokenProvider jwtTokenProvider;

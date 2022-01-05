@@ -21,6 +21,7 @@ import com.strongshop.mobile.service.FileUploadService;
 import com.strongshop.mobile.service.ReviewService;
 import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,7 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -64,9 +66,6 @@ public class UserController {
             //    요청에 필요한 Header에 포함될 내용
             conn.setRequestProperty("Authorization", accessToken);
 
-            int responseCode = conn.getResponseCode();
-            System.out.println("responseCode : " + responseCode);
-
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
             String line = "";
@@ -75,7 +74,6 @@ public class UserController {
             while ((line = br.readLine()) != null) {
                 result += line;
             }
-            System.out.println("response body : " + result);
 
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
@@ -99,6 +97,7 @@ public class UserController {
             User finduser = userRepository.findByEmail(email).orElseGet(() -> new User());
             Company findcompany = companyRepository.findByEmail(email).orElseGet(() -> new Company());
             if (findcompany.getEmail()!=null && findcompany.getEmail().equals(email)) {
+                log.debug("email: {} already signed as company account. (UserController.userLoginKakao)",findcompany.getEmail());
                 return new ResponseEntity<>(ApiResponse.response(
                         HttpStatusCode.NOT_ACCEPTABLE,
                         HttpResponseMsg.SEND_FAILED), HttpStatus.NOT_ACCEPTABLE);
@@ -130,7 +129,8 @@ public class UserController {
                         responseDto), headers, HttpStatus.OK);
             }
             } catch(IOException e){
-                throw new RuntimeException(e);
+            log.error("IOException (UserController.userLoginKakao)");
+            throw new RuntimeException(e);
         }
     }
 
@@ -155,6 +155,7 @@ public class UserController {
         }
         else
         {
+            log.debug("email: {} phoneNumber: {} email or phoneNumber is null. (UserController.completeUserLoginKakao)",requestDto.getEmail(),requestDto.getPhoneNumber());
             throw new RuntimeException();
         }
     }
@@ -210,7 +211,11 @@ public class UserController {
             User finduser = userRepository.findByEmail(email).orElseGet(() -> new User());
             Company findcompany = companyRepository.findByEmail(email).orElseGet(() -> new Company());
             if (findcompany.getEmail()!=null && findcompany.getEmail().equals(email)) {
-                throw new RuntimeException("이미 업체로 등록된 계정입니다.");        //업체로 이미 등록된 이메일이면 거부.
+                log.debug("email: {} already signed as company account. (UserController.userLoginNaver)",findcompany.getEmail());
+                return new ResponseEntity<>(ApiResponse.response(
+                        HttpStatusCode.NOT_ACCEPTABLE,
+                        HttpResponseMsg.SEND_FAILED), HttpStatus.NOT_ACCEPTABLE);
+
             }
             if (finduser.getEmail()== null) {
                 UserRequestDto requestDto = new UserRequestDto();
@@ -239,6 +244,7 @@ public class UserController {
                         responseDto), headers, HttpStatus.OK);
             }
         } catch(IOException e){
+            log.error("IOException (UserController.userLoginNaver)");
             throw new RuntimeException(e);
         }
 
@@ -265,6 +271,7 @@ public class UserController {
         }
         else
         {
+            log.debug("email: {} phoneNumber: {} email or phoneNumber is null. (UserController.completeUserLoginNaver)",requestDto.getEmail(),requestDto.getPhoneNumber());
             throw new RuntimeException();
         }
     }
@@ -330,6 +337,7 @@ public class UserController {
         }
         else
         {
+            log.debug("userID: {} cannot withdraw (having ongoing contract). (UserController.withdrawUser)",user.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.NOT_ACCEPTABLE,
                     HttpResponseMsg.DELETE_FAIL), HttpStatus.NOT_ACCEPTABLE);

@@ -79,7 +79,15 @@ public class OrderController {
 
             for (Order order : orders) {
                 if (order.getCreatedTime().plusDays(2).isBefore(LocalDateTime.now()))
+                {
                     orderService.updateState2BiddingComplete(order);
+                    try {
+                        firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "입찰 요청 만료", "입찰 요청 만료", "001");
+                    }catch (IOException e)
+                    {
+                        log.error("userId: {} failed to send fcm message. (OrderController.getOrderNowBidding)",order.getUser().getId());
+                    }
+                }
                 else {
                     boolean flag = true;
                     for(Bidding b : biddings)
@@ -125,7 +133,7 @@ public class OrderController {
                         firebaseCloudMessageService.sendMessageTo(o.getUser().getFcmToken(), "입찰 요청 만료", "입찰 요청 만료", "001");
                     }catch (IOException e)
                     {
-                        System.out.println("e.getMessage() = " + e.getMessage());
+                        log.error("userId: {} failed to send fcm message. (OrderController.getMyOrders4User)",user.getId());
                     }
                 }
             }

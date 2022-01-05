@@ -12,6 +12,7 @@ import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class CompanyInfoController {
 
     private final CompanyService companyService;
@@ -97,6 +99,7 @@ public class CompanyInfoController {
         CompanyInfo companyInfo = company.getCompanyInfo();
         if(companyInfo.getId()==null)
         {
+            log.debug("companyId: {} have no companyInfo Entity. (CompanyInfoController.getCompanyInfo)",company.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.NO_CONTENT,
                     HttpResponseMsg.NO_CONTENT), HttpStatus.NO_CONTENT);
@@ -118,6 +121,7 @@ public class CompanyInfoController {
         CompanyInfo companyInfo = company.getCompanyInfo();
         if(companyInfo.getId()==null)
         {
+            log.debug("companyId: {} have no companyInfo Entity. (CompanyInfoController.getCompanyInfo4User)",company.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.NO_CONTENT,
                     HttpResponseMsg.NO_CONTENT), HttpStatus.NO_CONTENT);

@@ -24,6 +24,7 @@ import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.ContractService;
 import com.strongshop.mobile.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class CompanyController {
 
     private final CompanyService companyService;
@@ -108,9 +110,6 @@ public class CompanyController {
             //    요청에 필요한 Header에 포함될 내용
             conn.setRequestProperty("Authorization", accessToken);
 
-            int responseCode = conn.getResponseCode();
-            System.out.println("responseCode : " + responseCode);
-
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
             String line = "";
@@ -119,8 +118,6 @@ public class CompanyController {
             while ((line = br.readLine()) != null) {
                 result += line;
             }
-            System.out.println("response body : " + result);
-
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
@@ -136,6 +133,7 @@ public class CompanyController {
             Company findcompany = companyRepository.findByEmail(email).orElseGet(()->new Company());
             User finduser = userRepository.findByEmail(email).orElseGet(()->new User());
             if(finduser.getEmail()!=null&&finduser.getEmail().equals(email)){
+                log.debug("email: {} already signed in user account.(CompanyController)",finduser.getEmail());
                 return new ResponseEntity<>(ApiResponse.response(
                         HttpStatusCode.FORBIDDEN,
                         HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
@@ -168,6 +166,7 @@ public class CompanyController {
                         responseDto),headers,HttpStatus.OK);
             }
         } catch (IOException e) {
+            log.error("IOException (CompanyController.companyLoginKakao)");
             throw new RuntimeException(e);
         }
     }
@@ -177,6 +176,7 @@ public class CompanyController {
     {
         if(companyRepository.findByBusinessNumber(requestDto.getBusinessNumber()).isPresent())
         {
+            log.debug("businessNumber: {} already signed up. (CompanyController.completeCompanyLoginKakao)",requestDto.getBusinessNumber());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.LOGIN_FAIL
@@ -199,6 +199,7 @@ public class CompanyController {
         }
         else
         {
+            log.error("email: {}, businessNumber: {} email or BN is null. (CompanyController.completeCompanyLoginKakao)",requestDto.getEmail(),requestDto.getBusinessNumber());
             throw new RuntimeException();
         }
     }
@@ -235,8 +236,6 @@ public class CompanyController {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            System.out.println("result = " + result);
-
             JsonObject response = element.getAsJsonObject().get("response").getAsJsonObject();
 
             String email = response.getAsJsonObject().get("email").getAsString() + "/";
@@ -246,6 +245,7 @@ public class CompanyController {
             User finduser = userRepository.findByEmail(email).orElseGet(() -> new User());
             Company findcompany = companyRepository.findByEmail(email).orElseGet(() -> new Company());
             if (finduser.getEmail()!=null && finduser.getEmail().equals(email)) {
+                log.debug("email: {} already signed in user account. (CompanyController.companyLoginNaver)",finduser.getEmail());
                 return new ResponseEntity<>(ApiResponse.response(
                         HttpStatusCode.NOT_ACCEPTABLE,
                         HttpResponseMsg.SEND_FAILED), HttpStatus.NOT_ACCEPTABLE);   //유저로 이미 등록된 이메일이면 거부.
@@ -274,6 +274,7 @@ public class CompanyController {
                         responseDto), headers, HttpStatus.OK);
             }
         } catch(IOException e){
+            log.error("IOException (CompanyController.companyLoginNaver)");
             throw new RuntimeException(e);
         }
 
@@ -282,6 +283,14 @@ public class CompanyController {
     @PostMapping("/api/login/company/naver")
     public ResponseEntity<ApiResponse<CompanyResponseDto>> completeCompanyLoginNaver(@RequestBody CompanyRequestDto requestDto)
     {
+        if(companyRepository.findByBusinessNumber(requestDto.getBusinessNumber()).isPresent())
+        {
+            log.debug("businessNumber: {} already signed up. (CompanyController.completeCompanyLoginNaver)",requestDto.getBusinessNumber());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.LOGIN_FAIL
+            ),HttpStatus.FORBIDDEN);
+        }
 
         if(requestDto.getEmail()!=null && requestDto.getBusinessNumber()!= null)       //필수항목 중 가장 중요한 두개 검사.
         {
@@ -300,6 +309,7 @@ public class CompanyController {
         }
         else
         {
+            log.error("email: {}, businessNumber: {} email or BN is null.(CompanyController.completeCompanyLoginNaver)",requestDto.getEmail(),requestDto.getBusinessNumber());
             throw new RuntimeException();
         }
     }
@@ -346,6 +356,7 @@ public class CompanyController {
         }
         else
         {
+            log.debug("companyId: {} cannot withdraw (having ongoing contract). (CompanyController.withdrawCompany)",company.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.NOT_ACCEPTABLE,
                     HttpResponseMsg.DELETE_FAIL), HttpStatus.NOT_ACCEPTABLE);

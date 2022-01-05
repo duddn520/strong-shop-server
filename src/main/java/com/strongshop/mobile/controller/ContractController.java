@@ -21,6 +21,7 @@ import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.*;
 import com.strongshop.mobile.service.Company.CompanyService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,7 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class ContractController {
 
 
@@ -51,7 +53,6 @@ public class ContractController {
     private final CompletedContractService completedContractService;
     private final UserService userService;
 
-    //TODO orderId와 biddingId를 받아서 contract생성, order의 상태, contract상태 변경 필요. Bidding상태도 변경.(POST)
     @PostMapping("/api/contract")
     @Transactional
     public ResponseEntity<ApiResponse<ContractResponseDto>> registerContract(@RequestBody ContractRequestDto requestDto)
@@ -83,6 +84,7 @@ public class ContractController {
                 }
                 catch (IOException e)
                 {
+                    log.error("companyId: {}, biddingId: {} failed to send fcm message. (ContractController.registerContract)",company.getId(),bidding.getId());
                     return new ResponseEntity<>(ApiResponse.response(
                             HttpStatusCode.FORBIDDEN,
                             HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
@@ -115,6 +117,7 @@ public class ContractController {
         }
         catch (IOException e)
         {
+            log.error("companyId: {}, biddingId: {} failed to send fcm message. (ContractController.registerContract)",contract.getCompanyId(),bidding.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
@@ -185,6 +188,7 @@ public class ContractController {
         }
         catch (IOException e)
         {
+            log.error("userId: {}, contractId: {} failed to send fcm message. (ContractController.finishChangeShipmentLocation)",contract.getUserId(),contract.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
@@ -221,6 +225,7 @@ public class ContractController {
         }
         catch (IOException e)
         {
+            log.error("companyId: {}, contractId: {} failed to send fcm message. (ContractController.uploadInspectionImages)",contract.getCompanyId(),contract.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
@@ -267,6 +272,7 @@ public class ContractController {
         }
         catch (IOException e)
         {
+            log.error("companyId: {}, contractId: {} failed to send fcm message. (ContractController.finishCarExamination)",contract.getCompanyId(),contract.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
@@ -278,7 +284,7 @@ public class ContractController {
     }
 
     @PutMapping("/api/contract/5/{order_id}")               //state 5->6  **알림필요.
-    public ResponseEntity<ApiResponse> confirmExamnation(@PathVariable("order_id") Long orderId)
+    public ResponseEntity<ApiResponse> confirmExamination(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
         Contract contract = contractService.getContractByOrder(order);
@@ -293,6 +299,7 @@ public class ContractController {
         }
         catch (IOException e)
         {
+            log.error("userId: {}, contractId: {} failed to send fcm message. (ContractController.confirmExamination)",contract.getUserId(),contract.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
@@ -303,8 +310,6 @@ public class ContractController {
                 HttpResponseMsg.GET_SUCCESS
                 ), HttpStatus.OK);
     }
-
-    //TODO:시공중 사진 등록, 사진 등록시 알림 보내기(212)
 
     @PostMapping(value = "/api/contract/6/{contract_id}" ,headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
     @Transactional
@@ -329,6 +334,7 @@ public class ContractController {
         }
         catch (IOException e)
         {
+            log.error("companyId: {}, contractId: {} failed to send fcm message. (ContractController.uploadConstructionImages)",contract.getCompanyId(),contract.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
@@ -375,6 +381,7 @@ public class ContractController {
         }
         catch (IOException e)
         {
+            log.error("companyId: {}, contractId: {} failed to send fcm message. (ContractController.finishConstruction)",contract.getCompanyId(),contract.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
@@ -427,6 +434,7 @@ public class ContractController {
         }
         catch (IOException e)
         {
+            log.error("userId: {}, contractId: {} failed to send fcm message. (ContractController.finishContract)",contract.getUserId(),contract.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);

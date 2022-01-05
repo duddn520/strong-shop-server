@@ -16,6 +16,7 @@ import com.strongshop.mobile.service.BiddingService;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class BiddingController {
 
     private final BiddingService biddingService;
@@ -48,6 +50,7 @@ public class BiddingController {
 
         if(!order.getState().equals(State.BIDDING))
         {
+            log.debug("companyId: {}, bidding failed. (BiddingController.registerBidding)",company.getId());
             return new ResponseEntity<>(ApiResponse.response(       //입찰 넣는 도중 취소되거나 낙찰된 경우. 거부된 response 전송.
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
@@ -60,6 +63,7 @@ public class BiddingController {
             try {
                 firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "새로운 입찰이 있습니다.", "새로운 입찰이 있습니다.", "200");
             } catch (IOException e) {
+                log.error("companyId: {}, firebase fcm messaging failed. (BiddingController.registerBidding)",company.getId());
                 return new ResponseEntity<>(ApiResponse.response(
                         HttpStatusCode.INTERNAL_SERVER_ERROR,
                         HttpResponseMsg.SEND_FAILED), HttpStatus.INTERNAL_SERVER_ERROR);

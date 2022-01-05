@@ -9,6 +9,7 @@ import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.ContractService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class ChattingController {
 
     private final FirebaseCloudMessageService firebaseCloudMessageService;
@@ -40,6 +42,7 @@ public class ChattingController {
                 firebaseCloudMessageService.sendMessageTo(fcm,contract.getOrder().getUser().getNickname(),content,"002");
             }catch (IOException e)
             {
+                log.error("companyId: {}, firebase messaging failed. (ChattingController.chatAlarm)",contract.getBidding().getCompany().getId());
                 return new ResponseEntity<>(ApiResponse.response(
                         HttpStatusCode.INTERNAL_SERVER_ERROR,
                         HttpResponseMsg.SEND_FAILED), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -51,6 +54,7 @@ public class ChattingController {
                 firebaseCloudMessageService.sendMessageTo(fcm,contract.getBidding().getCompany().getName(),content,"002");
             }catch (IOException e)
             {
+                log.error("userId: {}, firebase messaging failed. (ChattingController.chatAlarm)",contract.getOrder().getUser().getId());
                 return new ResponseEntity<>(ApiResponse.response(
                         HttpStatusCode.INTERNAL_SERVER_ERROR,
                         HttpResponseMsg.SEND_FAILED), HttpStatus.INTERNAL_SERVER_ERROR);

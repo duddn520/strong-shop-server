@@ -15,6 +15,7 @@ import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.*;
 import com.strongshop.mobile.service.Company.CompanyService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class ReviewController {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -78,6 +80,7 @@ public class ReviewController {
         }
         catch (IOException e)
         {
+            log.error("companyId: {} failed to send fcm message. (ReviewController.registerReviewContent)",company.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.INTERNAL_SERVER_ERROR,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.INTERNAL_SERVER_ERROR);
