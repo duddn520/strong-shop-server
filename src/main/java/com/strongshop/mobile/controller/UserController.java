@@ -290,6 +290,7 @@ public class UserController {
 
         Map<String,Object> map = new HashMap<>();
 
+        map.put("email",email);
         map.put("thumbnail",user.getThumbnailImage());
         map.put("nickname",user.getNickname());
         map.put("phonenumber",user.getPhoneNumber());
