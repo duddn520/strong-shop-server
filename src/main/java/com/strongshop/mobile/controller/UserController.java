@@ -337,7 +337,7 @@ public class UserController {
     }
 
     @PutMapping("/api/logout/user")
-    public ResponseEntity<ApiResponse> companyLogout(HttpServletRequest request)
+    public ResponseEntity<ApiResponse> userLogout(HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
