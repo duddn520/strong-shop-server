@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -165,5 +166,20 @@ public class OrderController {
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.DELETE_SUCCESS), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/orders/{order_id}")
+    public ResponseEntity<ApiResponse<Map<String,Object>>> getOrderInfo(@PathVariable("order_id") Long orderId)
+    {
+        Order order = orderService.getOrderByOrderId(orderId);
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("detail",order.getDetail());
+        map.put("state",order.getState());
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                map), HttpStatus.OK);
     }
 }
