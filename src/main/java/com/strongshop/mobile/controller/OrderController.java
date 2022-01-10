@@ -5,6 +5,7 @@ import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
+import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.dto.Order.OrderResponseDto;
 import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
@@ -89,7 +90,7 @@ public class OrderController {
                         log.error("userId: {} failed to send fcm message. (OrderController.getOrderNowBidding)",order.getUser().getId());
                     }
                 }
-                else {
+                else if(order.getState().equals(State.BIDDING)){
                     boolean flag = true;
                     for(Bidding b : biddings)
                     {
