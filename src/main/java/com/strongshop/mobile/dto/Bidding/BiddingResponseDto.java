@@ -18,6 +18,7 @@ public class BiddingResponseDto {
     private BiddingStatus status;
     private String address;
     private String company_name;
+    private String companyImage;
 
     public BiddingResponseDto(Bidding bidding){
         this.id = bidding.getId();
@@ -27,5 +28,6 @@ public class BiddingResponseDto {
         this.status = bidding.getStatus();
         this.address = bidding.getCompany().getCompanyInfo().getAddress();
         this.company_name = bidding.getCompany().getName();
+        this.companyImage = bidding.getCompany().getCompanyInfo().getBackgroundImageUrl();
     }
 }
