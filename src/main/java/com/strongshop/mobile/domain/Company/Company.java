@@ -36,6 +36,7 @@ public class Company implements UserDetails {
     private String bossName; // 대표자성명
     private String phoneNumber;
     private String businessNumber; // 사업자번호
+    private String region; //지역
     private String fcmToken;
 
     @OneToMany(mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true)
@@ -68,7 +69,7 @@ public class Company implements UserDetails {
 
 
     @Builder
-    public Company(Long id, String name, String email, String bossName, String phoneNumber, String businessNumber, String fcmToken
+    public Company(Long id, String name, String email, String bossName, String phoneNumber, String businessNumber, String region, String fcmToken
             ,List<Gallery> galleries, List<Bidding> biddings, CompanyInfo companyInfo, List<Review> reviews, List<Product> products, List<BiddingHistory> biddingHistories,List<CompletedContract> completedContracts, LoginMethod loginMethod) {
         this.id = id;
         this.role = Role.COMPANY;
@@ -77,6 +78,7 @@ public class Company implements UserDetails {
         this.bossName = bossName;
         this.phoneNumber = phoneNumber;
         this.businessNumber = businessNumber;
+        this.region = region;
         this.fcmToken = fcmToken;
         this.galleries = galleries;
         this.biddings = biddings;

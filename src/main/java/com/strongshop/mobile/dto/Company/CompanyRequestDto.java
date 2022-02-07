@@ -17,6 +17,7 @@ public class CompanyRequestDto {
     private String bossName; // 대표자성명
     private String phoneNumeber;
     private String businessNumber; // 사업자번호
+    private String region;
     private String fcmToken;
     private LoginMethod loginMethod;
 
@@ -28,6 +29,7 @@ public class CompanyRequestDto {
                 .bossName(bossName)
                 .phoneNumber(phoneNumeber)
                 .businessNumber(businessNumber)
+                .region(region)
                 .fcmToken(fcmToken)
                 .loginMethod(loginMethod)
                 .build();

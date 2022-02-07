@@ -18,6 +18,7 @@ public class CompanyResponseDto {
     private String bossName; // 대표자성명
     private String phoneNumber;
     private String businessNumber; // 사업자번호
+    private String region;
     private LoginMethod loginMethod;
 
 
@@ -29,6 +30,7 @@ public class CompanyResponseDto {
         this.bossName = company.getBossName();
         this.phoneNumber = company.getPhoneNumber();
         this.businessNumber = company.getBusinessNumber();
+        this.region = company.getRegion();
         this.loginMethod = company.getLoginMethod();
     }
 }
