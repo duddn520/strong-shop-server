@@ -5,6 +5,7 @@ import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Order.Kind;
 import com.strongshop.mobile.domain.Order.Order;
+import com.strongshop.mobile.domain.Order.OrderImage;
 import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.User;
@@ -15,6 +16,7 @@ import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
 import com.strongshop.mobile.service.Company.CompanyService;
+import com.strongshop.mobile.service.FileUploadService;
 import com.strongshop.mobile.service.OrderService;
 import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -42,6 +45,7 @@ public class OrderController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final CompanyService companyService;
+    private final FileUploadService fileUploadService;
     private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @PostMapping(value = "/api/orders/ncp",produces = "application/json; charset=utf8")
@@ -72,10 +76,26 @@ public class OrderController {
 
     @PostMapping(value = "/api/orders/care",produces = "application/json; charset=utf8")
     @Transactional
-    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestBody Map<String,Object> param,HttpServletRequest request)
+    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestParam List<MultipartFile> imagefiles, @RequestParam List<String> comments, @RequestBody Map<String,Object> param , HttpServletRequest request)
     {
+
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
+
+        List<OrderImage> orderImages = new ArrayList<>();
+
+        for(int i = 0;i<imagefiles.size();i++){
+
+            String filename = fileUploadService.uploadImage(imagefiles.get(i));
+            String url = fileUploadService.getFileUrl(filename);
+            OrderImage orderImage = OrderImage.builder()
+                    .imageUrl(url)
+                    .filename(filename)
+                    .comment(comments.get(i))
+                    .build();
+
+            orderImages.add(orderImage);
+        }
 
         String details = (String) param.get("details");
         String region = (String) param.get("region");
@@ -83,8 +103,10 @@ public class OrderController {
                 .detail(details)
                 .region(region)
                 .state(State.BIDDING)
+                .orderImages(orderImages)
                 .kind(Kind.Care)
                 .build();
+
         order.updateOrder(user);
 
         OrderResponseDto responseDto = orderService.saveOrder(order);

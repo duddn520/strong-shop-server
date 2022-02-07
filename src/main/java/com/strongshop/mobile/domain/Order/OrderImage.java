@@ -1,5 +1,6 @@
 package com.strongshop.mobile.domain.Order;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +21,15 @@ public class OrderImage {
     private String filename;
     private String imageUrl;
     private String comment;
+
+    @Builder
+    public OrderImage(Order order, String filename, String imageUrl, String comment)
+    {
+        this.order = order;
+        this.filename = filename;
+        this.imageUrl = imageUrl;
+        this.comment = comment;
+    }
 
 
 }
