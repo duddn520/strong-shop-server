@@ -16,6 +16,7 @@ public class GalleryImageUrl {
     private Long id;
     private String imageUrl;
     private String filename;
+
     @ManyToOne
     @JoinColumn(name = "gallery_id")
     private Gallery gallery;

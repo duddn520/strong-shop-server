@@ -36,18 +36,27 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private State state;
 
+    @Enumerated
+    private Kind kind;
+
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     private List<Bidding> biddings = new ArrayList<>();
 
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
+    private List<OrderImage> orderImages = new ArrayList<>();
+
+
     @Builder
-    public Order(Long id, User user, String detail,String region,State state, List<Bidding> biddings)
+    public Order(Long id, User user, String detail,String region,State state,Kind kind, List<Bidding> biddings,List<OrderImage> orderImages)
     {
         this.id = id;
         this.user = user;
         this.detail = detail;
         this.region = region;
         this.state = state;
+        this.kind = kind;
         this.biddings = biddings;
+        this.orderImages = orderImages;
 
     }
 

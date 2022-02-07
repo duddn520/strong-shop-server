@@ -1,12 +1,16 @@
 package com.strongshop.mobile.dto.Order;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
+import com.strongshop.mobile.domain.Order.Kind;
 import com.strongshop.mobile.domain.Order.Order;
+import com.strongshop.mobile.domain.Order.OrderImage;
 import com.strongshop.mobile.domain.State;
+import io.grpc.Grpc;
 import lombok.Getter;
 import lombok.Setter;
 import net.bytebuddy.agent.builder.AgentBuilder;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +25,8 @@ public class OrderResponseDto {
     private String details;
     private String region;
     private State state;
+    private Kind kind;
+    private CollectedOrderImageResponseDto responseDto;
     private int bidcount;
     private LocalDateTime created_time;
 
@@ -31,6 +37,8 @@ public class OrderResponseDto {
         this.details = order.getDetail();
         this.region = order.getRegion();
         this.state = order.getState();
+        this.kind = order.getKind();
+        this.responseDto = new CollectedOrderImageResponseDto(order);
         this.created_time = order.getCreatedTime();
     }
 }

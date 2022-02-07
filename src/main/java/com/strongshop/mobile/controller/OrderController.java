@@ -3,6 +3,7 @@ package com.strongshop.mobile.controller;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Order.Kind;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.domain.User.Role;
@@ -43,9 +44,9 @@ public class OrderController {
     private final CompanyService companyService;
     private final FirebaseCloudMessageService firebaseCloudMessageService;
 
-    @PostMapping(value = "/api/orders",produces = "application/json; charset=utf8")
+    @PostMapping(value = "/api/orders/ncp",produces = "application/json; charset=utf8")
     @Transactional
-    public ResponseEntity<ApiResponse<OrderResponseDto>> registerOrder(@RequestBody Map<String,Object> param,HttpServletRequest request)
+    public ResponseEntity<ApiResponse<OrderResponseDto>> registerNCPOrder(@RequestBody Map<String,Object> param,HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
@@ -56,6 +57,33 @@ public class OrderController {
                 .detail(details)
                 .region(region)
                 .state(State.BIDDING)
+                .kind(Kind.NewCarPackage)
+                .build();
+        order.updateOrder(user);
+
+        OrderResponseDto responseDto = orderService.saveOrder(order);
+        responseDto.setBidcount(0);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.CREATED,
+                HttpResponseMsg.POST_SUCCESS,
+                responseDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/api/orders/care",produces = "application/json; charset=utf8")
+    @Transactional
+    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestBody Map<String,Object> param,HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        User user = userService.getUserByEmail(email);
+
+        String details = (String) param.get("details");
+        String region = (String) param.get("region");
+        Order order = Order.builder()
+                .detail(details)
+                .region(region)
+                .state(State.BIDDING)
+                .kind(Kind.Care)
                 .build();
         order.updateOrder(user);
 
@@ -80,7 +108,7 @@ public class OrderController {
             List<Order> orders = orderService.getOrdersStateIsBiddingAndSearchedByRegion(region);
 
             for (Order order : orders) {
-                if (order.getCreatedTime().plusDays(2).isBefore(LocalDateTime.now()))
+                if (order.getCreatedTime().plusDays(1).isBefore(LocalDateTime.now()))
                 {
                     orderService.updateState2BiddingComplete(order);
                     try {
@@ -128,7 +156,7 @@ public class OrderController {
         {
             if(o.getState()== State.BIDDING)
             {
-                if (o.getCreatedTime().plusDays(2).isBefore(LocalDateTime.now()))
+                if (o.getCreatedTime().plusDays(1).isBefore(LocalDateTime.now()))
                 {
                     orderService.updateState2BiddingComplete(o);
                     try {
