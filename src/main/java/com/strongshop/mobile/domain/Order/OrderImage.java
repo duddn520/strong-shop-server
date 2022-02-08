@@ -23,8 +23,9 @@ public class OrderImage {
     private String comment;
 
     @Builder
-    public OrderImage(Order order, String filename, String imageUrl, String comment)
+    public OrderImage(Long id,Order order, String filename, String imageUrl, String comment)
     {
+        this.id = id;
         this.order = order;
         this.filename = filename;
         this.imageUrl = imageUrl;

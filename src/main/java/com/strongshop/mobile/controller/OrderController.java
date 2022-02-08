@@ -210,6 +210,14 @@ public class OrderController {
     public ResponseEntity<ApiResponse> removeOrder(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
+        if(!order.getOrderImages().isEmpty())
+        {
+            List<OrderImage> orderImages = order.getOrderImages();
+            for(OrderImage o : orderImages)
+            {
+                fileUploadService.removeFile(o.getFilename());
+            }
+        }
 
         order.getUser().getOrders().remove(order);
         orderService.deleteOrder(order);
