@@ -140,18 +140,36 @@ public class UserController {
 
         if(requestDto.getEmail()!=null && requestDto.getPhoneNumber()!= null)       //필수항목 중 가장 중요한 두개 검사.
         {
-            User user = requestDto.toEntity();
-            UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
+            if(requestDto.getBusinessNumber().isEmpty()) {
+                User user = requestDto.toEntity();
+                UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
 
-            String token = jwtTokenProvider.createToken(user.getEmail(), Role.USER,requestDto.getFcmToken());
+                String token = jwtTokenProvider.createToken(user.getEmail(), Role.USER, requestDto.getFcmToken());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Auth",token);
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Auth", token);
 
-            return new ResponseEntity<>(ApiResponse.response(
-                    HttpStatusCode.OK,
-                    HttpResponseMsg.POST_SUCCESS,
-                    responseDto),headers,HttpStatus.OK);
+                return new ResponseEntity<>(ApiResponse.response(
+                        HttpStatusCode.OK,
+                        HttpResponseMsg.POST_SUCCESS,
+                        responseDto), headers, HttpStatus.OK);
+            }
+            else
+            {
+                User user = requestDto.toEntity();
+                UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
+
+                String token = jwtTokenProvider.createToken(user.getEmail(), Role.DEALER, requestDto.getFcmToken());
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Auth", token);
+
+                return new ResponseEntity<>(ApiResponse.response(
+                        HttpStatusCode.OK,
+                        HttpResponseMsg.POST_SUCCESS,
+                        responseDto), headers, HttpStatus.OK);
+
+            }
         }
         else
         {
@@ -256,18 +274,36 @@ public class UserController {
 
         if(requestDto.getEmail()!=null && requestDto.getPhoneNumber()!= null)       //필수항목 중 가장 중요한 두개 검사.
         {
-            User user = requestDto.toEntity();
-            UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
+            if(requestDto.getBusinessNumber().isEmpty()) {
+                User user = requestDto.toEntity();
+                UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
 
-            String token = jwtTokenProvider.createToken(user.getEmail(), Role.USER,requestDto.getFcmToken());
+                String token = jwtTokenProvider.createToken(user.getEmail(), Role.USER, requestDto.getFcmToken());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Auth",token);
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Auth", token);
 
-            return new ResponseEntity<>(ApiResponse.response(
-                    HttpStatusCode.OK,
-                    HttpResponseMsg.POST_SUCCESS,
-                    responseDto),headers,HttpStatus.OK);
+                return new ResponseEntity<>(ApiResponse.response(
+                        HttpStatusCode.OK,
+                        HttpResponseMsg.POST_SUCCESS,
+                        responseDto), headers, HttpStatus.OK);
+            }
+            else
+            {
+                User user = requestDto.toEntity();
+                UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
+
+                String token = jwtTokenProvider.createToken(user.getEmail(), Role.DEALER, requestDto.getFcmToken());
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Auth", token);
+
+                return new ResponseEntity<>(ApiResponse.response(
+                        HttpStatusCode.OK,
+                        HttpResponseMsg.POST_SUCCESS,
+                        responseDto), headers, HttpStatus.OK);
+
+            }
         }
         else
         {

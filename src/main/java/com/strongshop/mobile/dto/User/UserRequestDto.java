@@ -23,13 +23,14 @@ public class UserRequestDto {
     private String profileImage; // 카카오
     private String thumbnailImage;  //카카오
     private String gender;  //카카오
+    private String businessNumber;
     private LocalDate birth;
     private String fcmToken;
     private LoginMethod loginMethod;
 
     @Builder
     public UserRequestDto(Long id,String realname,String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender
-                          , LocalDate birth, String fcmToken, LoginMethod loginMethod) {
+                          ,String businessNumber, LocalDate birth, String fcmToken, LoginMethod loginMethod) {
         this.id = id;
         this.realname = realname;
         this.email = email;
@@ -38,6 +39,7 @@ public class UserRequestDto {
         this.profileImage = profileImage;
         this.thumbnailImage = thumbnailImage;
         this.gender = gender;
+        this.businessNumber = businessNumber;
         this.birth = birth;
         this.fcmToken = fcmToken;
         this.loginMethod = loginMethod;
@@ -53,6 +55,7 @@ public class UserRequestDto {
                 .profileImage(profileImage)
                 .thumbnailImage(thumbnailImage)
                 .gender(gender)
+                .businessNumber(businessNumber)
                 .birth(birth)
                 .fcmToken(fcmToken)
                 .loginMethod(loginMethod)

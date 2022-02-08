@@ -68,7 +68,7 @@ public class ContractController {
         {
             Company company = b.getCompany();
 
-            if(b.getId()!=requestDto.getBidding_id()) {
+            if(!b.getId().equals(requestDto.getBidding_id())) {
                 b.updateStatus(BiddingStatus.FAILED);//선택 비딩 제외 모두 fail 설정
                 BiddingHistory biddingHistory = BiddingHistory.builder()
                         .company(company)

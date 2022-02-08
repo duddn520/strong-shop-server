@@ -35,6 +35,7 @@ public class User implements UserDetails{
     private String profileImage; // 카카오
     private String thumbnailImage;  //카카오
     private String gender;  //카카오
+    private String businessNumber;
     private LocalDate birth;
     private String fcmToken;
 
@@ -55,7 +56,7 @@ public class User implements UserDetails{
 
 
     @Builder
-    public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, LocalDate birth, List<Order> orders,
+    public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, String businessNumber, LocalDate birth, List<Order> orders,
                 String fcmToken, List<CompletedContract> completedContracts,List<Review> reviews, LoginMethod loginMethod) {
         this.id = id;
         this.role = Role.USER;
@@ -66,6 +67,7 @@ public class User implements UserDetails{
         this.profileImage = profileImage;
         this.thumbnailImage = thumbnailImage;
         this.gender = gender;
+        this.businessNumber = businessNumber;
         this.birth = birth;
         this.orders =orders;
         this.fcmToken = fcmToken;
