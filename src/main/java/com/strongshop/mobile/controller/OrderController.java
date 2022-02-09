@@ -61,6 +61,7 @@ public class OrderController {
                 .detail(details)
                 .region(region)
                 .state(State.BIDDING)
+                .orderImages(new ArrayList<>())
                 .kind(Kind.NewCarPackage)
                 .build();
         order.updateOrder(user);
