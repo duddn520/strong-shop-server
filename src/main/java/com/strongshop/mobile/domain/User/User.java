@@ -1,5 +1,6 @@
 package com.strongshop.mobile.domain.User;
 
+import com.strongshop.mobile.domain.Car.Car;
 import com.strongshop.mobile.domain.Contract.CompletedContract;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Review.Review;
@@ -48,6 +49,9 @@ public class User implements UserDetails{
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Car> cars = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private LoginMethod loginMethod;
 
@@ -57,7 +61,7 @@ public class User implements UserDetails{
 
     @Builder
     public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, String businessNumber, LocalDate birth, List<Order> orders,
-                String fcmToken, List<CompletedContract> completedContracts,List<Review> reviews, LoginMethod loginMethod) {
+                List<Car> cars, String fcmToken, List<CompletedContract> completedContracts,List<Review> reviews, LoginMethod loginMethod) {
         this.id = id;
         this.role = Role.USER;
         this.realName = realName;
@@ -70,6 +74,7 @@ public class User implements UserDetails{
         this.businessNumber = businessNumber;
         this.birth = birth;
         this.orders =orders;
+        this.cars = cars;
         this.fcmToken = fcmToken;
         this.completedContracts = completedContracts;
         this.reviews = reviews;
@@ -118,4 +123,5 @@ public class User implements UserDetails{
 
     public void removeFcmToken() {this.fcmToken = null;
     }
+
 }

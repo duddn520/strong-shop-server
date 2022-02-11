@@ -1,5 +1,6 @@
 package com.strongshop.mobile.service;
 
+import com.strongshop.mobile.domain.Car.Car;
 import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,12 @@ public class UserService {
     public void removeFcmToken(User user) {
         user.removeFcmToken();
 
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateCar(User user,Car car){
+        user.getCars().add(car);
         userRepository.save(user);
     }
 }
