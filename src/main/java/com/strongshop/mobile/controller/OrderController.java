@@ -87,9 +87,11 @@ public class OrderController {
 
         List<String> comments = (List<String>) param.get("comments");
 
-        for(int i = 0;i<imagefiles.size();i++){
+        int i = 0;
 
-            String filename = fileUploadService.uploadImage(imagefiles.get(i));
+        for(MultipartFile f : imagefiles){
+
+            String filename = fileUploadService.uploadImage(f);
             String url = fileUploadService.getFileUrl(filename);
             OrderImage orderImage = OrderImage.builder()
                     .imageUrl(url)
@@ -97,6 +99,7 @@ public class OrderController {
                     .comment(comments.get(i))
                     .build();
 
+            i++;
             orderImages.add(orderImage);
         }
 
