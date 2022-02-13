@@ -96,7 +96,6 @@ public class OrderController {
             OrderImage orderImage = OrderImage.builder()
                     .imageUrl(url)
                     .filename(filename)
-                    .comment(comments.get(i))
                     .build();
 
             i++;
