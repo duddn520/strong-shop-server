@@ -77,13 +77,15 @@ public class OrderController {
 
     @PostMapping(value = "/api/orders/care",produces = "application/json; charset=utf8")
     @Transactional
-    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestParam List<MultipartFile> imagefiles, @RequestParam List<String> comments, @RequestBody Map<String,Object> param , HttpServletRequest request)
+    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestParam List<MultipartFile> imagefiles, @RequestBody Map<String,Object> param , HttpServletRequest request)
     {
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
 
         List<OrderImage> orderImages = new ArrayList<>();
+
+        List<String> comments = (List<String>) param.get("comments");
 
         for(int i = 0;i<imagefiles.size();i++){
 
