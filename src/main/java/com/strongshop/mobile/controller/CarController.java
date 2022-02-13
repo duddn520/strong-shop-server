@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -50,8 +52,29 @@ public class CarController {
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
-                HttpResponseMsg.GET_SUCCESS,
+                HttpResponseMsg.POST_SUCCESS,
                 responseDto), HttpStatus.OK);
+
+    }
+
+    @GetMapping("/api/car")
+    public ResponseEntity<ApiResponse<List<CarResponseDto>>> getCars4User(HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        User user = userService.getUserByEmail(email);
+
+        List<Car> cars = userService.getCarList(user);
+        List<CarResponseDto> responseDtos = new ArrayList<>();
+
+        for(Car c : cars)
+        {
+            responseDtos.add(new CarResponseDto(c));
+        }
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDtos), HttpStatus.OK);
 
     }
 
