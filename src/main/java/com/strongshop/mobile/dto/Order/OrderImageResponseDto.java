@@ -12,11 +12,13 @@ public class OrderImageResponseDto {
     private Long id;
     private String imageUrl;
     private String comment;
+    private Long orderId;
 
     public OrderImageResponseDto (OrderImage orderImage)
     {
         this.id = orderImage.getId();
         this.imageUrl = orderImage.getImageUrl();
         this.comment = orderImage.getComment();
+        this.orderId = orderImage.getOrder().getId();
     }
 }

@@ -4,6 +4,7 @@ import com.strongshop.mobile.domain.BaseEntity;
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.domain.User.User;
+import com.strongshop.mobile.domain.User.UserRepository;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

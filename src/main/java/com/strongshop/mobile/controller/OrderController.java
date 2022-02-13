@@ -9,6 +9,7 @@ import com.strongshop.mobile.domain.Order.OrderImage;
 import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.domain.User.Role;
 import com.strongshop.mobile.domain.User.User;
+import com.strongshop.mobile.dto.Order.OrderRequestDto;
 import com.strongshop.mobile.dto.Order.OrderResponseDto;
 import com.strongshop.mobile.firebase.FirebaseCloudMessageService;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
@@ -77,17 +78,13 @@ public class OrderController {
 
     @PostMapping(value = "/api/orders/care",produces = "application/json; charset=utf8")
     @Transactional
-    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestParam List<MultipartFile> imagefiles, Map<String,Object> param , HttpServletRequest request)
+    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestPart List<MultipartFile> imagefiles, @RequestPart OrderRequestDto requestDto, HttpServletRequest request)
     {
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
         User user = userService.getUserByEmail(email);
 
         List<OrderImage> orderImages = new ArrayList<>();
-
-        List<String> comments = (List<String>) param.get("comments");
-
-        int i = 0;
 
         for(MultipartFile f : imagefiles){
 
@@ -98,21 +95,19 @@ public class OrderController {
                     .filename(filename)
                     .build();
 
-            i++;
             orderImages.add(orderImage);
         }
 
-        String details = (String) param.get("details");
-        String region = (String) param.get("region");
         Order order = Order.builder()
-                .detail(details)
-                .region(region)
+                .detail(requestDto.getDetails())
+                .region(requestDto.getRegion())
                 .state(State.BIDDING)
                 .orderImages(orderImages)
                 .kind(Kind.Care)
                 .build();
 
         order.updateOrder(user);
+        orderService.saveOrder(order);
 
         OrderResponseDto responseDto = orderService.saveOrder(order);
         responseDto.setBidcount(0);

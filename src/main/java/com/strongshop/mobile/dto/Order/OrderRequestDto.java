@@ -8,5 +8,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class OrderRequestDto {
-    private String jsonString;
+    private String region;
+    private String details;
 }
