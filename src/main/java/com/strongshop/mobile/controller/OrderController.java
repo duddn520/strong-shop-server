@@ -76,7 +76,7 @@ public class OrderController {
                 responseDto), HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/api/orders/care",produces = "application/json; charset=utf8")
+    @PostMapping(value = "/api/orders/care",consumes = "multipart/form-data")
     @Transactional
     public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestParam List<MultipartFile> imagefiles, @RequestPart String details, @RequestPart String region, HttpServletRequest request)
     {
