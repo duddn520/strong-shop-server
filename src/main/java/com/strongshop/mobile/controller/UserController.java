@@ -274,7 +274,7 @@ public class UserController {
 
         if(requestDto.getEmail()!=null && requestDto.getPhoneNumber()!= null)       //필수항목 중 가장 중요한 두개 검사.
         {
-            if(requestDto.getBusinessNumber().equals("0")) {  
+            if(requestDto.getBusinessNumber().equals("0")) {
                 User user = requestDto.toEntity();
                 UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
 

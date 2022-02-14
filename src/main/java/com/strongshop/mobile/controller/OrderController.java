@@ -67,7 +67,8 @@ public class OrderController {
                 .build();
         order.updateOrder(user);
 
-        OrderResponseDto responseDto = orderService.saveOrder(order);
+        orderService.saveOrder(order);
+        OrderResponseDto responseDto = new OrderResponseDto(order);
         responseDto.setBidcount(0);
 
         return new ResponseEntity<>(ApiResponse.response(

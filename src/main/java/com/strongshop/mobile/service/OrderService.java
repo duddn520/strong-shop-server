@@ -22,10 +22,9 @@ public class OrderService {
     private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @Transactional
-    public OrderResponseDto saveOrder(Order order)
+    public void saveOrder(Order order)
     {
-        OrderResponseDto responseDto = new OrderResponseDto(orderRepository.save(order));
-        return responseDto;
+        orderRepository.save(order);
     }
 
     @Transactional
