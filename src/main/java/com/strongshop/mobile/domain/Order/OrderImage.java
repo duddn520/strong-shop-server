@@ -14,7 +14,7 @@ public class OrderImage {
     @Id @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_id")
     private Order order;
 
@@ -30,6 +30,12 @@ public class OrderImage {
         this.filename = filename;
         this.imageUrl = imageUrl;
         this.comment = comment;
+    }
+
+    public void updateOrderImage(Order order)
+    {
+        this.order = order;
+        order.getOrderImages().add(this);
     }
 
 

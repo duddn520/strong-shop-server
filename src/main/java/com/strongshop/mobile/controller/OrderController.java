@@ -102,14 +102,18 @@ public class OrderController {
                 .detail(details)
                 .region(region)
                 .state(State.BIDDING)
-                .orderImages(orderImages)
                 .kind(Kind.Care)
                 .build();
 
         order.updateOrder(user);
         orderService.saveOrder(order);
 
-        OrderResponseDto responseDto = orderService.saveOrder(order);
+        for(OrderImage o : orderImages)
+        {
+            o.updateOrderImage(order);
+        }
+
+        OrderResponseDto responseDto = new OrderResponseDto(order);
         responseDto.setBidcount(0);
 
         return new ResponseEntity<>(ApiResponse.response(
