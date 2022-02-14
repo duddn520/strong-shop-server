@@ -37,7 +37,7 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private State state;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Kind kind;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
