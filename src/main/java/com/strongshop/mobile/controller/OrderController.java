@@ -78,7 +78,7 @@ public class OrderController {
 
     @PostMapping(value = "/api/orders/care",produces = "application/json; charset=utf8")
     @Transactional
-    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestParam List<MultipartFile> imagefiles, @RequestPart OrderRequestDto requestDto, HttpServletRequest request)
+    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestParam List<MultipartFile> imagefiles, @RequestPart String details, @RequestPart String region, HttpServletRequest request)
     {
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
@@ -99,8 +99,8 @@ public class OrderController {
         }
 
         Order order = Order.builder()
-                .detail(requestDto.getDetails())
-                .region(requestDto.getRegion())
+                .detail(details)
+                .region(region)
                 .state(State.BIDDING)
                 .orderImages(orderImages)
                 .kind(Kind.Care)
