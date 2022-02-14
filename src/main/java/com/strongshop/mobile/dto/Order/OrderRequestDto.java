@@ -11,7 +11,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class OrderRequestDto {
-    private List<MultipartFile> imagefiles;
     private String region;
     private String details;
 }
