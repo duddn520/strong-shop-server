@@ -23,7 +23,7 @@ public class UserRequestDto {
     private String profileImage; // 카카오
     private String thumbnailImage;  //카카오
     private String gender;  //카카오
-    private String businessNumber;
+    private String businessNumber = "0";
     private LocalDate birth;
     private String fcmToken;
     private LoginMethod loginMethod;
