@@ -78,7 +78,7 @@ public class OrderController {
 
     @PostMapping(value = "/api/orders/care",produces = "application/json; charset=utf8")
     @Transactional
-    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestPart List<MultipartFile> imagefiles, @RequestParam String details, @RequestParam String region, HttpServletRequest request)
+    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestPart OrderRequestDto requestDto, HttpServletRequest request)
     {
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
@@ -86,7 +86,7 @@ public class OrderController {
 
         List<OrderImage> orderImages = new ArrayList<>();
 
-        for(MultipartFile f : imagefiles){
+        for(MultipartFile f : requestDto.getImagefiles()){
 
             String filename = fileUploadService.uploadImage(f);
             String url = fileUploadService.getFileUrl(filename);
@@ -99,8 +99,8 @@ public class OrderController {
         }
 
         Order order = Order.builder()
-                .detail(details)
-                .region(region)
+                .detail(requestDto.getDetails())
+                .region(requestDto.getRegion())
                 .state(State.BIDDING)
                 .orderImages(orderImages)
                 .kind(Kind.Care)
