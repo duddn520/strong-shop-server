@@ -78,7 +78,7 @@ public class OrderController {
 
     @PostMapping(value = "/api/orders/care",consumes = "multipart/form-data")
     @Transactional
-    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestParam List<MultipartFile> imagefiles, @RequestPart String details, @RequestPart String region, HttpServletRequest request)
+    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestParam List<MultipartFile> imagefiles, @RequestParam String details, @RequestParam String region, HttpServletRequest request)
     {
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
