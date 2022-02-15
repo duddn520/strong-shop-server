@@ -236,6 +236,7 @@ public class OrderController {
 
         map.put("detail",order.getDetail());
         map.put("state",order.getState());
+        map.put("kind",order.getKind());
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
