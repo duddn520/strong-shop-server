@@ -22,6 +22,7 @@ import com.strongshop.mobile.service.OrderService;
 import com.strongshop.mobile.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -106,15 +107,10 @@ public class OrderController {
                 .kind(Kind.Care)
                 .build();
 
-        order.updateOrder(user);
-        orderService.saveOrder(order);
-
-        for(OrderImage o : orderImages)
-        {
-            o.updateOrderImage(order);
-        }
-
+        order.updateOrderImages(orderImages);
+        user.getOrders().add(order);
         OrderResponseDto responseDto = new OrderResponseDto(order);
+
         responseDto.setBidcount(0);
 
         return new ResponseEntity<>(ApiResponse.response(

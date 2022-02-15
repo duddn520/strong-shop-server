@@ -32,11 +32,5 @@ public class OrderImage {
         this.comment = comment;
     }
 
-    public void updateOrderImage(Order order)
-    {
-        this.order = order;
-        order.getOrderImages().add(this);
-    }
-
 
 }

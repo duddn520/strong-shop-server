@@ -27,7 +27,7 @@ public class OrderResponseDto {
     private String region;
     private State state;
     private Kind kind;
-    private CollectedOrderImageResponseDto responseDto;
+    private List<OrderImageResponseDto> responseDtos;
     private int bidcount;
     private Role role;
     private LocalDateTime created_time;
@@ -40,8 +40,20 @@ public class OrderResponseDto {
         this.region = order.getRegion();
         this.state = order.getState();
         this.kind = order.getKind();
-        this.responseDto = new CollectedOrderImageResponseDto(order);
+        this.responseDtos = orderImage2ResponseDtos(order.getOrderImages());
         this.role = order.getUser().getRole();
         this.created_time = order.getCreatedTime();
+    }
+
+    public List<OrderImageResponseDto> orderImage2ResponseDtos(List<OrderImage> orderImages)
+    {
+        List<OrderImageResponseDto> responseDtos = new ArrayList<>();
+        for(OrderImage o : orderImages)
+        {
+            OrderImageResponseDto responseDto = new OrderImageResponseDto(o);
+            responseDtos.add(responseDto);
+        }
+
+        return responseDtos;
     }
 }

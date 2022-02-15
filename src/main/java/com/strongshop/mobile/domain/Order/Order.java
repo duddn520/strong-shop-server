@@ -72,4 +72,9 @@ public class Order extends BaseEntity {
         this.state = state;
 
     }
+
+    public void updateOrderImages(List<OrderImage> orderImages)
+    {
+        this.orderImages = orderImages;
+    }
 }
