@@ -108,7 +108,7 @@ public class OrderController {
                 .build();
 
         order.updateOrderImages(orderImages);
-        user.getOrders().add(order);
+        order.updateOrder(user);
         OrderResponseDto responseDto = new OrderResponseDto(order);
 
         responseDto.setBidcount(0);
