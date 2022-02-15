@@ -76,5 +76,9 @@ public class Order extends BaseEntity {
     public void updateOrderImages(List<OrderImage> orderImages)
     {
         this.orderImages = orderImages;
+        for (OrderImage o : orderImages)
+        {
+            o.updateOrder(this);
+        }
     }
 }
