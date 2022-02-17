@@ -2,6 +2,7 @@ package com.strongshop.mobile.dto.Bidding;
 
 import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Bidding.BiddingStatus;
+import com.strongshop.mobile.domain.Order.Kind;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class BiddingResponseDto {
     private String address;
     private String company_name;
     private String companyImage;
+    private Kind kind;
 
     public BiddingResponseDto(Bidding bidding){
         this.id = bidding.getId();
@@ -29,5 +31,6 @@ public class BiddingResponseDto {
         this.address = bidding.getCompany().getCompanyInfo().getAddress();
         this.company_name = bidding.getCompany().getName();
         this.companyImage = bidding.getCompany().getCompanyInfo().getBackgroundImageUrl();
+        this.kind = bidding.getOrder().getKind();
     }
 }

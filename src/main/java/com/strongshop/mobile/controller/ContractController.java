@@ -9,6 +9,7 @@ import com.strongshop.mobile.domain.Contract.Contract;
 import com.strongshop.mobile.domain.Contract.ReviewStatus;
 import com.strongshop.mobile.domain.Image.ConstructionImageUrl;
 import com.strongshop.mobile.domain.Image.InspectionImageUrl;
+import com.strongshop.mobile.domain.Order.Kind;
 import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.State;
 import com.strongshop.mobile.domain.User.User;
@@ -39,7 +40,7 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class ContractController {
+public class ContractController {       //TODO ncp, care 분기필요.
 
 
 
@@ -108,6 +109,7 @@ public class ContractController {
                 .bidding(bidding)
                 .shipmentLocation(bidding.getCompany().getCompanyInfo().getAddress() + " " + bidding.getCompany().getCompanyInfo().getDetailAddress())
                 .state(State.DESIGNATING_SHIPMENT_LOCATION)
+                .kind(Kind.NewCarPackage)
                 .build();
 
         ContractResponseDto responseDto = new ContractResponseDto(contractService.registerContract(contract));
