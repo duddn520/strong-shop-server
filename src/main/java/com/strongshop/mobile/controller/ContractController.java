@@ -413,6 +413,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 .details(contract.getDetail())
                 .shipmentLocation(contract.getShipmentLocation())
                 .reviewStatus(ReviewStatus.NOT_WRITTEN)
+                .kind(Kind.NewCarPackage)
                 .build();
         user.getCompletedContracts().add(completedContract);
         company.getCompletedContracts().add(completedContract);
@@ -555,9 +556,78 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 map), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/api/contract/care/6/{contract_id}" ,headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
+    @PostMapping(value = "/api/contract/care/1/{contract_id}",headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
     @Transactional
-    public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> uploadConstructionImages4care(@RequestParam("files") List<MultipartFile> files, @PathVariable("contract_id") Long contractId)
+    public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> uploadInspectionImages4Care(@RequestParam("files") List<MultipartFile> files,@PathVariable("contract_id") Long contractId)
+    {
+        Contract contract = contractService.getContractById(contractId);
+
+        for(MultipartFile file : files)
+        {
+            String filename = fileUploadService.uploadImage(file);
+            String url = fileUploadService.getFileUrl(filename);
+            InspectionImageUrl imageUrl = InspectionImageUrl.builder()
+                    .imageUrl(url)
+                    .filename(filename)
+                    .contract(contract)
+                    .build();
+            contract.getInspectionImageUrls().add(imageUrl);
+        }
+        ContractInspectionImageResponseDto responseDto = new ContractInspectionImageResponseDto(contract);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.POST_SUCCESS,
+                responseDto), HttpStatus.OK);
+
+    }
+
+    @GetMapping("/api/contract/care/1/{contract_id}")
+    @Transactional
+    public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> getInspectionImageUrls4Care(@PathVariable("contract_id") Long contractId)
+    {
+        Contract contract = contractService.getContractById(contractId);
+
+        ContractInspectionImageResponseDto responseDto = new ContractInspectionImageResponseDto(contract);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDto), HttpStatus.OK);
+    }
+
+    @PutMapping("/api/contract/care/1/{order_id}")
+    public ResponseEntity<ApiResponse> startConstruction4Care(@PathVariable("order_id") Long orderId)
+    {
+        Order order = orderService.getOrderByOrderId(orderId);
+        Contract contract = contractService.getContractByOrder(order);
+        Company company = companyService.getCompanyById(contract.getCompanyId());
+        contract.updateState(State.CONSTRUCTING);
+        contractService.registerContract(contract);
+        order.updateState(State.CONSTRUCTING);
+        orderService.saveOrder(order);
+
+        try {
+            firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 시공 시작", "차량 시공 시작","214",company.getName());
+        }
+        catch (IOException e)
+        {
+            log.error("userId: {}, contractId: {} failed to send fcm message. (ContractController.startConstruction4Care)",contract.getUserId(),contract.getId());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS
+        ), HttpStatus.OK);
+    }
+
+
+    @PostMapping(value = "/api/contract/care/2/{contract_id}" ,headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
+    @Transactional
+    public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> uploadConstructionImages4Care(@RequestParam("files") List<MultipartFile> files, @PathVariable("contract_id") Long contractId)
     {
         Contract contract = contractService.getContractById(contractId);
         Company company = companyService.getCompanyById(contract.getCompanyId());
@@ -578,7 +648,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
         }
         catch (IOException e)
         {
-            log.error("companyId: {}, contractId: {} failed to send fcm message. (ContractController.uploadConstructionImages4care)",contract.getCompanyId(),contract.getId());
+            log.error("companyId: {}, contractId: {} failed to send fcm message. (ContractController.uploadConstructionImages4Care)",contract.getCompanyId(),contract.getId());
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.FORBIDDEN,
                     HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
@@ -589,5 +659,110 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 HttpResponseMsg.POST_SUCCESS,
                 responseDto), HttpStatus.OK);
 
+    }
+
+    @GetMapping("/api/contract/care/2/{contract_id}")
+    @Transactional
+    public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> getConstructionImageUrls4Care(@PathVariable("contract_id") Long contractId)
+    {
+        Contract contract = contractService.getContractById(contractId);
+
+        ContractConstructionImageResponseDto responseDto = new ContractConstructionImageResponseDto(contract);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                responseDto), HttpStatus.OK);
+    }
+
+    @PutMapping("api/contract/care/2")
+    public ResponseEntity<ApiResponse> finishConstruction4Care(@RequestBody ContractRequestDto requestDto)
+    {
+        Contract contract = contractService.getContractById(requestDto.getId());
+        Company company = companyService.getCompanyById(contract.getCompanyId());
+
+        Order order = contract.getOrder();
+
+        order.updateState(State.CONSTRUCTION_COMPLETED);
+        contract.updateState(State.CONSTRUCTION_COMPLETED);
+
+        orderService.saveOrder(order);
+        contractService.registerContract(contract);
+
+        try {
+            firebaseCloudMessageService.sendMessageTo(order.getUser().getFcmToken(), "시공 완료", "시공 완료","213",company.getName());
+        }
+        catch (IOException e)
+        {
+            log.error("companyId: {}, contractId: {} failed to send fcm message. (ContractController.finishConstruction4Care)",contract.getCompanyId(),contract.getId());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS), HttpStatus.OK);
+
+    }
+
+    @PutMapping("api/contract/care/3/{contract_id}")
+    @Transactional
+    public ResponseEntity<ApiResponse<CompletedContractResponseDto>> finishContract4Care(@PathVariable("contract_id") Long contractId, HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        User user = userService.getUserByEmail(email);
+        Contract contract = contractService.getContractById(contractId);
+
+        Order order = contract.getOrder();
+        Bidding bidding = contract.getBidding();
+        Company company = bidding.getCompany();
+        CompletedContract completedContract = CompletedContract.builder()
+                .user(order.getUser())
+                .company(bidding.getCompany())
+                .details(contract.getDetail())
+                .shipmentLocation(contract.getShipmentLocation())
+                .reviewStatus(ReviewStatus.NOT_WRITTEN)
+                .kind(Kind.Care)
+                .build();
+        user.getCompletedContracts().add(completedContract);
+        company.getCompletedContracts().add(completedContract);
+
+        completedContractService.registerCompletedContract(completedContract);
+
+        List<InspectionImageUrl> inspectionImageUrls = contract.getInspectionImageUrls();
+        List<ConstructionImageUrl> constructionImageUrls = contract.getConstructionImageUrls();
+
+        for(InspectionImageUrl i : inspectionImageUrls)
+        {
+            fileUploadService.removeFile(i.getFilename());
+        }
+
+        for(ConstructionImageUrl c : constructionImageUrls)
+        {
+            fileUploadService.removeFile(c.getFilename());
+        }
+
+        try {
+            firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "출고 완료", "차량 출고 완료","114",order.getUser().getNickname());
+        }
+        catch (IOException e)
+        {
+            log.error("userId: {}, contractId: {} failed to send fcm message. (ContractController.finishContract4Care)",contract.getUserId(),contract.getId());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
+        }
+
+        contractService.deleteContract(contract);
+        orderService.deleteOrder(order);
+        biddingService.deleteBidding(bidding);
+
+        CompletedContractResponseDto responseDto = new CompletedContractResponseDto(completedContract);
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.DELETE_SUCCESS,
+                responseDto), HttpStatus.OK);
     }
 }

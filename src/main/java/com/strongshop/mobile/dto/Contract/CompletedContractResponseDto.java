@@ -2,6 +2,7 @@ package com.strongshop.mobile.dto.Contract;
 
 import com.strongshop.mobile.domain.Contract.CompletedContract;
 import com.strongshop.mobile.domain.Contract.ReviewStatus;
+import com.strongshop.mobile.domain.Order.Kind;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class CompletedContractResponseDto {
     private String shipment_location;
     private ReviewStatus reviewStatus;
     private LocalDateTime createdtime;
+    private Kind kind;
 
     public CompletedContractResponseDto(CompletedContract completedContract)
     {
@@ -35,5 +37,6 @@ public class CompletedContractResponseDto {
         this.shipment_location = completedContract.getShipmentLocation();
         this.reviewStatus = completedContract.getReviewStatus();
         this.createdtime = completedContract.getCreatedTime();
+        this.kind = completedContract.getKind();
     }
 }
