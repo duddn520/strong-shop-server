@@ -54,7 +54,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
     private final CompletedContractService completedContractService;
     private final UserService userService;
 
-    @PostMapping("/api/contract")
+    @PostMapping("/api/contract/ncp")
     @Transactional
     public ResponseEntity<ApiResponse<ContractResponseDto>> registerContract(@RequestBody ContractRequestDto requestDto)
     {
@@ -99,6 +99,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 .details(bidding.getDetail())
                 .createdTime(order.getCreatedTime())
                 .biddingStatus(BiddingStatus.SUCCESS)
+                .kind(Kind.NewCarPackage)
                 .build();
 
         succompany.getBiddingHistories().add(successhistory);
@@ -154,7 +155,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 responseDtos), HttpStatus.OK);
     }
 
-    @GetMapping("/api/contract/3/{order_id}")
+    @GetMapping("/api/contract/ncp/3/{order_id}")
     public ResponseEntity<ApiResponse<Map<String,Object>>> getShipmentLocation4User(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
@@ -173,7 +174,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
             map), HttpStatus.OK);
     }
 
-    @PutMapping("/api/contract/3/{order_id}")               //state 3->4   **알림필요
+    @PutMapping("/api/contract/ncp/3/{order_id}")               //state 3->4   **알림필요
     public ResponseEntity<ApiResponse<Map<String,Object>>> finishChangeShipmentLocation(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
@@ -204,7 +205,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
 
     }
 
-    @PostMapping(value = "/api/contract/4/{contract_id}",headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
+    @PostMapping(value = "/api/contract/ncp/4/{contract_id}",headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
     @Transactional
     public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> uploadInspectionImages(@RequestParam("files") List<MultipartFile> files,@PathVariable("contract_id") Long contractId)
     {
@@ -240,7 +241,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
 
     }
 
-    @GetMapping("/api/contract/4/{contract_id}")
+    @GetMapping("/api/contract/ncp/4/{contract_id}")
     @Transactional
     public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> getInspectionImageUrls(@PathVariable("contract_id") Long contractId)
     {
@@ -254,7 +255,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 responseDto), HttpStatus.OK);
     }
 
-    @PutMapping("/api/contract/4")           // state 4->5   **알림필요
+    @PutMapping("/api/contract/ncp/4")           // state 4->5   **알림필요
     public ResponseEntity<ApiResponse> finishCarExamination(@RequestBody ContractRequestDto requestDto )
     {
         Contract contract = contractService.getContractById(requestDto.getId());
@@ -285,7 +286,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 HttpResponseMsg.GET_SUCCESS), HttpStatus.OK);
     }
 
-    @PutMapping("/api/contract/5/{order_id}")               //state 5->6  **알림필요.
+    @PutMapping("/api/contract/ncp/5/{order_id}")               //state 5->6  **알림필요.
     public ResponseEntity<ApiResponse> confirmExamination(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
@@ -313,7 +314,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 ), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/api/contract/6/{contract_id}" ,headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
+    @PostMapping(value = "/api/contract/ncp/6/{contract_id}" ,headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
     @Transactional
     public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> uploadConstructionImages(@RequestParam("files") List<MultipartFile> files, @PathVariable("contract_id") Long contractId)
     {
@@ -349,7 +350,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
 
     }
 
-    @GetMapping("/api/contract/6/{contract_id}")
+    @GetMapping("/api/contract/ncp/6/{contract_id}")
     @Transactional
     public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> getConstructionImageUrls(@PathVariable("contract_id") Long contractId)
     {
@@ -363,7 +364,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 responseDto), HttpStatus.OK);
     }
 
-    @PutMapping("api/contract/6")           //state 6->7 **알림필요
+    @PutMapping("api/contract/ncp/6")           //state 6->7 **알림필요
     public ResponseEntity<ApiResponse> finishConstruction(@RequestBody ContractRequestDto requestDto)
     {
         Contract contract = contractService.getContractById(requestDto.getId());
@@ -395,7 +396,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
 
     }
 
-    @PutMapping("api/contract/7/{contract_id}")
+    @PutMapping("api/contract/ncp/7/{contract_id}")
     @Transactional
     public ResponseEntity<ApiResponse<CompletedContractResponseDto>> finishContract(@PathVariable("contract_id") Long contractId, HttpServletRequest request)
     {
@@ -454,4 +455,139 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 responseDto), HttpStatus.OK);
     }
 
+
+    //care
+
+    @PostMapping("/api/contract/care")
+    @Transactional
+    public ResponseEntity<ApiResponse<ContractResponseDto>> registerContract4Care(@RequestBody ContractRequestDto requestDto)
+    {
+
+        Order order = orderService.getOrderByOrderId(requestDto.getOrder_id());
+        Bidding bidding = biddingService.getBiddingByBiddingId(requestDto.getBidding_id());
+        Company succompany = bidding.getCompany();
+        order.updateState(State.PRE_CONSTRUCTING);
+        List<Bidding> biddings = order.getBiddings();
+
+        for(Bidding b : biddings)
+        {
+            Company company = b.getCompany();
+
+            if(!b.getId().equals(requestDto.getBidding_id())) {
+                b.updateStatus(BiddingStatus.FAILED);//선택 비딩 제외 모두 fail 설정
+                BiddingHistory biddingHistory = BiddingHistory.builder()
+                        .company(company)
+                        .details(b.getDetail())
+                        .createdTime(order.getCreatedTime())
+                        .biddingStatus(BiddingStatus.FAILED)
+                        .build();
+
+                company.getBiddingHistories().add(biddingHistory);
+
+                try {
+                    firebaseCloudMessageService.sendMessageTo(b.getCompany().getFcmToken(), "낙찰 실패", "낙찰 실패", "111");
+                }
+                catch (IOException e)
+                {
+                    log.error("companyId: {}, biddingId: {} failed to send fcm message. (ContractController.registerContract)",company.getId(),bidding.getId());
+                    return new ResponseEntity<>(ApiResponse.response(
+                            HttpStatusCode.FORBIDDEN,
+                            HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
+                }
+            }
+        }
+
+        bidding.updateStatus(BiddingStatus.SUCCESS);
+        BiddingHistory successhistory = BiddingHistory.builder()
+                .company(succompany)
+                .details(bidding.getDetail())
+                .createdTime(order.getCreatedTime())
+                .biddingStatus(BiddingStatus.SUCCESS)
+                .kind(Kind.Care)
+                .build();
+
+        succompany.getBiddingHistories().add(successhistory);
+
+        Contract contract = Contract.builder()
+                .detail(bidding.getDetail())
+                .order(order)
+                .bidding(bidding)
+                .shipmentLocation(bidding.getCompany().getCompanyInfo().getAddress() + " " + bidding.getCompany().getCompanyInfo().getDetailAddress())
+                .state(State.PRE_CONSTRUCTING)
+                .kind(Kind.Care)
+                .build();
+
+        ContractResponseDto responseDto = new ContractResponseDto(contractService.registerContract(contract));
+
+        try {
+            firebaseCloudMessageService.sendMessageTo(bidding.getCompany().getFcmToken(), "낙찰", "낙찰","110",order.getUser().getNickname());
+        }
+        catch (IOException e)
+        {
+            log.error("companyId: {}, biddingId: {} failed to send fcm message. (ContractController.registerContract)",contract.getCompanyId(),bidding.getId());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.CREATED,
+                HttpResponseMsg.POST_SUCCESS,
+                responseDto), HttpStatus.CREATED);
+
+    }
+
+    @GetMapping("/api/contract/care/1/{order_id}")
+    public ResponseEntity<ApiResponse<Map<String,Object>>> getShipmentLocation4User4Care(@PathVariable("order_id") Long orderId)
+    {
+        Order order = orderService.getOrderByOrderId(orderId);
+        Contract contract = contractService.getContractByOrder(order);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("shipment_location",contract.getShipmentLocation());
+        map.put("company_name",contract.getBidding().getCompany().getName());
+        map.put("contract_id",contract.getId());
+        map.put("company_id",contract.getBidding().getCompany().getId());
+        map.put("receipt",contract.getBidding().getDetail());
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.GET_SUCCESS,
+                map), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/api/contract/care/6/{contract_id}" ,headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
+    @Transactional
+    public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> uploadConstructionImages4care(@RequestParam("files") List<MultipartFile> files, @PathVariable("contract_id") Long contractId)
+    {
+        Contract contract = contractService.getContractById(contractId);
+        Company company = companyService.getCompanyById(contract.getCompanyId());
+        for(MultipartFile file : files)
+        {
+            String filename = fileUploadService.uploadImage(file);
+            String url = fileUploadService.getFileUrl(filename);
+            ConstructionImageUrl imageUrl = ConstructionImageUrl.builder()
+                    .imageUrl(url)
+                    .filename(filename)
+                    .contract(contract)
+                    .build();
+            contract.getConstructionImageUrls().add(imageUrl);
+        }
+        ContractConstructionImageResponseDto responseDto = new ContractConstructionImageResponseDto(contract);
+        try {
+            firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 시공 사진 등록", "차량 시공 사진 등록","212",company.getName());
+        }
+        catch (IOException e)
+        {
+            log.error("companyId: {}, contractId: {} failed to send fcm message. (ContractController.uploadConstructionImages4care)",contract.getCompanyId(),contract.getId());
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.FORBIDDEN,
+                    HttpResponseMsg.SEND_FAILED), HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>(ApiResponse.response(
+                HttpStatusCode.OK,
+                HttpResponseMsg.POST_SUCCESS,
+                responseDto), HttpStatus.OK);
+
+    }
 }
