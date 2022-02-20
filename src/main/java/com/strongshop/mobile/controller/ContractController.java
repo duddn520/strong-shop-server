@@ -537,7 +537,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
 
     }
 
-    @GetMapping("/api/contract/care/1/{order_id}")
+    @GetMapping("/api/contract/care/2/{order_id}")
     public ResponseEntity<ApiResponse<Map<String,Object>>> getShipmentLocation4User4Care(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
@@ -556,7 +556,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 map), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/api/contract/care/1/{contract_id}",headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
+    @PostMapping(value = "/api/contract/care/3/{contract_id}",headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
     @Transactional
     public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> uploadInspectionImages4Care(@RequestParam("files") List<MultipartFile> files,@PathVariable("contract_id") Long contractId)
     {
@@ -582,7 +582,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
 
     }
 
-    @GetMapping("/api/contract/care/1/{contract_id}")
+    @GetMapping("/api/contract/care/3/{contract_id}")
     @Transactional
     public ResponseEntity<ApiResponse<ContractInspectionImageResponseDto>> getInspectionImageUrls4Care(@PathVariable("contract_id") Long contractId)
     {
@@ -596,7 +596,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 responseDto), HttpStatus.OK);
     }
 
-    @PutMapping("/api/contract/care/1/{order_id}")
+    @PutMapping("/api/contract/care/3/{order_id}")
     public ResponseEntity<ApiResponse> startConstruction4Care(@PathVariable("order_id") Long orderId)
     {
         Order order = orderService.getOrderByOrderId(orderId);
@@ -625,7 +625,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
     }
 
 
-    @PostMapping(value = "/api/contract/care/2/{contract_id}" ,headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
+    @PostMapping(value = "/api/contract/care/4/{contract_id}" ,headers = ("content-type=multipart/*"))                 //차량검수사진 업로드.
     @Transactional
     public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> uploadConstructionImages4Care(@RequestParam("files") List<MultipartFile> files, @PathVariable("contract_id") Long contractId)
     {
@@ -661,7 +661,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
 
     }
 
-    @GetMapping("/api/contract/care/2/{contract_id}")
+    @GetMapping("/api/contract/care/4/{contract_id}")
     @Transactional
     public ResponseEntity<ApiResponse<ContractConstructionImageResponseDto>> getConstructionImageUrls4Care(@PathVariable("contract_id") Long contractId)
     {
@@ -675,7 +675,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 responseDto), HttpStatus.OK);
     }
 
-    @PutMapping("api/contract/care/2")
+    @PutMapping("api/contract/care/4")
     public ResponseEntity<ApiResponse> finishConstruction4Care(@RequestBody ContractRequestDto requestDto)
     {
         Contract contract = contractService.getContractById(requestDto.getId());
@@ -706,7 +706,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
 
     }
 
-    @PutMapping("api/contract/care/3/{contract_id}")
+    @PutMapping("api/contract/care/5/{contract_id}")
     @Transactional
     public ResponseEntity<ApiResponse<CompletedContractResponseDto>> finishContract4Care(@PathVariable("contract_id") Long contractId, HttpServletRequest request)
     {
