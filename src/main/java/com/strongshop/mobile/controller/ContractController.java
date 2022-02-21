@@ -608,7 +608,7 @@ public class ContractController {       //TODO ncp, care 분기필요.
         orderService.saveOrder(order);
 
         try {
-            firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 시공 시작", "차량 시공 시작","214",company.getName());
+            firebaseCloudMessageService.sendMessageTo(contract.getOrder().getUser().getFcmToken(), "차량 시공 시작", "차량 시공 시작","215",company.getName());
         }
         catch (IOException e)
         {
