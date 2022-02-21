@@ -80,7 +80,7 @@ public class OrderController {
 
     @PostMapping(value = "/api/orders/care",consumes = "multipart/form-data")
     @Transactional
-    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestParam(required = false) List<MultipartFile> imagefiles, @RequestParam String details, @RequestParam String region, HttpServletRequest request)
+    public ResponseEntity<ApiResponse<OrderResponseDto>> registerCareOrder(@RequestParam(required = false) List<MultipartFile> imagefiles , @RequestParam String details, @RequestParam String region, HttpServletRequest request)
     {
 
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
@@ -88,16 +88,19 @@ public class OrderController {
 
         List<OrderImage> orderImages = new ArrayList<>();
 
-        for(MultipartFile f : imagefiles){
+        if(imagefiles!=null && !imagefiles.isEmpty())
+        {
+            for (MultipartFile f : imagefiles) {
 
-            String filename = fileUploadService.uploadImage(f);
-            String url = fileUploadService.getFileUrl(filename);
-            OrderImage orderImage = OrderImage.builder()
-                    .imageUrl(url)
-                    .filename(filename)
-                    .build();
+                String filename = fileUploadService.uploadImage(f);
+                String url = fileUploadService.getFileUrl(filename);
+                OrderImage orderImage = OrderImage.builder()
+                        .imageUrl(url)
+                        .filename(filename)
+                        .build();
 
-            orderImages.add(orderImage);
+                orderImages.add(orderImage);
+            }
         }
 
         Order order = Order.builder()
