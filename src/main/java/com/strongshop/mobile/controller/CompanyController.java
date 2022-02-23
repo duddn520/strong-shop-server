@@ -417,9 +417,9 @@ public class CompanyController {
             CompanyResponseDto responseDto = new CompanyResponseDto(companyRepository.save(company));
 
             return new ResponseEntity<>(ApiResponse.response(
-                    HttpStatusCode.OK,
+                    HttpStatusCode.CREATED,
                     HttpResponseMsg.POST_SUCCESS,
-                    responseDto), headers, HttpStatus.OK);
+                    responseDto), headers, HttpStatus.CREATED);
         }
 
     }
