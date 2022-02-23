@@ -16,6 +16,7 @@ import com.strongshop.mobile.domain.User.User;
 import com.strongshop.mobile.domain.User.UserRepository;
 import com.strongshop.mobile.dto.Company.CompanyRequestDto;
 import com.strongshop.mobile.dto.Company.CompanyResponseDto;
+import com.strongshop.mobile.dto.User.UserResponseDto;
 import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
@@ -375,6 +376,52 @@ public class CompanyController {
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
                 HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
+    }
+
+    @PostMapping("/api/login/test/company")         //테스트로그인
+    public ResponseEntity<ApiResponse<CompanyResponseDto>> companyTestLoginKakao(HttpServletRequest request)
+    {
+        String fcmToken = request.getHeader("FCM");
+
+        Company findcompany = companyRepository.findByEmail("companytestemail@strongshop.com").orElseGet(()->new Company());
+
+        if (findcompany.getEmail()!=null)
+        {
+            String token = jwtTokenProvider.createToken(findcompany.getEmail(),Role.COMPANY,fcmToken);
+
+            findcompany.updateFcmToken(fcmToken);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Auth", token);
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.OK,
+                    HttpResponseMsg.GET_SUCCESS,
+                    new CompanyResponseDto(findcompany)), headers, HttpStatus.OK);
+        }
+        else
+        {
+            Company company = Company.builder()
+                    .bossName("테스트업체")
+                    .businessNumber("7777777777")
+                    .email("companytestemail@strongshop.com")
+                    .fcmToken(fcmToken)
+                    .region("서울,수원")
+                    .build();
+
+            String token = jwtTokenProvider.createToken(findcompany.getEmail(),Role.COMPANY,fcmToken);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Auth", token);
+
+            CompanyResponseDto responseDto = new CompanyResponseDto(companyRepository.save(company));
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.OK,
+                    HttpResponseMsg.POST_SUCCESS,
+                    responseDto), headers, HttpStatus.OK);
+        }
+
     }
 
 }

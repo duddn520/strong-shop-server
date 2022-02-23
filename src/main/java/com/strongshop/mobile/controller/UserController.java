@@ -393,6 +393,52 @@ public class UserController {
                 HttpStatusCode.OK,
                 HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
     }
+
+    @PostMapping("/api/login/test/user")         //테스트로그인
+    public ResponseEntity<ApiResponse<UserResponseDto>> userTestLoginKakao(HttpServletRequest request)
+    {
+        String fcmToken = request.getHeader("FCM");
+        User finduser = userRepository.findByEmail("usertestemail@strongshop.com").orElseGet(()-> new User());
+
+        if (finduser.getEmail()!=null)
+        {
+            String token = jwtTokenProvider.createToken(finduser.getEmail(),Role.USER,fcmToken);
+
+            finduser.updateFcmToken(fcmToken);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Auth", token);
+
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.CREATED,
+                    HttpResponseMsg.POST_SUCCESS,
+                    new UserResponseDto(finduser)), HttpStatus.OK);
+        }
+        else
+        {
+            User user = User.builder()
+                    .email("usertestemail@strongshop.com")
+                    .nickname("테스트유저")
+                    .thumbnailImage("https://strongfilebucket.s3.ap-northeast-2.amazonaws.com/testimage.png")
+                    .profileImage("https://strongfilebucket.s3.ap-northeast-2.amazonaws.com/testimage.png")
+                    .loginMethod(LoginMethod.KAKAO)
+                    .fcmToken(fcmToken).build();
+
+            UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
+
+            String token = jwtTokenProvider.createToken(finduser.getEmail(),Role.USER,user.getFcmToken());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Auth", token);
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.CREATED,
+                    HttpResponseMsg.POST_SUCCESS,
+                    responseDto), HttpStatus.OK);
+        }
+
+    }
 }
 
 
