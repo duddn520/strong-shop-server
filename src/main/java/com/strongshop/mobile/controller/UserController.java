@@ -338,6 +338,7 @@ public class UserController {
         map.put("nickname",user.getNickname());
         map.put("phonenumber",user.getPhoneNumber());
         map.put("loginmethod",user.getLoginMethod());
+        map.put("role",user.getRole());
 
         return new ResponseEntity<>(ApiResponse.response(
                 HttpStatusCode.OK,
