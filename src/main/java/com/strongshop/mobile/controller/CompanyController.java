@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.strongshop.mobile.domain.Company.Company;
+import com.strongshop.mobile.domain.Company.CompanyInfo;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.Contract.Contract;
 import com.strongshop.mobile.domain.Gallery.Gallery;
@@ -408,6 +409,9 @@ public class CompanyController {
                     .fcmToken(fcmToken)
                     .region("서울,수원")
                     .build();
+
+            CompanyInfo companyInfo = CompanyInfo.builder().build();
+            company.updateCompanyInfo(companyInfo);
 
             String token = jwtTokenProvider.createToken(findcompany.getEmail(),Role.COMPANY,fcmToken);
 
