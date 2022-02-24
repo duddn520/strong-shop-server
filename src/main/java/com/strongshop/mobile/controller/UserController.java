@@ -393,7 +393,7 @@ public class UserController {
 
             UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
 
-            String token = jwtTokenProvider.createToken(finduser.getEmail(),Role.USER,user.getFcmToken());
+            String token = jwtTokenProvider.createToken(user.getEmail(),Role.USER,user.getFcmToken());
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Auth", token);

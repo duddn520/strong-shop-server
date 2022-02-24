@@ -411,7 +411,7 @@ public class CompanyController {
                     .region("서울,수원")
                     .build();
 
-            String token = jwtTokenProvider.createToken(findcompany.getEmail(),Role.COMPANY,fcmToken);
+            String token = jwtTokenProvider.createToken(company.getEmail(),Role.COMPANY,fcmToken);
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Auth", token);
