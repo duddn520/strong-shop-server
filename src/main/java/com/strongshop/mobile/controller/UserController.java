@@ -140,7 +140,6 @@ public class UserController {
 
         if(requestDto.getEmail()!=null && requestDto.getPhoneNumber()!= null)       //필수항목 중 가장 중요한 두개 검사.
         {
-            if(requestDto.getRole().equals("user")) {
                 User user = requestDto.toEntity();
                 user.updateRole(requestDto.getRole());
                 UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
@@ -154,24 +153,6 @@ public class UserController {
                         HttpStatusCode.OK,
                         HttpResponseMsg.POST_SUCCESS,
                         responseDto), headers, HttpStatus.OK);
-            }
-            else
-            {
-                User user = requestDto.toEntity();
-                user.updateRole(requestDto.getRole());
-                UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
-
-                String token = jwtTokenProvider.createToken(user.getEmail(), Role.DEALER, requestDto.getFcmToken());
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("Auth", token);
-
-                return new ResponseEntity<>(ApiResponse.response(
-                        HttpStatusCode.OK,
-                        HttpResponseMsg.POST_SUCCESS,
-                        responseDto), headers, HttpStatus.OK);
-
-            }
         }
         else
         {
@@ -276,7 +257,6 @@ public class UserController {
 
         if(requestDto.getEmail()!=null && requestDto.getPhoneNumber()!= null)       //필수항목 중 가장 중요한 두개 검사.
         {
-            if(requestDto.getRole().equals("user")) {
                 User user = requestDto.toEntity();
                 user.updateRole(requestDto.getRole());
                 UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
@@ -290,24 +270,6 @@ public class UserController {
                         HttpStatusCode.OK,
                         HttpResponseMsg.POST_SUCCESS,
                         responseDto), headers, HttpStatus.OK);
-            }
-            else
-            {
-                User user = requestDto.toEntity();
-                user.updateRole(requestDto.getRole());
-                UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
-
-                String token = jwtTokenProvider.createToken(user.getEmail(), Role.DEALER, requestDto.getFcmToken());
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("Auth", token);
-
-                return new ResponseEntity<>(ApiResponse.response(
-                        HttpStatusCode.OK,
-                        HttpResponseMsg.POST_SUCCESS,
-                        responseDto), headers, HttpStatus.OK);
-
-            }
         }
         else
         {
