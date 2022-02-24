@@ -435,7 +435,7 @@ public class UserController {
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.CREATED,
                     HttpResponseMsg.POST_SUCCESS,
-                    responseDto), HttpStatus.OK);
+                    responseDto),headers, HttpStatus.OK);
         }
 
     }
