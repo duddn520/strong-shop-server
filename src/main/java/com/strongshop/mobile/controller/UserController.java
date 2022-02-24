@@ -413,7 +413,7 @@ public class UserController {
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.CREATED,
                     HttpResponseMsg.POST_SUCCESS,
-                    new UserResponseDto(finduser)), HttpStatus.OK);
+                    new UserResponseDto(finduser)),headers,HttpStatus.OK);
         }
         else
         {
