@@ -274,6 +274,7 @@ public class UserController {
 
         if(requestDto.getEmail()!=null && requestDto.getPhoneNumber()!= null)       //필수항목 중 가장 중요한 두개 검사.
         {
+            System.out.println("requestDto.getRole() = " + requestDto.getRole());
             if(requestDto.getRole().equals("user")) {
                 User user = requestDto.toEntity();
                 user.updateRole(requestDto.getRole());
