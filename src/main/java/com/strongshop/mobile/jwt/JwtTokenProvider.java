@@ -78,6 +78,11 @@ public class JwtTokenProvider {
             UserDetails userDetails = jwtCompanyUserDetailService.loadUserByUsername(this.getEmail(token));
             return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
         }
+        else if(role ==Role.DEALER)
+        {
+          UserDetails userDetails = jwtUserUserDetailService.loadUserByUsername(this.getEmail(token));
+          return new UsernamePasswordAuthenticationToken(userDetails,"",userDetails.getAuthorities());
+        }
         else
             throw new RuntimeException("유저 정보 조회 실패");
     }
