@@ -102,6 +102,7 @@ public class Company implements UserDetails {
     public void updateCompanyInfo(CompanyInfo companyInfo)
     {
         this.companyInfo = companyInfo;
+        companyInfo.updateCompany(this);
     }
 
     public void updateFcmToken(String fcmToken){this.fcmToken = fcmToken;}

@@ -59,4 +59,9 @@ public class CompanyInfo {
         return this;
     }
 
+    public void updateCompany(Company company)
+    {
+        this.company = company;
+    }
+
 }

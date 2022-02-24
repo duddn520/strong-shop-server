@@ -411,9 +411,6 @@ public class CompanyController {
                     .region("서울,수원")
                     .build();
 
-            CompanyInfo companyInfo = CompanyInfo.builder().build();
-            company.updateCompanyInfo(companyInfo);
-
             String token = jwtTokenProvider.createToken(findcompany.getEmail(),Role.COMPANY,fcmToken);
 
             HttpHeaders headers = new HttpHeaders();
