@@ -60,10 +60,10 @@ public class User implements UserDetails{
 
 
     @Builder
-    public User(Long id,String realName, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, String businessNumber, LocalDate birth, List<Order> orders,
+    public User(Long id,String realName,Role role, String email, String nickname, String phoneNumber, String profileImage, String thumbnailImage, String gender, String businessNumber, LocalDate birth, List<Order> orders,
                 List<Car> cars, String fcmToken, List<CompletedContract> completedContracts,List<Review> reviews, LoginMethod loginMethod) {
         this.id = id;
-        this.role = Role.USER;
+        this.role = role;
         this.realName = realName;
         this.email = email;
         this.nickname = nickname;
@@ -84,6 +84,18 @@ public class User implements UserDetails{
     public void updateFcmToken(String token)
     {
         this.fcmToken = token;
+    }
+
+    public void updateRole(String role)
+    {
+        if (role.equals("user"))
+        {
+            this.role = Role.USER;
+        }
+        else if(role.equals("dealer"))
+        {
+            this.role = Role.DEALER;
+        }
     }
 
     @Override

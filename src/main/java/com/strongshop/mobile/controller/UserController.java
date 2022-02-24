@@ -276,6 +276,7 @@ public class UserController {
         {
             if(requestDto.getRole().equals("user")) {
                 User user = requestDto.toEntity();
+                user.updateRole(requestDto.getRole());
                 UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
 
                 String token = jwtTokenProvider.createToken(user.getEmail(), Role.USER, requestDto.getFcmToken());
@@ -291,6 +292,7 @@ public class UserController {
             else
             {
                 User user = requestDto.toEntity();
+                user.updateRole(requestDto.getRole());
                 UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
 
                 String token = jwtTokenProvider.createToken(user.getEmail(), Role.DEALER, requestDto.getFcmToken());
