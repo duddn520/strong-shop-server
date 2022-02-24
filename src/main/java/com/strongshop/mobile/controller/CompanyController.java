@@ -379,6 +379,7 @@ public class CompanyController {
                 HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
     }
 
+    @Transactional
     @PostMapping("/api/login/test/company")         //테스트로그인
     public ResponseEntity<ApiResponse<CompanyResponseDto>> companyTestLoginKakao(HttpServletRequest request)
     {
