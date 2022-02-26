@@ -404,7 +404,7 @@ public class CompanyController {
         else
         {
             Company company = Company.builder()
-                    .bossName("테스트업체")
+                    .name("테스트업체")
                     .businessNumber("7777777777")
                     .email("companytestemail@strongshop.com")
                     .fcmToken(fcmToken)
