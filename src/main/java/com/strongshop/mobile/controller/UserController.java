@@ -371,6 +371,7 @@ public class UserController {
             String token = jwtTokenProvider.createToken(finduser.getEmail(),Role.USER,fcmToken);
 
             finduser.updateFcmToken(fcmToken);
+            userRepository.save(finduser);
 
 
             HttpHeaders headers = new HttpHeaders();
