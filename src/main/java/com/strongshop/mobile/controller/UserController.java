@@ -372,6 +372,7 @@ public class UserController {
 
             finduser.updateFcmToken(fcmToken);
 
+
             HttpHeaders headers = new HttpHeaders();
             headers.add("Auth", token);
 
@@ -390,6 +391,8 @@ public class UserController {
                     .profileImage("https://strongfilebucket.s3.ap-northeast-2.amazonaws.com/testimage.png")
                     .loginMethod(LoginMethod.KAKAO)
                     .fcmToken(fcmToken).build();
+
+            user.updateRole("user");
 
             UserResponseDto responseDto = new UserResponseDto(userRepository.save(user));
 
