@@ -408,6 +408,7 @@ public class CompanyController {
                     .businessNumber("7777777777")
                     .email("companytestemail@strongshop.com")
                     .fcmToken(fcmToken)
+                    .loginMethod(LoginMethod.KAKAO)
                     .region("서울,수원")
                     .build();
 
