@@ -416,6 +416,7 @@ public class CompanyController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Auth", token);
+            System.out.println("token = " + token);
 
             CompanyResponseDto responseDto = new CompanyResponseDto(companyRepository.save(company));
 
