@@ -396,6 +396,7 @@ public class CompanyController {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Auth", token);
 
+
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.OK,
                     HttpResponseMsg.GET_SUCCESS,
@@ -424,6 +425,59 @@ public class CompanyController {
                     HttpStatusCode.CREATED,
                     HttpResponseMsg.POST_SUCCESS,
                     responseDto), headers, HttpStatus.CREATED);
+        }
+
+    }
+
+    @DeleteMapping("/api/company/{id}")
+    @Transactional
+    public ResponseEntity<ApiResponse> forcedWithdrawCompany(@PathVariable(name = "id")Long id, HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+
+        if(email.equals("companytestemail@strongshop.com")) {
+            Company company = companyService.getCompanyById(id);
+
+            List<Gallery> galleries = company.getGalleries();                       //컴퍼니 회원탈퇴시 서버에 저장된 관련 사진 모두를 삭제한다.
+            for (Gallery g : galleries) {
+                List<GalleryImageUrl> imageUrls = g.getImageUrls();
+
+                for (GalleryImageUrl img : imageUrls) {
+                    fileUploadService.removeFile(img.getFilename());
+                }
+            }
+            if (company.getCompanyInfo().getBackgroundImageUrl() != null)
+                fileUploadService.removeFile(company.getCompanyInfo().getBackgroundFilename());
+
+            List<Review> reviews = company.getReviews();
+            for (Review r : reviews) {
+                List<ReviewImageUrl> imageUrls = r.getReviewImageUrls();
+
+                for (ReviewImageUrl img : imageUrls) {
+                    fileUploadService.removeFile(img.getFilename());
+                }
+            }
+
+            List<Contract> contracts = contractService.getContractsByCompanyId(company.getId());
+
+            if (contracts.isEmpty()) {
+                companyService.deleteCompany(company);
+
+                return new ResponseEntity<>(ApiResponse.response(
+                        HttpStatusCode.OK,
+                        HttpResponseMsg.DELETE_SUCCESS), HttpStatus.OK);
+            } else {
+                log.debug("companyId: {} cannot withdraw (having ongoing contract). (CompanyController.withdrawCompany)", company.getId());
+                return new ResponseEntity<>(ApiResponse.response(
+                        HttpStatusCode.NOT_ACCEPTABLE,
+                        HttpResponseMsg.DELETE_FAIL), HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
+        else
+        {
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.NOT_ACCEPTABLE,
+                    HttpResponseMsg.DELETE_FAIL), HttpStatus.NOT_ACCEPTABLE);
         }
 
     }
