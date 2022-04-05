@@ -491,6 +491,8 @@ public class CompanyController {
                 biddingService.deleteBidding(bidding);
             }
 
+            companyService.deleteCompany(company);
+
             return new ResponseEntity<>(ApiResponse.response(
                     HttpStatusCode.OK,
                     HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
