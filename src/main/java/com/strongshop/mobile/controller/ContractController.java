@@ -765,4 +765,46 @@ public class ContractController {       //TODO ncp, care 분기필요.
                 HttpResponseMsg.DELETE_SUCCESS,
                 responseDto), HttpStatus.OK);
     }
+
+    @DeleteMapping("/api/contract/{id}")
+    @Transactional
+    public ResponseEntity<ApiResponse> ForcedDeletionOfContract(@PathVariable(name = "id")Long id, HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+
+        if(email.equals("companytestemail@strongshop.com")){
+            Contract contract = contractService.getContractById(id);
+
+            Order order = contract.getOrder();
+            Bidding bidding = contract.getBidding();
+
+            List<InspectionImageUrl> inspectionImageUrls = contract.getInspectionImageUrls();
+            List<ConstructionImageUrl> constructionImageUrls = contract.getConstructionImageUrls();
+
+            for(InspectionImageUrl i : inspectionImageUrls)
+            {
+                fileUploadService.removeFile(i.getFilename());
+            }
+
+            for(ConstructionImageUrl c : constructionImageUrls)
+            {
+                fileUploadService.removeFile(c.getFilename());
+            }
+
+            contractService.deleteContract(contract);
+            orderService.deleteOrder(order);
+            biddingService.deleteBidding(bidding);
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.OK,
+                    HttpResponseMsg.DELETE_SUCCESS), HttpStatus.OK);
+
+        }
+        else
+        {
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.NOT_ACCEPTABLE,
+                    HttpResponseMsg.DELETE_FAIL), HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
 }

@@ -3,13 +3,17 @@ package com.strongshop.mobile.controller;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyInfo;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.Contract.Contract;
 import com.strongshop.mobile.domain.Gallery.Gallery;
+import com.strongshop.mobile.domain.Image.ConstructionImageUrl;
 import com.strongshop.mobile.domain.Image.GalleryImageUrl;
+import com.strongshop.mobile.domain.Image.InspectionImageUrl;
 import com.strongshop.mobile.domain.Image.ReviewImageUrl;
+import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Review.Review;
 import com.strongshop.mobile.domain.User.LoginMethod;
 import com.strongshop.mobile.domain.User.Role;
@@ -22,9 +26,11 @@ import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
+import com.strongshop.mobile.service.BiddingService;
 import com.strongshop.mobile.service.Company.CompanyService;
 import com.strongshop.mobile.service.ContractService;
 import com.strongshop.mobile.service.FileUploadService;
+import com.strongshop.mobile.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -56,6 +62,8 @@ public class CompanyController {
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
     private final ContractService contractService;
+    private final OrderService orderService;
+    private final BiddingService biddingService;
 
 
     @PostMapping("/api/company")
@@ -431,7 +439,7 @@ public class CompanyController {
 
     @DeleteMapping("/api/company/{id}")
     @Transactional
-    public ResponseEntity<ApiResponse> forcedWithdrawCompany(@PathVariable(name = "id")Long id, HttpServletRequest request)
+    public ResponseEntity<ApiResponse> forcedWithdrawalOfCompany(@PathVariable(name = "id")Long id, HttpServletRequest request)
     {
         String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
 
@@ -460,18 +468,32 @@ public class CompanyController {
 
             List<Contract> contracts = contractService.getContractsByCompanyId(company.getId());
 
-            if (contracts.isEmpty()) {
-                companyService.deleteCompany(company);
+            for(Contract c : contracts)
+            {
+                Order order = c.getOrder();
+                Bidding bidding = c.getBidding();
 
-                return new ResponseEntity<>(ApiResponse.response(
-                        HttpStatusCode.OK,
-                        HttpResponseMsg.DELETE_SUCCESS), HttpStatus.OK);
-            } else {
-                log.debug("companyId: {} cannot withdraw (having ongoing contract). (CompanyController.withdrawCompany)", company.getId());
-                return new ResponseEntity<>(ApiResponse.response(
-                        HttpStatusCode.NOT_ACCEPTABLE,
-                        HttpResponseMsg.DELETE_FAIL), HttpStatus.NOT_ACCEPTABLE);
+                List<InspectionImageUrl> inspectionImageUrls = c.getInspectionImageUrls();
+                List<ConstructionImageUrl> constructionImageUrls = c.getConstructionImageUrls();
+
+                for(InspectionImageUrl i : inspectionImageUrls)
+                {
+                    fileUploadService.removeFile(i.getFilename());
+                }
+
+                for(ConstructionImageUrl ci : constructionImageUrls)
+                {
+                    fileUploadService.removeFile(ci.getFilename());
+                }
+
+                contractService.deleteContract(c);
+                orderService.deleteOrder(order);
+                biddingService.deleteBidding(bidding);
             }
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.OK,
+                    HttpResponseMsg.DELETE_SUCCESS),HttpStatus.OK);
         }
         else
         {
