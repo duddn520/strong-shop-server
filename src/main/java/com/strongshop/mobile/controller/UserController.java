@@ -1,10 +1,14 @@
 package com.strongshop.mobile.controller;
 
 import com.google.gson.*;
+import com.strongshop.mobile.domain.Bidding.Bidding;
 import com.strongshop.mobile.domain.Company.Company;
 import com.strongshop.mobile.domain.Company.CompanyRepository;
 import com.strongshop.mobile.domain.Contract.Contract;
+import com.strongshop.mobile.domain.Image.ConstructionImageUrl;
+import com.strongshop.mobile.domain.Image.InspectionImageUrl;
 import com.strongshop.mobile.domain.Image.ReviewImageUrl;
+import com.strongshop.mobile.domain.Order.Order;
 import com.strongshop.mobile.domain.Review.Review;
 import com.strongshop.mobile.domain.User.LoginMethod;
 import com.strongshop.mobile.domain.User.Role;
@@ -16,10 +20,7 @@ import com.strongshop.mobile.jwt.JwtTokenProvider;
 import com.strongshop.mobile.model.ApiResponse;
 import com.strongshop.mobile.model.HttpResponseMsg;
 import com.strongshop.mobile.model.HttpStatusCode;
-import com.strongshop.mobile.service.ContractService;
-import com.strongshop.mobile.service.FileUploadService;
-import com.strongshop.mobile.service.ReviewService;
-import com.strongshop.mobile.service.UserService;
+import com.strongshop.mobile.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -49,6 +50,8 @@ public class UserController {
     private final ReviewService reviewService;
     private final FileUploadService fileUploadService;
     private final ContractService contractService;
+    private final BiddingService biddingService;
+    private final OrderService orderService;
 
     @GetMapping("/api/login/user/kakao")
     public ResponseEntity<ApiResponse<UserResponseDto>> userLoginKakao(HttpServletRequest request)
@@ -408,6 +411,60 @@ public class UserController {
                     responseDto),headers, HttpStatus.OK);
         }
 
+    }
+
+    @DeleteMapping("/api/user/{id}")
+    @Transactional
+    public ResponseEntity<ApiResponse> forcedwithdrawalOfUser(@PathVariable(name = "id")Long id, HttpServletRequest request)
+    {
+        String email = jwtTokenProvider.getEmail(jwtTokenProvider.getToken(request));
+        if(email.equals("usertestemail@strongshop.com")) {
+            User user = userService.getUserById(id);
+
+            List<Review> reviews = reviewService.findAllReviewsByUser(user);
+            for (Review r : reviews) {
+                List<ReviewImageUrl> imageUrls = r.getReviewImageUrls();
+                for (ReviewImageUrl img : imageUrls) {
+                    fileUploadService.removeFile(img.getFilename());
+                }
+
+            }
+            List<Contract> contracts = contractService.getContractsByUserId(user.getId());
+
+            for (Contract c : contracts){
+                Order order = c.getOrder();
+                Bidding bidding = c.getBidding();
+
+                List<InspectionImageUrl> inspectionImageUrls = c.getInspectionImageUrls();
+                List<ConstructionImageUrl> constructionImageUrls = c.getConstructionImageUrls();
+
+                for(InspectionImageUrl i : inspectionImageUrls)
+                {
+                    fileUploadService.removeFile(i.getFilename());
+                }
+
+                for(ConstructionImageUrl ci : constructionImageUrls)
+                {
+                    fileUploadService.removeFile(ci.getFilename());
+                }
+
+                contractService.deleteContract(c);
+                orderService.deleteOrder(order);
+                biddingService.deleteBidding(bidding);
+            }
+
+            userService.deleteUser(user);
+
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.OK,
+                    HttpResponseMsg.DELETE_SUCCESS), HttpStatus.OK);
+        }
+        else
+        {
+            return new ResponseEntity<>(ApiResponse.response(
+                    HttpStatusCode.NOT_ACCEPTABLE,
+                    HttpResponseMsg.DELETE_FAIL), HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 }
 

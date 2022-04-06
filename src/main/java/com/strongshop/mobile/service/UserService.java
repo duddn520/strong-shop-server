@@ -55,4 +55,11 @@ public class UserService {
 
         return cars;
     }
+
+    @Transactional
+    public User getUserById(Long id)
+    {
+        User user = userRepository.findById(id).orElseThrow(()->new RuntimeException());
+        return user;
+    }
 }
